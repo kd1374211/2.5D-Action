@@ -2,18 +2,23 @@
 
 #include"../BaseScene/BaseScene.h"
 
+class Player;
+
 class GameScene : public BaseScene
 {
 public :
 
-	GameScene()  { Init(); }
+	GameScene() { Init(); }
 	~GameScene() {}
+
+	Math::Vector3 GetCameraPos()const { return m_cameraPos; }
+	Math::Vector3 GetCameraAngle()const { return m_cameraDeg; }
 
 private:
 
-	int m_countF;
-	float m_cameraDeg;
+	Math::Vector3 m_cameraPos;
+	Math::Vector3 m_cameraDeg;
 
-	void Event() override;
 	void Init()  override;
+	void Event() override;
 };

@@ -4,6 +4,7 @@
 #include "../../Object/Terrain/Wall/Wall.h"
 #include "../../Object/Terrain/Stair/Stair.h"
 #include "../../Object/Character/Player/Player.h"
+#include "../../StageSpawner/StageSpawner.h"
 
 void GameScene::Event()
 {
@@ -15,47 +16,130 @@ void GameScene::Event()
 		);
 	}
 
-	m_countF++;
-	if (m_countF >= 160)
+	//ステージアップデート
+	STAGESPAWNER.Update();
+
+	if (GetAsyncKeyState('Z') & 0x8000)
 	{
-		m_countF = 0;
+		m_cameraPos.x += 0.2f;
+	}
+	if (GetAsyncKeyState('X') & 0x8000)
+	{
+		m_cameraPos.x -= 0.2f;
+	}
+	if (GetAsyncKeyState('C') & 0x8000)
+	{
+		m_cameraPos.y += 0.2f;
+	}
+	if (GetAsyncKeyState('V') & 0x8000)
+	{
+		m_cameraPos.y -= 0.2f;
+	}
+	if (GetAsyncKeyState('B') & 0x8000)
+	{
+		m_cameraPos.z += 0.2f;
+	}
+	if (GetAsyncKeyState('N') & 0x8000)
+	{
+		m_cameraPos.z -= 0.2f;
+	}
+	if (GetAsyncKeyState(VK_UP) & 0x8000)
+	{
+		m_cameraDeg.x -= 0.5f;
+	}
+	if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+	{
+		m_cameraDeg.x += 0.5f;
+	}
+	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+	{
+		m_cameraDeg.y -= 0.5f;
+	}
+	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+	{
+		m_cameraDeg.y += 0.5f;
+	}
+	if (m_cameraDeg.x > 360.0f)m_cameraDeg.x -= 360.0f;
+	else if (m_cameraDeg.x < 0.0f)m_cameraDeg.x += 360.0f;
+	if (m_cameraDeg.y > 360.0f)m_cameraDeg.y -= 360.0f;
+	else if (m_cameraDeg.y < 0.0f)m_cameraDeg.y += 360.0f;
+	
+	//仮セーブ
+	if (GetAsyncKeyState(VK_RETURN) & 0x8000)
+	{
+		//一旦ストップ
+		if (0)
+		{
+			FILE* fp = nullptr;
+
+			if (fopen_s(&fp, "Asset/Data/Test/TestCameraData.csv", "w") == 0)
+			{
+				fprintf_s(fp, "%f,%f,%f,\n%f,%f,%f,",
+					m_cameraPos.x,
+					m_cameraPos.y,
+					m_cameraPos.z,
+					m_cameraDeg.x,
+					m_cameraDeg.y,
+					m_cameraDeg.z
+				);
+
+				fclose(fp);
+			}
+		}
 	}
 
-	//カメラ
-	m_cameraDeg -= 0.3f;
-	if (m_cameraDeg > 360.0f)m_cameraDeg -= 360.0f;
-	else if (m_cameraDeg < 0.0f)m_cameraDeg += 360.0f;
-
-	Math::Matrix trans = Math::Matrix::CreateTranslation(0, -15.0f, -90.0f);
-	Math::Matrix rotatX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(5));
-	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(5));
-	Math::Matrix rotatY2 = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_cameraDeg));
-	Math::Matrix mat = rotatY * rotatX * trans * rotatY2;
+	Math::Matrix trans = Math::Matrix::CreateTranslation(m_cameraPos);
+	Math::Matrix rotatX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(m_cameraDeg.x));
+	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_cameraDeg.y));
+	Math::Matrix mat = rotatY * rotatX * trans;
 	m_camera->SetCameraMatrix(mat);
 }
 
 void GameScene::Init()
 {
-	m_countF = 0;
-	m_cameraDeg = 0.0f;
+	AddObject(std::make_shared<Player>());
 
-	AddObject(std::make_shared<Player>(Math::Vector3(0.0f, 0.0f, 0.0f)));
+	//ステージスポーナーに任せた
+	STAGESPAWNER.StartGame(this);
 
-	for (int i = 0; i < 3; i++)
-	{
-		float posY = -128.0f + (float)i * 128.0f;
-		AddObject(std::make_shared<Pillar>(Math::Vector3(0.0f, posY, 0.0f)));
-		AddObject(std::make_shared<Wall>(Math::Vector3(0.0f, posY, 0.0f)));
-	}
-
-	for (int i = 0; i < 120; i++)
-	{
-		float angleDeg = -(float)i * 6.0f;
-		Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * 40.0f,-60.0f + (float)i,cosf(DirectX::XMConvertToRadians(angleDeg)) * 40.0f };
-		AddObject(std::make_shared<Stair>(pos, angleDeg));
-	}
+	//階段召喚(バグ対策は考える)
+	//for (int i = 0; i < 80; i++)
+	//{
+	//	float angleDeg = -180.0 - (float)i * 9.0f;
+	//	Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * 20.0f,-30.0f + (float)i * 0.75f,cosf(DirectX::XMConvertToRadians(angleDeg)) * 20.0f };
+	//	AddObject(std::make_shared<Stair>(pos, angleDeg));
+	//}
 
 	m_camera = std::make_unique<KdCamera>();
 	m_camera->SetProjectionMatrix(60);
-	m_camera->SetCameraMatrix(Math::Matrix::CreateTranslation(0, -15.0f, -90.0f));
+	m_camera->SetCameraMatrix(Math::Matrix::CreateTranslation(0.0f, 5.0f, -45.0f));
+
+	//テスト用
+	FILE* fp = nullptr;
+	
+	if (fopen_s(&fp, "Asset/Data/Test/TestCameraData.csv", "r") == 0)
+	{
+		fscanf_s(fp, "%f,%f,%f,",
+			&m_cameraPos.x,
+			&m_cameraPos.y,
+			&m_cameraPos.z
+		);
+
+		char dummy[250];
+		fgets(dummy, 250, fp);
+
+		fscanf_s(fp, "%f,%f,%f,",
+			&m_cameraDeg.x,
+			&m_cameraDeg.y,
+			&m_cameraDeg.z
+		);
+
+		fclose(fp);
+	}
+
+	if (0)
+	{
+		m_cameraPos = Math::Vector3(0.0f, 5.0f, -45.0f);
+		m_cameraDeg = Math::Vector3(0.0f, 0.0f, 0.0f);
+	}
 }

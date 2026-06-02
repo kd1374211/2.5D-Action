@@ -34,6 +34,12 @@ public :
 	// 現在のシーンにオブジェクトを追加
 	void AddObject(const std::shared_ptr<KdGameObject>& _obj);
 
+	//現在のシーンにスクロール量を設定
+	void SetScrollSpeedMulti(float a_speed) { m_scrollSpeedMulti = a_speed; }
+
+	//スクロール速度を取得
+	float GetScrollSpeedMulti()const { return m_scrollSpeedMulti; }
+
 private :
 
 	// マネージャーの初期化
@@ -55,6 +61,9 @@ private :
 	
 	// 次のシーンの種類を保持している変数
 	SceneType m_nextSceneType = m_currentSceneType;
+
+	//スクロール速度保持
+	float m_scrollSpeedMulti = 0.0f;
 
 private:
 

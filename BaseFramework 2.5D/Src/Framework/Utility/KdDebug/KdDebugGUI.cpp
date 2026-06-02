@@ -2,6 +2,9 @@
 
 #include "KdDebugGUI.h"
 
+//仮置き
+#include "../../../Application/StageSpawner/StageSpawner.h"
+
 KdDebugGUI::KdDebugGUI()
 {}
 KdDebugGUI::~KdDebugGUI()
@@ -58,8 +61,16 @@ void KdDebugGUI::GuiProcess()
 //	}
 //	ImGui::End();
 
+	if (ImGui::Begin("ImGui"))
+	{
+		ImGui::Text("StairStore : %d", STAGESPAWNER.GetStairStore());
+		ImGui::Text("StairLog_Past : %d", STAGESPAWNER.GetStoreList_P().size());
+		ImGui::Text("StairLog_Future : %d", STAGESPAWNER.GetStoreList_F().size());
+	}
+	ImGui::End();
+
 	// ログウィンドウ
-	m_uqLog->Draw("Log Window");
+	//m_uqLog->Draw("Log Window");
 
 	//=====================================================
 	// ログ出力 ・・・ AddLog("～") で追加

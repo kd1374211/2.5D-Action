@@ -1,0 +1,22 @@
+﻿#include "Void.h"
+
+void Void::DrawUnLit()
+{
+	//描画
+	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
+}
+
+void Void::Init()
+{
+	//モデルロード
+	m_model = std::make_shared<KdModelData>();
+	m_model->Load("Asset/Models/Void/Void.gltf");
+
+	//マトリックス
+	Math::Matrix scale = Math::Matrix::CreateScale(3.0f);
+	Math::Matrix trans = Math::Matrix::CreateTranslation(Math::Vector3(0.0f, -10.0f, 0.0f));
+	m_mWorld = scale * trans;
+}
+
+void Void::Release()
+{}

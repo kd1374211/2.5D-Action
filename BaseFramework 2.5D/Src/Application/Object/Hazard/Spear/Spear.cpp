@@ -1,0 +1,74 @@
+﻿#include "Spear.h"
+#include "../../../Scene/SceneManager.h"
+#include "../../../Const/StageConst.h"
+
+Spear::Spear(Math::Vector3 a_startPos, float a_startDeg, float a_linePos)
+{
+	Init();
+	m_pos = a_startPos;
+	m_angleDeg = a_startDeg;
+	m_linePos = a_linePos;
+}
+
+void Spear::Update()
+{
+	//スクロール速度取得
+	float speedMulti = SCENEMGR.GetScrollSpeedMulti();
+
+	//角度更新
+	m_angleDeg += TERRAINBASEROTATY * speedMulti;
+	if (m_angleDeg > 360.0f)m_angleDeg -= 360.0f;
+	else if (m_angleDeg < 0.0f)m_angleDeg += 360.0f;
+
+	//角度に合わせて位置変更
+	m_pos = { sinf(DirectX::XMConvertToRadians(m_angleDeg)) * m_linePos,m_pos.y += TERRAINBASEMOVEY * speedMulti,cosf(DirectX::XMConvertToRadians(m_angleDeg)) * m_linePos };
+	//一定位置まで下りたら槍が生える
+	if (m_pos.y < SPEARACTIVEY)m_isSpear = true;
+
+	//槍移動
+	if (m_isSpear)
+	{
+		if (m_spearPos < SPEARPOSMAX)m_spearPos += SPEARMOVEY;
+	}
+	
+	//消去
+	if (m_pos.y < -40.0f)m_isExpired = true;
+
+	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_angleDeg));
+	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos + Math::Vector3(0, m_spearPos, 0));
+	m_mWorld = rotatY * trans;
+}
+
+void Spear::DrawLit()
+{
+	//穴
+	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
+	m_mHoleWorld = trans;
+
+	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_holeModel, m_mHoleWorld);
+
+	//槍
+	if (m_isSpear)
+	{
+		trans = Math::Matrix::CreateTranslation(m_pos + Math::Vector3(0, m_spearPos, 0));
+		m_mWorld = trans;
+
+		KdShaderManager::Instance().m_StandardShader.DrawModel(*m_spearModel, m_mWorld);
+	}
+}
+
+void Spear::Init()
+{
+	m_holeModel = std::make_shared<KdModelData>();
+	m_holeModel->Load("Asset/Models/SpearHole/SpearHole.gltf");
+
+	m_spearModel = std::make_shared<KdModelData>();
+	m_spearModel->Load("Asset/Models/Spear/Spear.gltf");
+
+	//当たり判定用意
+	m_pCollider = std::make_unique<KdCollider>();
+	m_pCollider->RegisterCollisionShape("SpearHit", m_spearModel, KdCollider::Type::TypeDamage);
+}
+
+void Spear::Release()
+{}

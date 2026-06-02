@@ -8,8 +8,12 @@ public:
 	~Pillar()override { Release(); }
 
 	void Update()override;
-	void DrawUnLit()override;
-	void GenerateDepthMapFromLight()override;
+	void DrawLit()override;
+
+	void Respawn();
+	
+	//ゲッター
+	bool GetIsDisappear()const { return m_isDisappear; }
 
 private:
 
@@ -17,6 +21,10 @@ private:
 	void Release();
 
 	Math::Vector3 m_pos;
+	float m_angleDeg;
 	std::shared_ptr<KdModelData> m_model;
 
+	//リスポーン処理関連
+	bool m_isDisappear = false;
+	RespawnDir m_respawnDir = RespawnDir::Up;
 };

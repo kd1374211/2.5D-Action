@@ -1,0 +1,186 @@
+﻿#include "StageSpawner.h"
+#include "../Scene/SceneManager.h"
+#include "../Scene/BaseScene/BaseScene.h"
+#include "../Object/Terrain/Stair/Stair.h"
+#include "../Object/Terrain/Pillar/Pillar.h"
+#include "../Object/Terrain/Wall/Wall.h"
+#include "../Object/Terrain/Void/Void.h"
+#include "../Object/Hazard/Boulder/Boulder.h"
+#include "../Object/Hazard/Spear/Spear.h"
+#include "../Const/StageConst.h"
+
+//階段再出現用
+#define LOWEST m_stairs.front()
+#define HIGHEST m_stairs.back()
+
+void StageSpawner::StartGame(BaseScene* a_scene)
+{
+	//リストの内容を転送
+	for (auto& itr : m_stairs)
+	{
+		a_scene->AddObject(itr);
+	}
+
+	for (auto &itr:m_pillars)
+	{
+		a_scene->AddObject(itr);
+	}
+
+	for (auto& itr : m_walls)
+	{
+		a_scene->AddObject(itr);
+	}
+
+	//それとは別に奈落召喚
+	a_scene->AddObject(std::make_shared<Void>());
+}
+
+void StageSpawner::Update()
+{
+	//テスト
+	static bool test = false;
+	static int test2 = 0;
+
+	//未来のスポーン情報
+	while (m_stairVisibleLog_future.size() < MAXFUTUREROLL)
+	{
+		//テスト
+		if (rand() % 10 == 0 && !test)
+		{
+			test = true;
+			test2 = 2;
+		}
+
+		m_stairVisibleLog_future.push_back(test && test2 > 0 ? true : false);
+
+		if (test)
+		{
+			test2--;
+			if (test2 == -1)test = false;
+		}
+	}
+
+	//仮置き（階段があるかどうか）
+	bool test3;
+
+	//準方向スクロール
+	if (SCENEMGR.GetScrollSpeedMulti() >= 0.0f)
+	{
+		//Front（一番下）のワープフラグがある間
+		while (LOWEST->GetIsDisappear())
+		{
+			//次に出現する階段のデータを取得（あり得ないが空ならfalse）
+			if (!m_stairVisibleLog_future.empty())
+			{
+				test3 = m_stairVisibleLog_future.front();
+				m_stairVisibleLog_future.pop_front();
+			}
+			else test3 = false;
+
+			//戻り数カウントが0でないなら減少
+			if (m_countBackScroll > 0)m_countBackScroll--;
+			//0ならギミックの出現チェック
+			else
+			{
+				if (rand() % 150 == 0)
+				{
+					float angleDeg = LOWEST->GetAngleDeg();
+					int linePos = rand() % (int)(LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 16) + LINEPLAYAREA_MIN + 8;
+					Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,38.0f,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+					SCENEMGR.AddObject(std::make_shared<Boulder>(pos, angleDeg, linePos));
+				}
+
+				//階段が空なら出現しない
+				if (rand() % 20 == 0 && !test3)
+				{
+					float angleDeg = LOWEST->GetAngleDeg();
+					int linePos = rand() % (int)(LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 16) + LINEPLAYAREA_MIN + 3;
+					
+					for (int i = 0; i < 5; i++)
+					{
+						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,31.0f,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+						SCENEMGR.AddObject(std::make_shared<Spear>(pos, angleDeg, linePos));
+						linePos += 2.5;
+					}
+				}
+			}
+
+			//ワープ
+			LOWEST->Respawn(test3);
+
+			//今ワープした物を階段リストのBackに移動
+			m_stairs.push_back(LOWEST);
+			m_stairs.pop_front();
+		}
+	}
+	//逆方向スクロール
+	else
+	{
+		//Back（一番上）のワープフラグがある間
+		while (HIGHEST->GetIsDisappear())
+		{
+			//戻り数カウント増加
+			m_countBackScroll++;
+
+			//過去に消えた階段のログが残っているならそれを使う
+			if (!m_stairVisibleLog_past.empty())
+			{
+				test3 = m_stairVisibleLog_past.front();
+				m_stairVisibleLog_past.pop_front();
+			}
+			//無いならfalse
+			else test3 = false;
+
+			//ワープ
+			HIGHEST->Respawn(test3);
+
+			//今ワープした物を階段リストのFrontに移動
+			m_stairs.push_front(HIGHEST);
+			m_stairs.pop_back();
+		}
+	}
+
+	for (auto& itr : m_pillars)
+	{
+		if (itr->GetIsDisappear())itr->Respawn();
+	}
+
+	for (auto& itr : m_walls)
+	{
+		if (itr->GetIsDisappear())itr->Respawn();
+	}
+}
+
+void StageSpawner::AddPastStairVisibleLog(bool a_isVisible)
+{
+	m_stairVisibleLog_past.push_front(a_isVisible);
+	if (m_stairVisibleLog_past.size() > MAXDATASTORE)m_stairVisibleLog_past.pop_back();
+}
+
+void StageSpawner::AddFutureStairVisibleLog(bool a_isVisible)
+{
+	m_stairVisibleLog_future.push_front(a_isVisible);
+}
+
+void StageSpawner::Init()
+{
+	//階段召喚
+	for (int i = 0; i < STAIRNUM; i++)
+	{
+		float angleDeg = STAIRDEGBASE - (float)i * STAIRDEGDIFF;
+		Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * STAIRSPAWNRANGE,STAIRSPAWNBASE_Y + (float)i * STAIRSPAWNDIFF_Y,cosf(DirectX::XMConvertToRadians(angleDeg)) * STAIRSPAWNRANGE };
+		m_stairs.push_back(std::make_shared<Stair>(pos, angleDeg));
+	}
+
+	//壁柱召喚
+	for (int i = 0; i < PILLARWALLNUM; i++)
+	{
+		float posY = -64.0f + (float)i * 64.0f;
+		m_pillars.push_back(std::make_shared<Pillar>(Math::Vector3(0.0f, posY, 0.0f)));
+		m_walls.push_back(std::make_shared<Wall>(Math::Vector3(0.0f, posY, 0.0f)));
+	}
+}
+
+void StageSpawner::Release()
+{
+}

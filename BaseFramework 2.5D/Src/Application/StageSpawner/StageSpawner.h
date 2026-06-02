@@ -1,0 +1,75 @@
+﻿#pragma once
+
+class Stair;
+class Wall;
+class Pillar;
+class BaseScene;
+
+class StageSpawner
+{
+public:
+
+	void StartGame(BaseScene* a_scene);
+	void Update();
+
+	//デバッグ
+	int GetStairStore()const { return m_countBackScroll; }
+
+	//仮
+	void AddPastStairVisibleLog(bool a_isVisible);
+	void AddFutureStairVisibleLog(bool a_isVisible);
+	std::list<bool> GetStoreList_P() { return m_stairVisibleLog_past; }
+	std::list<bool> GetStoreList_F() { return m_stairVisibleLog_future; }
+
+private:
+
+	StageSpawner() { Init(); }
+	~StageSpawner() { Release(); }
+
+	void Init();
+	void Release();
+
+	//同時に存在する階段数
+	static const int STAIRNUM = 80;
+	static const int PILLARWALLNUM = 3;
+
+	//角度関連
+	const float STAIRDEGBASE = -180.0f;
+	const float STAIRDEGDIFF = 9.0f;
+
+	//位置関連
+	const float STAIRSPAWNRANGE = 20.0f;
+	const float STAIRSPAWNBASE_Y = -30.0f;
+	const float STAIRSPAWNDIFF_Y = 0.75f;
+
+	//階段80個(後ろにあるほど上にある)
+	std::list<std::shared_ptr<Stair>> m_stairs;
+	
+	//最大貯蔵数
+	static const int MAXDATASTORE = 80;
+	static const int MAXFUTUREROLL = 20;
+
+	//仮
+	std::list<bool> m_stairVisibleLog_past;
+	std::list<bool> m_stairVisibleLog_future;
+
+	//壁(3個)
+	std::list<std::shared_ptr<Wall>> m_walls;
+	
+	//柱(3個)
+	std::list<std::shared_ptr<Pillar>> m_pillars;
+
+	//上に飛んだ階段のカウンター（これが０じゃない間は障害がスポーンしない）
+	int m_countBackScroll = 0;
+	
+public:
+
+	static StageSpawner& Instance()
+	{
+		static StageSpawner instance;
+		return instance;
+	}
+
+};
+
+#define STAGESPAWNER StageSpawner::Instance()

@@ -97,6 +97,24 @@
     <Filter Include="Src\Application\Object\Character\Player">
       <UniqueIdentifier>{56944876-fa8e-47b9-932a-49cabfa08a52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\StageSpawner">
+      <UniqueIdentifier>{54e04ee4-42dc-4f86-9c17-7dc2fab742b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Hazard">
+      <UniqueIdentifier>{4feb8346-00aa-47f8-9e5b-7585b2f61bec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Const">
+      <UniqueIdentifier>{67fdece6-a219-4133-ad3e-7b16af32c18a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Terrain\Void">
+      <UniqueIdentifier>{05103add-3a63-47f6-b909-a2a95bfa3f6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Hazard\Spear">
+      <UniqueIdentifier>{21f55258-f767-4ee6-aed2-e4d894507f32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Hazard\Boulder">
+      <UniqueIdentifier>{60421edc-b506-43d3-8516-98ed94a3e792}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -285,6 +303,21 @@
     <ClInclude Include="Src\Application\Object\Character\Player\Player.h">
       <Filter>Src\Application\Object\Character\Player</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\StageSpawner\StageSpawner.h">
+      <Filter>Src\Application\StageSpawner</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Const\StageConst.h">
+      <Filter>Src\Application\Const</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Terrain\Void\Void.h">
+      <Filter>Src\Application\Object\Terrain\Void</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Hazard\Boulder\Boulder.h">
+      <Filter>Src\Application\Object\Hazard\Boulder</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Hazard\Spear\Spear.h">
+      <Filter>Src\Application\Object\Hazard\Spear</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -442,6 +475,18 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Character\Player\Player.cpp">
       <Filter>Src\Application\Object\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\StageSpawner\StageSpawner.cpp">
+      <Filter>Src\Application\StageSpawner</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Terrain\Void\Void.cpp">
+      <Filter>Src\Application\Object\Terrain\Void</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Hazard\Boulder\Boulder.cpp">
+      <Filter>Src\Application\Object\Hazard\Boulder</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Hazard\Spear\Spear.cpp">
+      <Filter>Src\Application\Object\Hazard\Spear</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "../../Application/Const/StageConst.h"
 
 // ゲーム上に存在するすべてのオブジェクトの基底となるクラス
 class KdGameObject : public std::enable_shared_from_this<KdGameObject>
@@ -48,7 +49,7 @@ public:
 	const Math::Matrix& GetMatrix() const { return m_mWorld; }
 
 	virtual bool IsExpired() const { return m_isExpired; }
-
+	
 	virtual bool IsVisible()	const { return false; }
 	virtual bool IsRideable()	const { return false; }
 

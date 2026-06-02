@@ -9,22 +9,43 @@ Pillar::Pillar(Math::Vector3 a_startPos)
 
 void Pillar::Update()
 {
-	m_pos.y -= 0.05f;
-	if (m_pos.y < -192.0f)
+	//スクロール速度取得
+	float speedMulti = SCENEMGR.GetScrollSpeedMulti();
+
+	//角度更新
+	m_angleDeg += TERRAINBASEROTATY * speedMulti;
+	if (m_angleDeg > 360.0f)m_angleDeg -= 360.0f;
+	else if (m_angleDeg < 0.0f)m_angleDeg += 360.0f;
+
+	//Y座標変化
+	m_pos.y += TERRAINBASEMOVEY * speedMulti;
+
+	//Y座標が最大・最小を超えたらリスポーン準備
+	if (m_pos.y < PILLARWALLPOSY_MIN)
 	{
-		m_pos.y += 384.0f;
+		m_isDisappear = true;
+		m_respawnDir = RespawnDir::Up;
 	}
-	SetPos(m_pos);
+	else if (m_pos.y > PILLARWALLPOSY_MAX)
+	{
+		m_isDisappear = true;
+		m_respawnDir = RespawnDir::Down;
+	}
 }
 
-void Pillar::DrawUnLit()
+void Pillar::DrawLit()
 {
+	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_angleDeg));
+	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
+	m_mWorld = rotatY * trans;
+
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
 
-void Pillar::GenerateDepthMapFromLight()
+void Pillar::Respawn()
 {
-	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
+	m_pos.y += PILLARWALLRESPAWNY * (int)m_respawnDir;
+	m_isDisappear = false;
 }
 
 void Pillar::Init()
@@ -32,7 +53,7 @@ void Pillar::Init()
 	m_model = std::make_shared<KdModelData>();
 	m_model->Load("Asset/Models/StonePillar/StonePillar.gltf");
 
-	SetScale(2.0f);
+	m_angleDeg = 0.0f;
 }
 
 void Pillar::Release()
