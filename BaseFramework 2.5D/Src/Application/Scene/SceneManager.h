@@ -40,6 +40,9 @@ public :
 	//スクロール速度を取得
 	float GetScrollSpeedMulti()const { return m_scrollSpeedMulti; }
 
+	//テスト
+	void SetStageBaseX(float a_posX) {}
+
 private :
 
 	// マネージャーの初期化
@@ -65,6 +68,9 @@ private :
 	//スクロール速度保持
 	float m_scrollSpeedMulti = 0.0f;
 
+	//テスト
+	float m_stageBasePosX;
+	
 private:
 
 	SceneManager() { Init(); }

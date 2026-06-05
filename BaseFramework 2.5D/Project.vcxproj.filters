@@ -115,6 +115,12 @@
     <Filter Include="Src\Application\Object\Hazard\Boulder">
       <UniqueIdentifier>{60421edc-b506-43d3-8516-98ed94a3e792}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Object\Sprite">
+      <UniqueIdentifier>{e1a201e8-3bb8-466f-8479-394998b59bf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Sprite\Number">
+      <UniqueIdentifier>{d5417413-0f0e-4061-98f7-dd8610bbafb1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -318,6 +324,9 @@
     <ClInclude Include="Src\Application\Object\Hazard\Spear\Spear.h">
       <Filter>Src\Application\Object\Hazard\Spear</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Object\Sprite\Number\HeightsNumber.h">
+      <Filter>Src\Application\Object\Sprite\Number</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -487,6 +496,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Hazard\Spear\Spear.cpp">
       <Filter>Src\Application\Object\Hazard\Spear</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Sprite\Number\HeightsNumber.cpp">
+      <Filter>Src\Application\Object\Sprite\Number</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

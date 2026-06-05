@@ -4,13 +4,20 @@
 Player::Player()
 {
 	Init();
-	m_pos = { 0,0,LINEPOSSTART };
+	m_pos = { 0,1.0f,LINEPOSSTART };
 }
 
 void Player::Update()
 {
+	//テスト
+	m_pos.x += 0.3f;
+
 	//重力更新
-	m_moveY -= GRAVITY;
+	if (m_moveY > FALLSPEEDMAX)
+	{
+		m_moveY -= GRAVITY;
+		if (m_moveY <= FALLSPEEDMAX)m_moveY = FALLSPEEDMAX;
+	}
 	
 	//奥行き移動
 	if (GetAsyncKeyState('W') & 0x8000)
@@ -59,59 +66,63 @@ void Player::PostUpdate()
 	//当たり判定を実装するときは当たる側と当たられる側が存在する
 	//当たる側の処理
 
-	//↓ここからレイ判定
-
-	//レイ判定用の変数を作成
-	const float enableStepHigh = 1.0f;
-	KdCollider::RayInfo ray;
-	//レイの発射位置を設定
-	ray.m_pos = m_pos + Math::Vector3(0, enableStepHigh, 0);
-	//レイの発射方向を設定
-	ray.m_dir = { 0,-1.0f,0 };
-	//レイの長さを設定
-	ray.m_range = enableStepHigh - m_moveY;
-	//当たり判定をしたいタイプを設定
-	ray.m_type = KdCollider::TypeGround;
-
-	//デバッグ用
-	m_pDebugWire->AddDebugLine(ray.m_pos, ray.m_dir, ray.m_range);
-
-	//レイに当たったオブジェクト情報を格納するリスト
-	std::list<KdCollider::CollisionResult> retRayList;
-
-	//全オブジェクトとの当たり判定
-	for (auto& obj : SceneManager::Instance().GetObjList())
+	//上飛び中は地面判定スキップ
+	if (m_moveY <= 0.0f)
 	{
-		//↓レイ当たり判定
-		obj->Intersects(ray, &retRayList);
-	}
+		//↓ここからレイ判定
 
-	//レイに当たったリストから一番近いオブジェクトを探す
-	float maxOverLap = 0.0f;
-	Math::Vector3 hitPos;
-	bool isHit = false;
-	for (auto& ret : retRayList)
-	{
-		//レイを遮断してオーバーした長さが一番長いものを探す
-		if (maxOverLap < ret.m_overlapDistance)
+		//レイ判定用の変数を作成
+		const float enableStepHigh = 1.0f;
+		KdCollider::RayInfo ray;
+		//レイの発射位置を設定
+		ray.m_pos = m_pos + Math::Vector3(0, enableStepHigh, 0);
+		//レイの発射方向を設定
+		ray.m_dir = { 0,-1.0f,0 };
+		//レイの長さを設定
+		ray.m_range = enableStepHigh - m_moveY;
+		//当たり判定をしたいタイプを設定
+		ray.m_type = KdCollider::TypeGround;
+
+		//デバッグ用
+		m_pDebugWire->AddDebugLine(ray.m_pos, ray.m_dir, ray.m_range);
+
+		//レイに当たったオブジェクト情報を格納するリスト
+		std::list<KdCollider::CollisionResult> retRayList;
+
+		//全オブジェクトとの当たり判定
+		for (auto& obj : SceneManager::Instance().GetObjList())
 		{
-			//更新
-			maxOverLap = ret.m_overlapDistance;
-			hitPos = ret.m_hitPos;
-			isHit = true;
+			//↓レイ当たり判定
+			obj->Intersects(ray, &retRayList);
+		}
+
+		//レイに当たったリストから一番近いオブジェクトを探す
+		float maxOverLap = 0.0f;
+		Math::Vector3 hitPos;
+		bool isHit = false;
+		for (auto& ret : retRayList)
+		{
+			//レイを遮断してオーバーした長さが一番長いものを探す
+			if (maxOverLap < ret.m_overlapDistance)
+			{
+				//更新
+				maxOverLap = ret.m_overlapDistance;
+				hitPos = ret.m_hitPos;
+				isHit = true;
+			}
+		}
+
+		//座標更新
+		if (isHit)
+		{
+			m_pos = hitPos;
+			m_isJump = false;
+			m_moveY = 0.0f;
 		}
 	}
 
-	//座標更新
-	if (isHit)
-	{
-		m_pos = hitPos;
-		m_isJump = false;
-		m_moveY = 0.0f;
-	}
-
 	//2
-	//当たり判定（スフィア判定）
+	//被弾判定（スフィア判定）
 
 	//変数作成
 	KdCollider::SphereInfo sphere;
@@ -120,13 +131,13 @@ void Player::PostUpdate()
 	sphere.m_sphere.Center = m_pos + Math::Vector3(0, 2.0f, 0);
 
 	//スフィアの半径
-	sphere.m_sphere.Radius = 1.0f;
+	sphere.m_sphere.Radius = m_pos.z * SPHEREHITSIZEMULTI;
 
 	//当たり判定をしたいタイプ
 	sphere.m_type = KdCollider::Type::TypeDamage;
 
 	//デバッグ用
-	m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius);
+	m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius, kRedColor);
 
 	//スフィアに当たったオブジェクト情報を格納するリスト
 	std::list<KdCollider::CollisionResult> retSphereList;

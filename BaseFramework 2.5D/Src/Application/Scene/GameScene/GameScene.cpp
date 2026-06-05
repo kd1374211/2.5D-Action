@@ -5,6 +5,7 @@
 #include "../../Object/Terrain/Stair/Stair.h"
 #include "../../Object/Character/Player/Player.h"
 #include "../../StageSpawner/StageSpawner.h"
+#include "../../Object/Sprite/Number/HeightsNumber.h"
 
 void GameScene::Event()
 {
@@ -102,13 +103,8 @@ void GameScene::Init()
 	//ステージスポーナーに任せた
 	STAGESPAWNER.StartGame(this);
 
-	//階段召喚(バグ対策は考える)
-	//for (int i = 0; i < 80; i++)
-	//{
-	//	float angleDeg = -180.0 - (float)i * 9.0f;
-	//	Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * 20.0f,-30.0f + (float)i * 0.75f,cosf(DirectX::XMConvertToRadians(angleDeg)) * 20.0f };
-	//	AddObject(std::make_shared<Stair>(pos, angleDeg));
-	//}
+	//現在の高さ
+	AddObject(std::make_shared<HeightsNumber>());
 
 	m_camera = std::make_unique<KdCamera>();
 	m_camera->SetProjectionMatrix(60);

@@ -15,9 +15,6 @@ public:
 	void OnHit();
 	void FallVoid();
 
-	//ゲッター
-	float GetStageScroll()const {};
-
 private:
 
 	void Init()override;
@@ -30,7 +27,11 @@ private:
 	const float LINEPOSMIN = -36.0f;
 	const float LINEMOVE = 0.3f;
 
+	const float SPHEREGROUNDHITSIZEMULTI = -0.075f;
+	const float SPHEREHITSIZEMULTI = -0.05f;
+
 	const float GRAVITY = 0.05f;
+	const float FALLSPEEDMAX = -2.0f;
 	const float JUMPPOWER = 0.75f;
 	const float HITJUMP = 0.8f;
 	const float HITJUMP_VOID = 1.25f;
