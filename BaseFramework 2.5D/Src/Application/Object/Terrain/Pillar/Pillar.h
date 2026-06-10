@@ -8,6 +8,7 @@ public:
 	~Pillar()override { Release(); }
 
 	void Update()override;
+	void PostUpdate()override;
 	void DrawLit()override;
 
 	void Respawn();
@@ -20,7 +21,6 @@ private:
 	void Init()override;
 	void Release();
 
-	Math::Vector3 m_pos;
 	float m_angleDeg;
 	std::shared_ptr<KdModelData> m_model;
 

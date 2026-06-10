@@ -33,12 +33,25 @@ void Wall::Update()
 	}
 }
 
-void Wall::DrawLit()
+void Wall::PostUpdate()
 {
+	float backDeg = SCENEMGR.GetScrollBack();
+
+	//角度更新
+	m_angleDeg -= backDeg;
+	if (m_angleDeg > 360.0f)m_angleDeg -= 360.0f;
+	else if (m_angleDeg < 0.0f)m_angleDeg += 360.0f;
+
+	//上に戻る
+	m_pos.y -= TERRAINBASEMOVEY * backDeg;
+
 	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_angleDeg));
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	m_mWorld = rotatY * trans;
+}
 
+void Wall::DrawLit()
+{
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
 

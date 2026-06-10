@@ -8,40 +8,18 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				0,
-				1
+				0
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Plane",
-			"rotation":[
-				0,
-				0,
-				-0.7071068286895752,
-				0.7071068286895752
-			],
+			"name":"Cylinder",
 			"scale":[
-				32,
-				1.5,
-				36
-			]
-		},
-		{
-			"mesh":1,
-			"name":"Plane.001",
-			"rotation":[
-				0.7071068286895752,
-				-0.7071068286895752,
-				0,
-				5.3385093679025886e-08
-			],
-			"scale":[
-				32,
-				1.5,
-				36
+				1.100000023841858,
+				1,
+				1.100000023841858
 			]
 		}
 	],
@@ -60,27 +38,13 @@
 	],
 	"meshes":[
 		{
-			"name":"Plane",
+			"name":"Cylinder.001",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
 						"TEXCOORD_0":2
-					},
-					"indices":3,
-					"material":0
-				}
-			]
-		},
-		{
-			"name":"Plane.001",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
 					},
 					"indices":3,
 					"material":0
@@ -105,108 +69,62 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":18,
+			"count":120,
 			"max":[
-				1.0000009536743164,
-				0,
-				1
+				8,
+				20,
+				8
 			],
 			"min":[
-				-1,
-				-24,
-				-1
+				-8,
+				-20,
+				-8
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":18,
+			"count":120,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":18,
+			"count":120,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":48,
+			"count":228,
 			"type":"SCALAR"
-		},
-		{
-			"bufferView":4,
-			"componentType":5126,
-			"count":18,
-			"max":[
-				1.0000009536743164,
-				0,
-				1
-			],
-			"min":[
-				-1,
-				-24,
-				-1
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":5,
-			"componentType":5126,
-			"count":18,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":6,
-			"componentType":5126,
-			"count":18,
-			"type":"VEC2"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":216,
+			"byteLength":1440,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":216,
-			"byteOffset":216,
+			"byteLength":1440,
+			"byteOffset":1440,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":144,
-			"byteOffset":432,
+			"byteLength":960,
+			"byteOffset":2880,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":96,
-			"byteOffset":576,
+			"byteLength":456,
+			"byteOffset":3840,
 			"target":34963
-		},
-		{
-			"buffer":0,
-			"byteLength":216,
-			"byteOffset":672,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":216,
-			"byteOffset":888,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":144,
-			"byteOffset":1104,
-			"target":34962
 		}
 	],
 	"samplers":[
@@ -217,7 +135,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":1248,
+			"byteLength":4296,
 			"uri":"Wall.bin"
 		}
 	]

@@ -1,14 +1,12 @@
 ﻿#include "GameScene.h"
 #include"../SceneManager.h"
-#include "../../Object/Terrain/Pillar/Pillar.h"
-#include "../../Object/Terrain/Wall/Wall.h"
-#include "../../Object/Terrain/Stair/Stair.h"
 #include "../../Object/Character/Player/Player.h"
 #include "../../StageSpawner/StageSpawner.h"
 #include "../../Object/Sprite/Number/HeightsNumber.h"
 
 void GameScene::Event()
 {
+
 	if (GetAsyncKeyState('T') & 0x8000)
 	{
 		SceneManager::Instance().SetNextScene
@@ -98,17 +96,17 @@ void GameScene::Event()
 
 void GameScene::Init()
 {
-	AddObject(std::make_shared<Player>());
+	m_camera = std::make_shared<KdCamera>();
+	m_camera->SetProjectionMatrix(60);
+	m_camera->SetCameraMatrix(Math::Matrix::CreateTranslation(0.0f, 5.0f, -45.0f));
+
+	AddObject(std::make_shared<Player>(m_camera));
 
 	//ステージスポーナーに任せた
 	STAGESPAWNER.StartGame(this);
 
 	//現在の高さ
 	AddObject(std::make_shared<HeightsNumber>());
-
-	m_camera = std::make_unique<KdCamera>();
-	m_camera->SetProjectionMatrix(60);
-	m_camera->SetCameraMatrix(Math::Matrix::CreateTranslation(0.0f, 5.0f, -45.0f));
 
 	//テスト用
 	FILE* fp = nullptr;

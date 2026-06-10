@@ -33,12 +33,25 @@ void Pillar::Update()
 	}
 }
 
-void Pillar::DrawLit()
+void Pillar::PostUpdate()
 {
+	float backDeg = SCENEMGR.GetScrollBack();
+
+	//角度更新
+	m_angleDeg -= backDeg;
+	if (m_angleDeg > 360.0f)m_angleDeg -= 360.0f;
+	else if (m_angleDeg < 0.0f)m_angleDeg += 360.0f;
+
+	//上に戻る
+	m_pos.y -= TERRAINBASEMOVEY * backDeg;
+
 	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_angleDeg));
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	m_mWorld = rotatY * trans;
+}
 
+void Pillar::DrawLit()
+{
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
 
@@ -51,7 +64,7 @@ void Pillar::Respawn()
 void Pillar::Init()
 {
 	m_model = std::make_shared<KdModelData>();
-	m_model->Load("Asset/Models/StonePillar/StonePillar.gltf");
+	m_model->Load("Asset/Models/Pillar/Pillar.gltf");
 
 	m_angleDeg = 0.0f;
 }

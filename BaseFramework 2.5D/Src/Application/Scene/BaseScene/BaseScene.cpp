@@ -39,6 +39,14 @@ void BaseScene::Update()
 	}
 }
 
+void BaseScene::HitCheck()
+{
+	for (auto& obj : m_objList)
+	{
+		obj->HitCheck();
+	}
+}
+
 void BaseScene::PostUpdate()
 {
 	for (auto& obj : m_objList)

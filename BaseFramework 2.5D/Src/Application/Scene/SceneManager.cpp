@@ -4,6 +4,8 @@
 #include "TitleScene/TitleScene.h"
 #include "GameScene/GameScene.h"
 
+#include "../Const/StageConst.h"
+
 void SceneManager::PreUpdate()
 {
 	// シーン切替
@@ -17,12 +19,35 @@ void SceneManager::PreUpdate()
 
 void SceneManager::Update()
 {
+	//仮
+	if (GetAsyncKeyState('1') & 0x8000)
+	{
+		test = false;
+	}
+	else if (GetAsyncKeyState('2') & 0x8000)
+	{
+		test = true;
+	}
+
 	m_currentScene->Update();
+
+	testScroll += TERRAINBASEROTATY * m_scrollSpeedMulti;
+	if (testScroll >= 360.0f)testScroll -= 360.0f;
+	else if (testScroll < 0.0f)testScroll += 360.0f;
 }
 
 void SceneManager::PostUpdate()
 {
+	m_currentScene->HitCheck();
 	m_currentScene->PostUpdate();
+
+	testScroll -= m_scrollBackDeg;
+	if (testScroll >= 360.0f)testScroll -= 360.0f;
+	else if (testScroll < 0.0f)testScroll += 360.0f;
+
+	KdDebugGUI::Instance().AddLog("%.2f\n", testScroll - testLastScroll);
+	KdDebugGUI::Instance().AddLog("%.2f\n", testScroll);
+	testLastScroll = testScroll;
 }
 
 void SceneManager::PreDraw()

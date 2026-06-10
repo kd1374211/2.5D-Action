@@ -22,11 +22,11 @@ void Stair::Update()
 	//角度に合わせて位置変更
 	if (!test)
 	{
-		m_pos = { sinf(DirectX::XMConvertToRadians(m_angleDeg)) * 20.0f,m_pos.y += TERRAINBASEMOVEY * speedMulti,cosf(DirectX::XMConvertToRadians(m_angleDeg)) * 20.0f };
+		m_pos = { sinf(DirectX::XMConvertToRadians(m_angleDeg)) * 4.0f,m_pos.y += TERRAINBASEMOVEY * speedMulti,cosf(DirectX::XMConvertToRadians(m_angleDeg)) * 4.0f };
 	}
 	else
 	{
-		m_pos = { 100,m_pos.y += TERRAINBASEMOVEY * speedMulti,100 };
+		m_pos = { -250,m_pos.y += TERRAINBASEMOVEY * speedMulti,100 };
 	}
 
 	//Y座標が最大・最小を超えたらリスポーン準備
@@ -40,15 +40,39 @@ void Stair::Update()
 		m_isDisappear = true;
 		m_respawnDir = RespawnDir::Down;
 	}
+
+	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_angleDeg));
+	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
+	m_mWorld = rotatY * trans;
+}
+
+void Stair::PostUpdate()
+{
+	float backDeg = SCENEMGR.GetScrollBack();
+
+	//角度更新
+	m_angleDeg -= backDeg;
+	if (m_angleDeg > 360.0f)m_angleDeg -= 360.0f;
+	else if (m_angleDeg < 0.0f)m_angleDeg += 360.0f;
+
+	//角度に合わせて位置変更
+	if (!test)
+	{
+		m_pos = { sinf(DirectX::XMConvertToRadians(m_angleDeg)) * 4.0f,m_pos.y - TERRAINBASEMOVEY * backDeg,cosf(DirectX::XMConvertToRadians(m_angleDeg)) * 4.0f };
+	}
+	else
+	{
+		m_pos.y -= TERRAINBASEMOVEY * backDeg;
+	}
+
+	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_angleDeg));
+	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
+	m_mWorld = rotatY * trans;
 }
 
 void Stair::DrawLit()
 {
 	if (test)return;
-	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_angleDeg));
-	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
-
-	m_mWorld = rotatY * trans;
 
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }

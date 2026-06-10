@@ -24,6 +24,7 @@ public:
 
 	virtual void PreUpdate() {}
 	virtual void Update() {}
+	virtual void HitCheck() {}
 	virtual void PostUpdate() {}
 
 	// それぞれの状況で描画する関数
@@ -79,6 +80,9 @@ protected:
 
 	// 存在消滅フラグ
 	bool m_isExpired = false;
+
+	//位置
+	Math::Vector3 m_pos = Math::Vector3::Zero;
 
 	// 3D空間に存在する機能
 	Math::Matrix	m_mWorld;

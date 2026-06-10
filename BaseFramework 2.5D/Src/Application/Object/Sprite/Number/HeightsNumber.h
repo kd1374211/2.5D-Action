@@ -8,6 +8,7 @@ public:
 	~HeightsNumber()override { Release(); }
 
 	void Update()override;
+	void PostUpdate()override;
 	void DrawSprite()override;
 
 private:

@@ -9,8 +9,9 @@ public :
 
 	void PreUpdate();
 	void Update();
+	void HitCheck();
 	void PostUpdate();
-
+	
 	void PreDraw();
 	void Draw();
 	void DrawSprite();
@@ -34,7 +35,7 @@ protected :
 	virtual void Init();
 	virtual void Event();
 
-	std::unique_ptr<KdCamera> m_camera = nullptr;
+	std::shared_ptr<KdCamera> m_camera = nullptr;
 
 	// 全オブジェクトのアドレスをリストで管理
 	std::list<std::shared_ptr<KdGameObject>> m_objList;

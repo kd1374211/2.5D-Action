@@ -7,8 +7,9 @@ public:
 	Stair(Math::Vector3 a_startPos, float a_startDeg);
 	~Stair()override { Release(); }
 
-	void Update();
-	void DrawLit();
+	void Update()override;
+	void PostUpdate()override;
+	void DrawLit()override;
 
 	//再生成（ワープ）
 	void Respawn(bool a_test);
@@ -25,7 +26,6 @@ private:
 
 	std::shared_ptr<KdModelData> m_model;
 
-	Math::Vector3 m_pos;
 	float m_angleDeg;
 
 	//リスポーン処理関連

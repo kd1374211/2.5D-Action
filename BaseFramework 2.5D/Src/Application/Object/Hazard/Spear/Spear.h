@@ -8,6 +8,7 @@ public:
 	~Spear()override { Release(); }
 
 	void Update()override;
+	void PostUpdate()override;
 	void DrawLit()override;
 
 private:
@@ -15,13 +16,10 @@ private:
 	void Init()override;
 	void Release();
 
-	//位置
-	Math::Vector3 m_pos;
-
 	//槍の位置
-	const float SPEARPOSMAX = 5.0f;
-	const float SPEARPOSSTART = -5.0f;
-	const float SPEARMOVEY = 1.0f;
+	const float SPEARPOSMAX = 1.0f;
+	const float SPEARPOSSTART = -1.0f;
+	const float SPEARMOVEY = 0.2f;
 
 	float m_spearPos = SPEARPOSSTART;
 
@@ -35,7 +33,7 @@ private:
 	Math::Matrix m_mHoleWorld;
 
 	//槍出現フラグ
-	const float SPEARACTIVEY = 4.0f;
+	const float SPEARACTIVEY = 0.8f;
 
 	bool m_isSpear = false;
 

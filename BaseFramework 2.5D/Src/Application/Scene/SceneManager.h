@@ -35,13 +35,16 @@ public :
 	void AddObject(const std::shared_ptr<KdGameObject>& _obj);
 
 	//現在のシーンにスクロール量を設定
-	void SetScrollSpeedMulti(float a_speed) { m_scrollSpeedMulti = a_speed; }
+	void SetScrollSpeedMulti(float a_speed) {
+		if (!test)m_scrollSpeedMulti = 0.0f;
+		else m_scrollSpeedMulti = a_speed; }
 
 	//スクロール速度を取得
 	float GetScrollSpeedMulti()const { return m_scrollSpeedMulti; }
 
-	//テスト
-	void SetStageBaseX(float a_posX) {}
+	//スクロールバック
+	void SetScrollBack(float a_deg) { m_scrollBackDeg = a_deg; }
+	float GetScrollBack()const { return m_scrollBackDeg; }
 
 private :
 
@@ -67,9 +70,13 @@ private :
 
 	//スクロール速度保持
 	float m_scrollSpeedMulti = 0.0f;
+	float m_scrollBackDeg = 0.0f;
+
+	float testLastScroll = 0.0f;
+	float testScroll = 0.0f;
 
 	//テスト
-	float m_stageBasePosX;
+	bool test = true;
 	
 private:
 

@@ -121,6 +121,12 @@
     <Filter Include="Src\Application\Object\Sprite\Number">
       <UniqueIdentifier>{d5417413-0f0e-4061-98f7-dd8610bbafb1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Object\Hazard\SideSpear">
+      <UniqueIdentifier>{449c68d5-5433-41e9-b8a2-094ccd699e8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Hazard\RollingWood">
+      <UniqueIdentifier>{8f113d87-45e8-49a6-9b76-096f12cec973}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -327,6 +333,12 @@
     <ClInclude Include="Src\Application\Object\Sprite\Number\HeightsNumber.h">
       <Filter>Src\Application\Object\Sprite\Number</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Object\Hazard\SideSpear\SideSpear.h">
+      <Filter>Src\Application\Object\Hazard\SideSpear</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Hazard\RollingWood\RollingWood.h">
+      <Filter>Src\Application\Object\Hazard\RollingWood</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -499,6 +511,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Sprite\Number\HeightsNumber.cpp">
       <Filter>Src\Application\Object\Sprite\Number</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Hazard\SideSpear\SideSpear.cpp">
+      <Filter>Src\Application\Object\Hazard\SideSpear</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Hazard\RollingWood\RollingWood.cpp">
+      <Filter>Src\Application\Object\Hazard\RollingWood</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

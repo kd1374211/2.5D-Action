@@ -28,33 +28,51 @@ void Spear::Update()
 	//槍移動
 	if (m_isSpear)
 	{
-		if (m_spearPos < SPEARPOSMAX)m_spearPos += SPEARMOVEY;
+		if (m_spearPos < SPEARPOSMAX)
+		{
+			m_spearPos += SPEARMOVEY;
+			if (m_spearPos >= SPEARPOSMAX)m_spearPos = SPEARPOSMAX;
+		}
 	}
 	
 	//消去
-	if (m_pos.y < -40.0f)m_isExpired = true;
+	if (m_pos.y < -8.0f)m_isExpired = true;
 
+	//槍
 	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_angleDeg));
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos + Math::Vector3(0, m_spearPos, 0));
+	m_mWorld = rotatY * trans;
+}
+
+void Spear::PostUpdate()
+{
+	float backDeg = SCENEMGR.GetScrollBack();
+
+	//角度更新
+	m_angleDeg -= backDeg;
+	if (m_angleDeg > 360.0f)m_angleDeg -= 360.0f;
+	else if (m_angleDeg < 0.0f)m_angleDeg += 360.0f;
+
+	//角度に合わせて位置変更
+	m_pos = { sinf(DirectX::XMConvertToRadians(m_angleDeg)) * m_linePos,m_pos.y - TERRAINBASEMOVEY * backDeg,cosf(DirectX::XMConvertToRadians(m_angleDeg)) * m_linePos };
+
+	//穴
+	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_angleDeg));
+	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
+	m_mHoleWorld = rotatY * trans;
+
+	//槍
+	trans = Math::Matrix::CreateTranslation(m_pos + Math::Vector3(0, m_spearPos, 0));
 	m_mWorld = rotatY * trans;
 }
 
 void Spear::DrawLit()
 {
 	//穴
-	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
-	m_mHoleWorld = trans;
-
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_holeModel, m_mHoleWorld);
 
-	//槍
-	if (m_isSpear)
-	{
-		trans = Math::Matrix::CreateTranslation(m_pos + Math::Vector3(0, m_spearPos, 0));
-		m_mWorld = trans;
-
-		KdShaderManager::Instance().m_StandardShader.DrawModel(*m_spearModel, m_mWorld);
-	}
+	//槍（出現済み）
+	if (m_isSpear)KdShaderManager::Instance().m_StandardShader.DrawModel(*m_spearModel, m_mWorld);
 }
 
 void Spear::Init()

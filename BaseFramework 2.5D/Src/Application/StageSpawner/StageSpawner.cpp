@@ -6,7 +6,9 @@
 #include "../Object/Terrain/Wall/Wall.h"
 #include "../Object/Terrain/Void/Void.h"
 #include "../Object/Hazard/Boulder/Boulder.h"
+#include "../Object/Hazard/RollingWood/RollingWood.h"
 #include "../Object/Hazard/Spear/Spear.h"
+#include "../Object/Hazard/SideSpear/SideSpear.h"
 #include "../Const/StageConst.h"
 
 //階段再出現用
@@ -21,15 +23,9 @@ void StageSpawner::StartGame(BaseScene* a_scene)
 		a_scene->AddObject(itr);
 	}
 
-	for (auto &itr:m_pillars)
-	{
-		a_scene->AddObject(itr);
-	}
-
-	for (auto& itr : m_walls)
-	{
-		a_scene->AddObject(itr);
-	}
+	//柱と壁
+	a_scene->AddObject(m_pillar);
+	a_scene->AddObject(m_wall);
 
 	//それとは別に奈落召喚
 	a_scene->AddObject(std::make_shared<Void>());
@@ -82,25 +78,44 @@ void StageSpawner::Update()
 			//0ならギミックの出現チェック
 			else
 			{
-				if (rand() % 150 == 0)
+				if (rand() % 300 == 0)
 				{
 					float angleDeg = LOWEST->GetAngleDeg();
-					int linePos = rand() % (int)(LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 16) + LINEPLAYAREA_MIN + 8;
-					Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,38.0f,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+					float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 3.2f) + LINEPLAYAREA_MIN + 1.6f;
+					Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,7.16f,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 					SCENEMGR.AddObject(std::make_shared<Boulder>(pos, angleDeg, linePos));
 				}
-
-				//階段が空なら出現しない
-				if (rand() % 20 == 0 && !test3)
+				if (rand() % 100 == 0)
 				{
 					float angleDeg = LOWEST->GetAngleDeg();
-					int linePos = rand() % (int)(LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 16) + LINEPLAYAREA_MIN + 3;
+					float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 3.2f) + LINEPLAYAREA_MIN + 1.6f;
+					Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,6.16f,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+					SCENEMGR.AddObject(std::make_shared<RollingWood>(pos, angleDeg, linePos, 2.0f));
+				}
+
+				if (m_isSideSpearNext)
+				{
+					float angleDeg = LOWEST->GetAngleDeg();
+					SCENEMGR.AddObject(std::make_shared<SideSpear>(angleDeg));
+					m_isSideSpearNext = false;
+				}
+				//階段が空なら出現しない
+				else if (rand() % 10 == 0 && !test3)
+				{
+					float angleDeg = LOWEST->GetAngleDeg();
+					float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 3.2f) + LINEPLAYAREA_MIN + 0.3f;
 					
 					for (int i = 0; i < 5; i++)
 					{
-						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,31.0f,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,5.76f,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 						SCENEMGR.AddObject(std::make_shared<Spear>(pos, angleDeg, linePos));
-						linePos += 2.5;
+						linePos += 0.5f;
+					}
+
+					//横槍
+					if (rand() % 3 == 0)
+					{
+						m_isSideSpearNext = true;
 					}
 				}
 			}
@@ -140,15 +155,8 @@ void StageSpawner::Update()
 		}
 	}
 
-	for (auto& itr : m_pillars)
-	{
-		if (itr->GetIsDisappear())itr->Respawn();
-	}
-
-	for (auto& itr : m_walls)
-	{
-		if (itr->GetIsDisappear())itr->Respawn();
-	}
+	if (m_pillar->GetIsDisappear())m_pillar->Respawn();
+	if (m_wall->GetIsDisappear())m_wall->Respawn();
 }
 
 void StageSpawner::AddPastStairVisibleLog(bool a_isVisible)
@@ -173,12 +181,8 @@ void StageSpawner::Init()
 	}
 
 	//壁柱召喚
-	for (int i = 0; i < PILLARWALLNUM; i++)
-	{
-		float posY = -64.0f + (float)i * 64.0f;
-		m_pillars.push_back(std::make_shared<Pillar>(Math::Vector3(0.0f, posY, 0.0f)));
-		m_walls.push_back(std::make_shared<Wall>(Math::Vector3(0.0f, posY, 0.0f)));
-	}
+	m_wall = std::make_shared<Wall>(Math::Vector3::Zero);
+	m_pillar = std::make_shared<Pillar>(Math::Vector3::Zero);
 }
 
 void StageSpawner::Release()

@@ -7,6 +7,12 @@ void HeightsNumber::Update()
 	m_nowHeight += scroll * 0.05f;
 }
 
+void HeightsNumber::PostUpdate()
+{
+	float scrollBack = SCENEMGR.GetScrollBack();
+	m_nowHeight -= scrollBack * 0.05f;
+}
+
 void HeightsNumber::DrawSprite()
 {
 	//整数化＆値コピー

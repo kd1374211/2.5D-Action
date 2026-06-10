@@ -38,9 +38,9 @@ private:
 	const float STAIRDEGDIFF = 9.0f;
 
 	//位置関連
-	const float STAIRSPAWNRANGE = 20.0f;
-	const float STAIRSPAWNBASE_Y = -30.0f;
-	const float STAIRSPAWNDIFF_Y = 0.75f;
+	const float STAIRSPAWNRANGE = 5.36f;
+	const float STAIRSPAWNBASE_Y = -6.16f;
+	const float STAIRSPAWNDIFF_Y = 0.144f;
 
 	//階段80個(後ろにあるほど上にある)
 	std::list<std::shared_ptr<Stair>> m_stairs;
@@ -50,17 +50,20 @@ private:
 	static const int MAXFUTUREROLL = 20;
 
 	//仮
-	std::list<bool> m_stairVisibleLog_past;
+	std::list <bool> m_stairVisibleLog_past;
 	std::list<bool> m_stairVisibleLog_future;
 
-	//壁(3個)
-	std::list<std::shared_ptr<Wall>> m_walls;
+	//壁
+	std::shared_ptr<Wall> m_wall;
 	
-	//柱(3個)
-	std::list<std::shared_ptr<Pillar>> m_pillars;
+	//柱
+	std::shared_ptr<Pillar> m_pillar;
 
 	//上に飛んだ階段のカウンター（これが０じゃない間は障害がスポーンしない）
 	int m_countBackScroll = 0;
+
+	//横槍
+	bool m_isSideSpearNext = false;
 	
 public:
 

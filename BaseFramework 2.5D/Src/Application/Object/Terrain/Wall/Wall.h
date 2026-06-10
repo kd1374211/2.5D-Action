@@ -8,6 +8,7 @@ public:
 	~Wall()override { Release(); }
 
 	void Update()override;
+	void PostUpdate()override;
 	void DrawLit()override;
 
 	void Respawn();
@@ -21,7 +22,6 @@ private:
 	void Release();
 
 	std::shared_ptr<KdModelData> m_model;
-	Math::Vector3 m_pos;
 	float m_angleDeg;
 
 	//リスポーン処理関連

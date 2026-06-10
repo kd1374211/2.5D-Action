@@ -14,7 +14,7 @@ void Void::Init()
 
 	//マトリックス
 	Math::Matrix scale = Math::Matrix::CreateScale(3.0f);
-	Math::Matrix trans = Math::Matrix::CreateTranslation(Math::Vector3(0.0f, -10.0f, 0.0f));
+	Math::Matrix trans = Math::Matrix::CreateTranslation(Math::Vector3(0.0f, -2.0f, 0.0f));
 	m_mWorld = scale * trans;
 }
 
