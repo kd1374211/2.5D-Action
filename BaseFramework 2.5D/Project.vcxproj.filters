@@ -339,6 +339,15 @@
     <ClInclude Include="Src\Application\Object\Hazard\RollingWood\RollingWood.h">
       <Filter>Src\Application\Object\Hazard\RollingWood</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Object\Character\CharaBase.h">
+      <Filter>Src\Application\Object\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Character\CharaManager.h">
+      <Filter>Src\Application\Object\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Character\CharaManagerConst.h">
+      <Filter>Src\Application\Object\Character</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -517,6 +526,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Hazard\RollingWood\RollingWood.cpp">
       <Filter>Src\Application\Object\Hazard\RollingWood</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Character\CharaBase.cpp">
+      <Filter>Src\Application\Object\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Character\CharaManager.cpp">
+      <Filter>Src\Application\Object\Character</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

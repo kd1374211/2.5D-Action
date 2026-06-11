@@ -10,6 +10,7 @@ class StageSpawner
 public:
 
 	void StartGame(BaseScene* a_scene);
+	void ResetStage();
 	void Update();
 
 	//デバッグ
@@ -64,7 +65,11 @@ private:
 
 	//横槍
 	bool m_isSideSpearNext = false;
-	
+
+	//非出現フラグ
+	bool noSpawnFlg = false;
+	int noSpawnStairCnt = 0;
+
 public:
 
 	static StageSpawner& Instance()

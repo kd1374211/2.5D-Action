@@ -13,4 +13,8 @@ private :
 
 	void Init()  override;
 	void Event() override;
+
+	Math::Vector3 m_cameraPos;
+	Math::Vector3 m_cameraDeg;
+
 };

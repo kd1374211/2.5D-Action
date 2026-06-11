@@ -14,6 +14,9 @@ public:
 	//再生成（ワープ）
 	void Respawn(bool a_test);
 
+	//セッター
+	void SetStairFlg(bool a_flg) { test = a_flg; }
+
 	//ゲッター
 	bool GetIsDisappear()const { return m_isDisappear; }
 	float GetAngleDeg()const { return m_angleDeg; }

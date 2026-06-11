@@ -4,6 +4,7 @@
 #include "TitleScene/TitleScene.h"
 #include "GameScene/GameScene.h"
 
+#include "../StageSpawner/StageSpawner.h"
 #include "../Const/StageConst.h"
 
 void SceneManager::PreUpdate()
@@ -45,8 +46,8 @@ void SceneManager::PostUpdate()
 	if (testScroll >= 360.0f)testScroll -= 360.0f;
 	else if (testScroll < 0.0f)testScroll += 360.0f;
 
-	KdDebugGUI::Instance().AddLog("%.2f\n", testScroll - testLastScroll);
-	KdDebugGUI::Instance().AddLog("%.2f\n", testScroll);
+	KdDebugGUI::Instance().AddLog("ScrollThisFrame : %.2f\n", testScroll - testLastScroll);
+	KdDebugGUI::Instance().AddLog("StageScrollDeg : %.2f\n", testScroll);
 	testLastScroll = testScroll;
 }
 

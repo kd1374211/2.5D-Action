@@ -13,7 +13,7 @@ public:
 
 private:
 
-	const float SPAWNPOSY = 6.01f;
+	const float SPAWNPOSY = 6.21f;
 	const float BASELINEPOS = 2.02f;
 
 	void Init()override;
@@ -33,7 +33,7 @@ private:
 	Math::Matrix m_mHoleWorld;
 
 	//槍出現フラグ
-	const float SPEARACTIVEY = 0.8f;
+	const float SPEARACTIVEY = 1.25f;
 
 	bool m_isSpear = false;
 

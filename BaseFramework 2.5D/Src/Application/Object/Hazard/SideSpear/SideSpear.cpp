@@ -22,7 +22,11 @@ void SideSpear::Update()
 	//角度に合わせて位置変更
 	m_pos = { sinf(DirectX::XMConvertToRadians(m_angleDeg)) * BASELINEPOS,m_pos.y += TERRAINBASEMOVEY * speedMulti,cosf(DirectX::XMConvertToRadians(m_angleDeg)) * BASELINEPOS };
 	//一定位置まで下りたら槍が生える
-	if (m_pos.y < SPEARACTIVEY)m_isSpear = true;
+	if (m_pos.y < SPEARACTIVEY)
+	{
+		m_isSpear = true;
+		m_pCollider->SetEnableAll(true);
+	}
 
 	//槍移動
 	if (m_isSpear)
@@ -86,6 +90,7 @@ void SideSpear::Init()
 	//当たり判定用意
 	m_pCollider = std::make_unique<KdCollider>();
 	m_pCollider->RegisterCollisionShape("SideSpearHit", m_spearModel, KdCollider::Type::TypeDamage);
+	m_pCollider->SetEnableAll(false);
 }
 
 void SideSpear::Release()

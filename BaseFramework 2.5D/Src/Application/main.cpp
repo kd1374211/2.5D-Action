@@ -324,6 +324,11 @@ void Application::Execute()
 		//=========================================
 
 		m_fpsController.Update();
+
+		std::string titleBar = "Spiral Steps FPS:" + std::to_string(m_fpsController.m_nowfps);
+
+		SetWindowTextA(m_window.GetWndHandle(), titleBar.c_str());
+
 	}
 
 	//===================================================================

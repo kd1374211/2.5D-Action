@@ -1,13 +1,12 @@
 ﻿#pragma once
 #include "../../../Const/StageConst.h"
+#include "../CharaBase.h"
 
-class KdCamera;
-
-class Player :public KdGameObject
+class Player :public CharaBase
 {
 public:
 
-	Player(std::shared_ptr<KdCamera> a_camera);
+	Player();
 	~Player()override { Release(); }
 
 	void PreUpdate()override;
@@ -19,13 +18,19 @@ public:
 	void OnHit();
 	void FallVoid();
 
-private:
+	void Respawn();
 
-	//2D描画位置取得用
-	std::weak_ptr<KdCamera> m_wpCamera;
+	//セッター
+	void SetPolygonData(std::map<PlayerAnimType, PolygonData>* a_data) { m_polygons = a_data; }
+
+private:
 
 	void Init()override;
 	void Release();
+
+	//アニメーション
+	void ChangeAnim(PlayerAnimType a_anim);
+	void UpdateAnim();
 
 	//体力画像
 	void CheckHeartAnimExpired();
@@ -35,10 +40,11 @@ private:
 	void OnDamage();
 
 	//ポリゴン
-	std::shared_ptr<KdSquarePolygon> m_polygon = nullptr;
-
+	std::map<PlayerAnimType, PolygonData>* m_polygons = nullptr;
+	
 	//体力画像
-	Math::Vector2 HEARTTEXBASESIZE = Math::Vector2(17.0f, 17.0f);
+	const Math::Vector2 HEARTTEXBASESIZE = Math::Vector2(17.0f, 17.0f);
+	const Math::Vector2 HEARTTEXDRAWSIZE = HEARTTEXBASESIZE * 5.0f;
 	
 	std::shared_ptr<KdTexture> m_heartTex = nullptr;
 
@@ -66,8 +72,11 @@ private:
 
 	//体力
 	static const int STARTHEALTH = 5;
-	const float HEALTHANIMSPEED = 0.2f;
+	const float HEALTHANIMSPEED = 0.5f;
 	static const int HEALTHANIMEND = 5;
+
+	//ゲーム終了フラグ
+	bool m_isGameEnd = false;
 
 	struct HealthTexData
 	{
@@ -78,18 +87,16 @@ private:
 	};
 
 	int m_health = STARTHEALTH;
-	bool m_isDead = false;
 	std::list<HealthTexData> m_healthTexData;
 
 	//アニメーション
-	const float ANIMMAX = 11;
-	const float ANIMADD = 0.5f;
+	PlayerAnimType m_nowAnim = PlayerAnimType::Run;
 
 	//空中ジャンプ規制（少し猶予を設ける）
 	const float AIRJUMPLIMIT = -0.04f;
 
 	//被弾フラグ
-	static const int HITIMMUNEF = 180;
+	static const int HITIMMUNEF = 20;
 
 	bool m_isInvinsible = false;
 	int m_immuneF = 0;

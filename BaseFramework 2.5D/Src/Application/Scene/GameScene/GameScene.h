@@ -16,9 +16,11 @@ public :
 
 private:
 
+	std::weak_ptr<Player> m_wpPlayer;
 	Math::Vector3 m_cameraPos;
 	Math::Vector3 m_cameraDeg;
 
 	void Init()  override;
 	void Event() override;
+
 };

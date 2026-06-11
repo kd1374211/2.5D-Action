@@ -1,8 +1,7 @@
 ﻿#include "Player.h"
 #include "../../../Scene/SceneManager.h"
-#include "../../../../Framework/Direct3D/KdCamera.h"
 
-Player::Player(std::shared_ptr<KdCamera> a_camera)
+Player::Player()
 {
 	Init();
 	m_pos = { 0,0.2f,LINEPOSSTART };
@@ -11,8 +10,6 @@ Player::Player(std::shared_ptr<KdCamera> a_camera)
 	{
 		m_healthTexData.push_back(HealthTexData(i, false, 0.0f, false));
 	}
-
-	m_wpCamera = a_camera;
 }
 
 void Player::PreUpdate()
@@ -48,27 +45,37 @@ void Player::Update()
 		{
 			m_isJump = true;
 			m_moveY = JUMPPOWER;
+			ChangeAnim(PlayerAnimType::Jump);
 		}
 	}
 
 	//空中ジャンプ規制
 	if (m_moveY < AIRJUMPLIMIT && !m_isJump)m_isJump = true;
 
+	//攻撃
+	if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
+	{
+		ChangeAnim(PlayerAnimType::Attack);
+	}
+
 	//Y座標更新
 	m_pos.y += m_moveY;
 
 	//アニメーション更新
-	m_animCnt += ANIMADD;
-	if (m_animCnt >= ANIMMAX)m_animCnt -= ANIMMAX;
-	m_polygon->SetUVRect((int)m_animCnt);
-
+	UpdateAnim();
+	
+	//ハート画像
 	UpdateHeartAnim();
 
 	//無敵F更新
 	if (m_isInvinsible)
 	{
 		m_immuneF--;
-		if (m_immuneF <= 0)m_isInvinsible = false;
+		if (m_immuneF <= 0)
+		{
+			m_isInvinsible = false;
+			ChangeAnim(PlayerAnimType::Run);
+		}
 	}
 
 	//スクロール量更新
@@ -138,6 +145,7 @@ void Player::HitCheck()
 			m_pos = hitPos;
 			m_isJump = false;
 			m_moveY = 0.0f;
+			if (m_nowAnim == PlayerAnimType::Jump)ChangeAnim(PlayerAnimType::Run);
 		}
 
 		//2
@@ -204,6 +212,8 @@ void Player::HitCheck()
 			{
 				m_pos.y = hitPos.y;
 				m_moveY = 0.0f;
+				m_isJump = false;
+				if (m_nowAnim == PlayerAnimType::Jump)ChangeAnim(PlayerAnimType::Run);
 			}
 			else
 			{
@@ -213,11 +223,7 @@ void Player::HitCheck()
 				//移動先の角度を求める
 				deg = DirectX::XMConvertToDegrees(atan2f(pushPos.z, pushPos.x));
 
-				if (deg != -90.0f)
-				{
-					int a = 0;
-				}
-
+				//スクロールを戻す
 				SCENEMGR.SetScrollBack(-90.0f - deg);
 			}
 		}
@@ -248,16 +254,12 @@ void Player::HitCheck()
 	for (auto& obj : SceneManager::Instance().GetObjList())
 	{
 		//↓スフィア当たり判定
-		if (obj->Intersects(sphere, &retSphereList))
-		{
-			int a = 0;
-		}
+		obj->Intersects(sphere, &retSphereList);
 	}
 
 	if (!retSphereList.empty())
 	{
 		OnHit();
-		KdDebugGUI::Instance().AddLog("Hit\n");
 	}
 
 	if (m_pos.y < VOIDPOSY)
@@ -267,39 +269,35 @@ void Player::HitCheck()
 
 	KdDebugGUI::Instance().AddLog("PlayerPosY : %.2f\n", m_pos.y);
 	KdDebugGUI::Instance().AddLog("PlayerLinePos : %.2f\n", m_pos.z);
+
+	//マトリックス
+	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
+	m_mWorld = trans;
 }
 
 void Player::DrawLit()
 {
-	//マトリックス
-	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
-
-	//Worldセット
-	m_mWorld = trans;
-
-	KdShaderManager::Instance().m_StandardShader.DrawPolygon(*m_polygon, m_mWorld);
+	PolygonData* data = &m_polygons->find(m_nowAnim)->second;
+	KdShaderManager::Instance().m_StandardShader.DrawPolygon(*data->m_polygon, m_mWorld);
 }
 
 void Player::GenerateDepthMapFromLight()
 {
-	KdShaderManager::Instance().m_StandardShader.DrawPolygon(*m_polygon, m_mWorld);
+	PolygonData* data = &m_polygons->find(m_nowAnim)->second;
+	KdShaderManager::Instance().m_StandardShader.DrawPolygon(*data->m_polygon, m_mWorld);
 }
 
 void Player::DrawSprite()
 {
-	if (m_wpCamera.expired())return;
-	Math::Vector3 playerPos2D = {};
-	m_wpCamera.lock()->ConvertWorldToScreenDetail(m_pos, playerPos2D);
-
 	int heartNum = m_healthTexData.size();
-	float left = playerPos2D.x - (float)heartNum * HEARTTEXBASESIZE.x / 2.0f;
+	float left = -630.0f;
 	for (auto &itr : m_healthTexData)
 	{
 		if (itr.m_isExpired)continue;
 
 		Math::Rectangle rec = Math::Rectangle((long)((int)itr.m_animCnt * HEARTTEXBASESIZE.x), 0, (long)HEARTTEXBASESIZE.x, (long)HEARTTEXBASESIZE.y);
-		Math::Vector2 pos = Math::Vector2(left + HEARTTEXBASESIZE.x * ((float)itr.m_number + 0.5f), playerPos2D.y + 100.0f);
-		KdShaderManager::Instance().m_spriteShader.DrawTex(m_heartTex, pos.x, pos.y, HEARTTEXBASESIZE.x, HEARTTEXBASESIZE.y, &rec);
+		Math::Vector2 pos = Math::Vector2(left + HEARTTEXDRAWSIZE.x * ((float)itr.m_number + 0.5f), 310.0f);
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_heartTex, pos.x, pos.y, HEARTTEXDRAWSIZE.x, HEARTTEXDRAWSIZE.y, &rec);
 	}
 }
 
@@ -334,15 +332,31 @@ void Player::FallVoid()
 	OnDamage();
 }
 
+void Player::Respawn()
+{
+	//初期化
+	m_pos = { 0,0.2f,LINEPOSSTART };
+	m_moveY = 0.0f;
+	m_isJump = false;
+
+	ChangeAnim(PlayerAnimType::Run);
+	m_isDead = false;
+	m_isGameEnd = false;
+
+	m_health = STARTHEALTH;
+	for (int i = 0; i < STARTHEALTH; i++)
+	{
+		m_healthTexData.push_back(HealthTexData(i, false, 0.0f, false));
+	}
+
+	m_isInvinsible = true;
+	m_immuneF = HITIMMUNEF;
+
+	m_stageScrollMulti = STAGESCROLLMAX;
+}
+
 void Player::Init()
 {
-	//ポリゴン初期化
-	m_polygon = std::make_shared<KdSquarePolygon>();
-	m_polygon->SetMaterial("Asset/Textures/Chara/Player/PlayerRun.png");
-	m_polygon->SetSplit(12, 1);
-	m_polygon->SetPivot(KdSquarePolygon::PivotType::Center_Bottom);
-	m_polygon->SetScale(0.8f);
-
 	//ハート画像
 	m_heartTex = std::make_shared<KdTexture>();
 	m_heartTex->Load("Asset/Textures/Heart.png");
@@ -353,6 +367,46 @@ void Player::Init()
 
 void Player::Release()
 {}
+
+void Player::ChangeAnim(PlayerAnimType a_anim)
+{
+	m_nowAnim = a_anim;
+	m_animCnt = 0.0f;
+}
+
+void Player::UpdateAnim()
+{
+	bool isAnimLooped = false;
+
+	PolygonData* data = &m_polygons->find(m_nowAnim)->second;
+
+	m_animCnt += data->m_animAdd;
+	if (m_animCnt >= data->m_animMax)
+	{
+		m_animCnt -= data->m_animMax;
+		isAnimLooped = true;
+	}
+
+	//画像が1周したらなにかあるやつ
+	if (isAnimLooped)
+	{
+		switch (m_nowAnim)
+		{
+		case PlayerAnimType::Attack:
+			ChangeAnim(PlayerAnimType::Run);
+			break;
+		case PlayerAnimType::Dead:
+			break;
+		default:
+			break;
+		}
+
+		//再検索
+		data = &m_polygons->find(m_nowAnim)->second;
+	}
+
+	data->m_polygon->SetUVRect((int)m_animCnt);
+}
 
 void Player::CheckHeartAnimExpired()
 {
@@ -382,7 +436,13 @@ void Player::OnDamage()
 	m_health--;
 	if (m_health <= 0)
 	{
+		ChangeAnim(PlayerAnimType::Dead);
 		//死亡
+		m_isDead = true;
+	}
+	else
+	{
+		ChangeAnim(PlayerAnimType::Hit);
 	}
 
 	//被弾後無敵

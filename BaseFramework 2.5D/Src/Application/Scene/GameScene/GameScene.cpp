@@ -1,32 +1,43 @@
 ﻿#include "GameScene.h"
-#include"../SceneManager.h"
+#include "../SceneManager.h"
 #include "../../Object/Character/Player/Player.h"
+#include "../../Object/Character/CharaManager.h"
 #include "../../StageSpawner/StageSpawner.h"
 #include "../../Object/Sprite/Number/HeightsNumber.h"
 
 void GameScene::Event()
 {
-
-	if (GetAsyncKeyState('T') & 0x8000)
+	if (!m_wpPlayer.expired())
 	{
-		SceneManager::Instance().SetNextScene
-		(
-			SceneManager::SceneType::Title
-		);
+		std::shared_ptr<Player> player = m_wpPlayer.lock();
+
+		if (player->GetIsDead())
+		{
+			player->Respawn();
+			STAGESPAWNER.ResetStage();
+
+			SceneManager::Instance().SetNextScene
+			(
+				SceneManager::SceneType::Title
+			);
+		}
 	}
 
-	//ステージアップデート
+	//キャラ更新
+	CHARAMGR.Update();
+
+	//ステージ更新
 	STAGESPAWNER.Update();
 
-	if (GetAsyncKeyState('Z') & 0x8000)
+	if (GetAsyncKeyState('H') & 0x8000)
 	{
 		m_cameraPos.x += 0.2f;
 	}
-	if (GetAsyncKeyState('X') & 0x8000)
+	if (GetAsyncKeyState('F') & 0x8000)
 	{
 		m_cameraPos.x -= 0.2f;
 	}
-	if (GetAsyncKeyState('C') & 0x8000)
+	if (GetAsyncKeyState('Y') & 0x8000)
 	{
 		m_cameraPos.y += 0.2f;
 	}
@@ -34,14 +45,15 @@ void GameScene::Event()
 	{
 		m_cameraPos.y -= 0.2f;
 	}
-	if (GetAsyncKeyState('B') & 0x8000)
+	if (GetAsyncKeyState('T') & 0x8000)
 	{
 		m_cameraPos.z += 0.2f;
 	}
-	if (GetAsyncKeyState('N') & 0x8000)
+	if (GetAsyncKeyState('B') & 0x8000)
 	{
 		m_cameraPos.z -= 0.2f;
 	}
+	KdDebugGUI::Instance().AddLog("CameraMoveCenter : G\n");
 	if (GetAsyncKeyState(VK_UP) & 0x8000)
 	{
 		m_cameraDeg.x -= 0.5f;
@@ -97,13 +109,15 @@ void GameScene::Event()
 void GameScene::Init()
 {
 	m_camera = std::make_shared<KdCamera>();
-	m_camera->SetProjectionMatrix(60);
+	m_camera->SetProjectionMatrix(90);
 	m_camera->SetCameraMatrix(Math::Matrix::CreateTranslation(0.0f, 5.0f, -45.0f));
 
-	AddObject(std::make_shared<Player>(m_camera));
-
-	//ステージスポーナーに任せた
+	//ステージ
 	STAGESPAWNER.StartGame(this);
+
+	//プレイヤー
+	CHARAMGR.StartGame(this);
+	m_wpPlayer = CHARAMGR.GetPlayer();
 
 	//現在の高さ
 	AddObject(std::make_shared<HeightsNumber>());
