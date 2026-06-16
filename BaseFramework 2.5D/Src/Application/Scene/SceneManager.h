@@ -49,6 +49,9 @@ public :
 	void SetScrollBack(float a_deg) { m_scrollBackDeg = a_deg; }
 	float GetScrollBack()const { return m_scrollBackDeg; }
 
+	//このフレームでのスクロール量（次のフレームに呼ぶ）
+	float GetFrameScroll()const { return m_diffDeg; }
+
 private :
 
 	// マネージャーの初期化
@@ -75,8 +78,9 @@ private :
 	float m_scrollSpeedMulti = 0.0f;
 	float m_scrollBackDeg = 0.0f;
 
-	float testLastScroll = 0.0f;
-	float testScroll = 0.0f;
+	float m_lastDeg = 0.0f;
+	float m_currentDeg = 0.0f;
+	float m_diffDeg = 0.0f;
 
 	//テスト
 	bool test = true;

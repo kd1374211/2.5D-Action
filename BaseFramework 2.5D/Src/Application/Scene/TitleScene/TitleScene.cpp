@@ -31,11 +31,11 @@ void TitleScene::Init()
 	m_camera = std::make_shared<KdCamera>();
 	m_camera->SetProjectionMatrix(90);
 
-	//地形生成
-	STAGESPAWNER.StartGame(this);
-
 	//プレイヤー
 	CHARAMGR.StartGame(this);
+
+	//地形生成
+	STAGESPAWNER.StartGame(this);
 
 	//カメラ
 	FILE* fp = nullptr;

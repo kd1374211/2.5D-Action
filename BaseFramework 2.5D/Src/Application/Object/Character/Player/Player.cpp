@@ -1,5 +1,6 @@
 ﻿#include "Player.h"
 #include "../../../Scene/SceneManager.h"
+#include "../../Effect/Slash/Slash.h"
 
 Player::Player()
 {
@@ -19,6 +20,8 @@ void Player::PreUpdate()
 
 void Player::Update()
 {
+	if (GetAsyncKeyState('3') & 0x8000)OnHit();
+
 	//重力更新
 	if (m_moveY > FALLSPEEDMAX)
 	{
@@ -26,36 +29,75 @@ void Player::Update()
 		if (m_moveY <= FALLSPEEDMAX)m_moveY = FALLSPEEDMAX;
 	}
 	
-	//奥行き移動
-	if (GetAsyncKeyState('W') & 0x8000)
+	//死んでいたら操作不可
+	if (!m_isDead)
 	{
-		m_pos.z += LINEMOVE;
-		if (m_pos.z > LINEPOSMAX)m_pos.z = LINEPOSMAX;
-	}
-	if (GetAsyncKeyState('S') & 0x8000)
-	{
-		m_pos.z -= LINEMOVE;
-		if (m_pos.z < LINEPOSMIN)m_pos.z = LINEPOSMIN;
-	}
-
-	//ジャンプ
-	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
-	{
-		if (!m_isJump)
+		//奥行き移動
+		if (GetAsyncKeyState('W') & 0x8000)
 		{
-			m_isJump = true;
-			m_moveY = JUMPPOWER;
-			ChangeAnim(PlayerAnimType::Jump);
+			m_pos.z += LINEMOVE;
+			if (m_pos.z > LINEPOSMAX)m_pos.z = LINEPOSMAX;
 		}
-	}
+		if (GetAsyncKeyState('S') & 0x8000)
+		{
+			m_pos.z -= LINEMOVE;
+			if (m_pos.z < LINEPOSMIN)m_pos.z = LINEPOSMIN;
+		}
 
-	//空中ジャンプ規制
-	if (m_moveY < AIRJUMPLIMIT && !m_isJump)m_isJump = true;
+		//ジャンプ
+		if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+		{
+			if (!m_isJump)
+			{
+				m_isJump = true;
+				m_moveY = JUMPPOWER;
+				ChangeAnimCheck(PlayerAnimType::Jump);
+			}
+		}
 
-	//攻撃
-	if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
-	{
-		ChangeAnim(PlayerAnimType::Attack);
+		//空中ジャンプ規制
+		if (m_moveY < AIRJUMPLIMIT && !m_isJump)m_isJump = true;
+
+		//攻撃クールタイム
+		if (m_attackWaitF > 0)m_attackWaitF--;
+
+		//攻撃
+		if (GetAsyncKeyState('N') & 0x8000)
+		{
+			if (!m_isAttackKey && !m_isAttack && m_attackWaitF <= 0)
+			{
+				if (ChangeAnimCheck(PlayerAnimType::Attack))
+				{
+					m_isAttack = true;
+					m_attackF = 0;
+					m_attackWaitF = ATTACKWAITF;
+				}
+				else
+				{
+					m_attackWaitF = ATTACKWAITF_FAIL;
+				}
+			}
+			m_isAttackKey = true;
+		}
+		else m_isAttackKey = false;
+
+		KdDebugGUI::Instance().AddLog("AttackWait : %d\n", m_attackWaitF);
+		KdDebugGUI::Instance().AddLog("IsAttack : %d\n", m_isAttack);
+
+		if (m_isAttack)
+		{
+			m_attackF++;
+			//攻撃発生
+			if (m_attackF == ATTACKSPAWNF)
+			{
+				float angle = -8.0f;
+				Math::Vector3 attackSpawnPos = { -sinf(DirectX::XMConvertToRadians(angle)) * GetLinePos(),m_pos.y + 0.4f,-cosf(DirectX::XMConvertToRadians(angle)) * GetLinePos() };
+				float scale = GetLinePos() * 0.25f;
+				SCENEMGR.AddObject(std::make_shared<Slash>(attackSpawnPos, scale, angle));
+
+				m_isAttack = false;
+			}
+		}
 	}
 
 	//Y座標更新
@@ -71,17 +113,11 @@ void Player::Update()
 	if (m_isInvinsible)
 	{
 		m_immuneF--;
-		if (m_immuneF <= 0)
-		{
-			m_isInvinsible = false;
-			ChangeAnim(PlayerAnimType::Run);
-		}
+		if (m_immuneF <= 0)m_isInvinsible = false;
 	}
 
 	//スクロール量更新
-	m_stageScrollMulti += STAGESCROLLADD;
-	if (m_stageScrollMulti > STAGESCROLLMAX)m_stageScrollMulti = STAGESCROLLMAX;
-	SCENEMGR.SetScrollSpeedMulti(m_stageScrollMulti);
+	UpdateScrollMulti();
 }
 
 void Player::HitCheck()
@@ -145,7 +181,7 @@ void Player::HitCheck()
 			m_pos = hitPos;
 			m_isJump = false;
 			m_moveY = 0.0f;
-			if (m_nowAnim == PlayerAnimType::Jump)ChangeAnim(PlayerAnimType::Run);
+			if (m_nowAnim == PlayerAnimType::Fall)ChangeAnim(PlayerAnimType::Run);
 		}
 
 		//2
@@ -207,19 +243,12 @@ void Player::HitCheck()
 
 		if (isHit)
 		{
-			//一定以上プレイヤーのYが高いなら登る
-			if (m_pos.y > -0.15f)
-			{
-				m_pos.y = hitPos.y;
-				m_moveY = 0.0f;
-				m_isJump = false;
-				if (m_nowAnim == PlayerAnimType::Jump)ChangeAnim(PlayerAnimType::Run);
-			}
-			else
+			//一定以上プレイヤーのYが低ければ当たり判定
+			if (m_pos.y <= -0.15f)
 			{
 				//押した先の位置を見る
 				Math::Vector3 pushPos = m_pos + hitDir * maxOverLap;
-				
+
 				//移動先の角度を求める
 				deg = DirectX::XMConvertToDegrees(atan2f(pushPos.z, pushPos.x));
 
@@ -229,37 +258,41 @@ void Player::HitCheck()
 		}
 	}
 
-	//3
-	//被弾判定（スフィア判定）
-
-	//変数作成
-	KdCollider::SphereInfo sphere;
-
-	//スフィアの中心座標
-	sphere.m_sphere.Center = m_pos + Math::Vector3(0, 0.4f, 0);
-
-	//スフィアの半径
-	sphere.m_sphere.Radius = m_pos.z * SPHEREHITSIZEMULTI;
-
-	//当たり判定をしたいタイプ
-	sphere.m_type = KdCollider::Type::TypeDamage;
-
-	//デバッグ用
-	m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius, kRedColor);
-
-	//スフィアに当たったオブジェクト情報を格納するリスト
-	std::list<KdCollider::CollisionResult> retSphereList;
-
-	//全オブジェクトとの当たり判定
-	for (auto& obj : SceneManager::Instance().GetObjList())
+	//死んでいたら敵判定スキップ
+	if (!m_isDead)
 	{
-		//↓スフィア当たり判定
-		obj->Intersects(sphere, &retSphereList);
-	}
+		//3
+		//被弾判定（スフィア判定）
 
-	if (!retSphereList.empty())
-	{
-		OnHit();
+		//変数作成
+		KdCollider::SphereInfo sphere;
+
+		//スフィアの中心座標
+		sphere.m_sphere.Center = m_pos + Math::Vector3(0, 0.4f, 0);
+
+		//スフィアの半径
+		sphere.m_sphere.Radius = m_pos.z * SPHEREHITSIZEMULTI;
+
+		//当たり判定をしたいタイプ
+		sphere.m_type = KdCollider::Type::TypeDamage;
+
+		//デバッグ用
+		m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius, kRedColor);
+
+		//スフィアに当たったオブジェクト情報を格納するリスト
+		std::list<KdCollider::CollisionResult> retSphereList;
+
+		//全オブジェクトとの当たり判定
+		for (auto& obj : SceneManager::Instance().GetObjList())
+		{
+			//↓スフィア当たり判定
+			obj->Intersects(sphere, &retSphereList);
+		}
+
+		if (!retSphereList.empty())
+		{
+			OnHit();
+		}
 	}
 
 	if (m_pos.y < VOIDPOSY)
@@ -273,6 +306,12 @@ void Player::HitCheck()
 	//マトリックス
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	m_mWorld = trans;
+}
+
+void Player::PreDraw()
+{
+	PolygonData* data = &m_polygons->find(m_nowAnim)->second;
+	data->m_polygon->SetUVRect((int)m_animCnt);
 }
 
 void Player::DrawLit()
@@ -307,11 +346,31 @@ void Player::OnHit()
 	if (m_isInvinsible)return;
 	//ジャンプ不可に
 	m_isJump = true;
-	//上方向に飛ばす
-	m_moveY = HITJUMP;
-	
-	//スクロールを戻す
-	m_stageScrollMulti = STAGESCROLL_ONHIT;
+
+	//体力減少
+	m_health--;
+	if (m_health <= 0)
+	{
+		//上方向に飛ばす
+		m_moveY = HITJUMP_DEAD;
+
+		//スクロールを戻す
+		m_stageScrollMulti = STAGESCROLL_ONDEAD;
+
+		ChangeAnim(PlayerAnimType::Dead);
+		//死亡
+		m_isDead = true;
+	}
+	else
+	{
+		//上方向に飛ばす
+		m_moveY = HITJUMP;
+
+		//スクロールを戻す
+		m_stageScrollMulti = STAGESCROLL_ONHIT;
+
+		ChangeAnim(PlayerAnimType::Hit);
+	}
 
 	OnDamage();
 }
@@ -322,12 +381,27 @@ void Player::FallVoid()
 	m_isJump = true;
 	//上方向に飛ばす
 	m_moveY = HITJUMP_VOID;
-	
-	//スクロールを戻す
+
+	//無敵or死ならスキップ
+	if (m_isInvinsible || m_isDead)return;
+
+	//生きていたらスクロールを戻す
 	m_stageScrollMulti = STAGESCROLL_VOID;
 
-	//無敵ならノーダメージ
-	if (m_isInvinsible)return;
+	m_health--;
+	if (m_health <= 0)
+	{
+		//スクロールを戻す
+		m_stageScrollMulti = STAGESCROLL_ONDEAD;
+
+		ChangeAnim(PlayerAnimType::Dead);
+		//死亡
+		m_isDead = true;
+	}
+	else
+	{
+		ChangeAnim(PlayerAnimType::Hit);
+	}
 
 	OnDamage();
 }
@@ -338,10 +412,13 @@ void Player::Respawn()
 	m_pos = { 0,0.2f,LINEPOSSTART };
 	m_moveY = 0.0f;
 	m_isJump = false;
+	m_isAttack = false;
+	m_attackF = 0;
+	m_attackWaitF = 0;
 
-	ChangeAnim(PlayerAnimType::Run);
 	m_isDead = false;
 	m_isGameEnd = false;
+	ChangeAnim(PlayerAnimType::Run);
 
 	m_health = STARTHEALTH;
 	for (int i = 0; i < STARTHEALTH; i++)
@@ -368,44 +445,67 @@ void Player::Init()
 void Player::Release()
 {}
 
+void Player::UpdateScrollMulti()
+{
+	if (m_isDead)
+	{
+		m_stageScrollMulti += STAGESCROLLADD_DEAD;
+		if (m_stageScrollMulti >= STAGESCROLL_GAMEEND)m_isGameEnd = true;
+	}
+	else
+	{
+		m_stageScrollMulti += STAGESCROLLADD;
+		if (m_stageScrollMulti > STAGESCROLLMAX)m_stageScrollMulti = STAGESCROLLMAX;
+	}
+	
+	SCENEMGR.SetScrollSpeedMulti(m_stageScrollMulti);
+}
+
+bool Player::ChangeAnimCheck(PlayerAnimType a_anim)
+{
+	if (m_nowAnim > a_anim)return false;
+	ChangeAnim(a_anim);
+	return true;
+}
+
 void Player::ChangeAnim(PlayerAnimType a_anim)
 {
+	//死んでいたらスキップ
+	if (m_isDead)return;
+
 	m_nowAnim = a_anim;
 	m_animCnt = 0.0f;
 }
 
 void Player::UpdateAnim()
 {
-	bool isAnimLooped = false;
-
 	PolygonData* data = &m_polygons->find(m_nowAnim)->second;
 
 	m_animCnt += data->m_animAdd;
 	if (m_animCnt >= data->m_animMax)
 	{
-		m_animCnt -= data->m_animMax;
-		isAnimLooped = true;
-	}
-
-	//画像が1周したらなにかあるやつ
-	if (isAnimLooped)
-	{
+		//画像が1周したらなにかあるやつ
 		switch (m_nowAnim)
 		{
+		case PlayerAnimType::Jump:
+			if (m_moveY <= 0.0f)ChangeAnim(PlayerAnimType::Fall);
+			else m_animCnt -= data->m_animAdd;
+			break;
 		case PlayerAnimType::Attack:
 			ChangeAnim(PlayerAnimType::Run);
 			break;
+		case PlayerAnimType::Hit:
+			ChangeAnim(PlayerAnimType::Fall);
+			break;
+		case PlayerAnimType::Fall:
 		case PlayerAnimType::Dead:
+			m_animCnt -= data->m_animAdd;
 			break;
 		default:
+			m_animCnt -= data->m_animMax;
 			break;
 		}
-
-		//再検索
-		data = &m_polygons->find(m_nowAnim)->second;
 	}
-
-	data->m_polygon->SetUVRect((int)m_animCnt);
 }
 
 void Player::CheckHeartAnimExpired()
@@ -432,23 +532,27 @@ void Player::UpdateHeartAnim()
 
 void Player::OnDamage()
 {
-	if (m_isInvinsible)return;
-	m_health--;
-	if (m_health <= 0)
-	{
-		ChangeAnim(PlayerAnimType::Dead);
-		//死亡
-		m_isDead = true;
-	}
-	else
-	{
-		ChangeAnim(PlayerAnimType::Hit);
-	}
-
 	//被弾後無敵
 	m_isInvinsible = true;
 	m_immuneF = HITIMMUNEF;
 
+	//攻撃停止、攻撃不可
+	AttackStun();
+
 	//体力画像
 	if (!m_healthTexData.empty())m_healthTexData.back().m_isAnimStart = true;
+}
+
+void Player::AttackStun()
+{
+	//攻撃キャンセルの場合10Fにセット
+	if (m_isAttack)
+	{
+		m_isAttack = false;
+		m_attackWaitF = ATTACKWAITF_FAIL;
+	}
+	//ではない場合10より多ければ10に
+	else if (m_attackWaitF < ATTACKWAITF_FAIL)m_attackWaitF = ATTACKWAITF_FAIL;
+
+	m_attackF = 0;
 }

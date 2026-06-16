@@ -1,13 +1,27 @@
 ﻿#pragma once
 
-enum PlayerAnimType
+enum class PlayerAnimType
 {
 	Run,
 	Jump,
+	Fall,
 	Attack,
 	Hit,
 	Dead,
-	Number
+	PlayerAnimNumber
+};
+
+enum EnemyName
+{
+	EnemyName_Goblin,
+	EnemyNumber
+};
+
+enum class EnemyAnimType
+{
+	Idle,
+	Hit,
+	EnemyAnimNumber
 };
 
 struct PolygonData

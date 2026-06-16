@@ -127,6 +127,18 @@
     <Filter Include="Src\Application\Object\Hazard\RollingWood">
       <UniqueIdentifier>{8f113d87-45e8-49a6-9b76-096f12cec973}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Object\Character\Enemy">
+      <UniqueIdentifier>{47a76a1d-c167-465d-924e-feb774e0345a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Character\Enemy\Goblin">
+      <UniqueIdentifier>{bde22c5f-4b60-4390-bd94-6f6630e85339}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Effect">
+      <UniqueIdentifier>{de53d848-3ffb-44fd-a736-11993c1c4e9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Effect\Slash">
+      <UniqueIdentifier>{610b6860-6f82-414a-92b8-b45cabe78eb0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -348,6 +360,21 @@
     <ClInclude Include="Src\Application\Object\Character\CharaManagerConst.h">
       <Filter>Src\Application\Object\Character</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Object\Character\Enemy\EnemyBase.h">
+      <Filter>Src\Application\Object\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Character\Enemy\Goblin\Goblin.h">
+      <Filter>Src\Application\Object\Character\Enemy\Goblin</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Character\CharacterInclude.h">
+      <Filter>Src\Application\Object\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\StageSpawner\StageObjectInclude.h">
+      <Filter>Src\Application\StageSpawner</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Effect\Slash\Slash.h">
+      <Filter>Src\Application\Object\Effect\Slash</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -532,6 +559,15 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Character\CharaManager.cpp">
       <Filter>Src\Application\Object\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Character\Enemy\EnemyBase.cpp">
+      <Filter>Src\Application\Object\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Character\Enemy\Goblin\Goblin.cpp">
+      <Filter>Src\Application\Object\Character\Enemy\Goblin</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Effect\Slash\Slash.cpp">
+      <Filter>Src\Application\Object\Effect\Slash</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

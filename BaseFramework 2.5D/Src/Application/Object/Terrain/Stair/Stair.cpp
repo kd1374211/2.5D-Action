@@ -29,18 +29,6 @@ void Stair::Update()
 		m_pos = { -250,m_pos.y += TERRAINBASEMOVEY * speedMulti,100 };
 	}
 
-	//Y座標が最大・最小を超えたらリスポーン準備
-	if (m_pos.y < STAIRPOSY_MIN)
-	{
-		m_isDisappear = true;
-		m_respawnDir = RespawnDir::Up;
-	}
-	else if (m_pos.y > STAIRPOSY_MAX)
-	{
-		m_isDisappear = true;
-		m_respawnDir = RespawnDir::Down;
-	}
-
 	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_angleDeg));
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	m_mWorld = rotatY * trans;
@@ -63,6 +51,18 @@ void Stair::PostUpdate()
 	else
 	{
 		m_pos.y -= TERRAINBASEMOVEY * backDeg;
+	}
+
+	//Y座標が最大・最小を超えたらリスポーン準備
+	if (m_pos.y < STAIRPOSY_MIN)
+	{
+		m_isDisappear = true;
+		m_respawnDir = RespawnDir::Up;
+	}
+	else if (m_pos.y > STAIRPOSY_MAX)
+	{
+		m_isDisappear = true;
+		m_respawnDir = RespawnDir::Down;
 	}
 
 	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_angleDeg));

@@ -19,18 +19,6 @@ void Wall::Update()
 
 	//Y座標変化
 	m_pos.y += TERRAINBASEMOVEY * speedMulti;
-
-	//Y座標が最大・最小を超えたらリスポーン準備
-	if (m_pos.y < PILLARWALLPOSY_MIN)
-	{
-		m_isDisappear = true;
-		m_respawnDir = RespawnDir::Up;
-	}
-	else if (m_pos.y > PILLARWALLPOSY_MAX)
-	{
-		m_isDisappear = true;
-		m_respawnDir = RespawnDir::Down;
-	}
 }
 
 void Wall::PostUpdate()
@@ -44,6 +32,18 @@ void Wall::PostUpdate()
 
 	//上に戻る
 	m_pos.y -= TERRAINBASEMOVEY * backDeg;
+
+	//Y座標が最大・最小を超えたらリスポーン準備
+	if (m_pos.y < PILLARWALLPOSY_MIN)
+	{
+		m_isDisappear = true;
+		m_respawnDir = RespawnDir::Up;
+	}
+	else if (m_pos.y > PILLARWALLPOSY_MAX)
+	{
+		m_isDisappear = true;
+		m_respawnDir = RespawnDir::Down;
+	}
 
 	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_angleDeg));
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);

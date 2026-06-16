@@ -12,6 +12,7 @@ public:
 	void PreUpdate()override;
 	void Update()override;
 	void HitCheck()override;
+	void PreDraw()override;
 	void DrawLit()override;
 	void GenerateDepthMapFromLight()override;
 	void DrawSprite()override;
@@ -23,12 +24,20 @@ public:
 	//セッター
 	void SetPolygonData(std::map<PlayerAnimType, PolygonData>* a_data) { m_polygons = a_data; }
 
+	//ゲッター
+	bool GetIsGameEnd()const { return m_isGameEnd; }
+	float GetLinePos()const { return -m_pos.z; }
+
 private:
 
 	void Init()override;
 	void Release();
 
+	//スクロール
+	void UpdateScrollMulti();
+
 	//アニメーション
+	bool ChangeAnimCheck(PlayerAnimType a_anim);
 	void ChangeAnim(PlayerAnimType a_anim);
 	void UpdateAnim();
 
@@ -38,6 +47,9 @@ private:
 
 	//体力減少
 	void OnDamage();
+
+	//攻撃停止
+	void AttackStun();
 
 	//ポリゴン
 	std::map<PlayerAnimType, PolygonData>* m_polygons = nullptr;
@@ -52,7 +64,7 @@ private:
 	const float LINEPOSMAX = -2.0f;
 	const float LINEPOSSTART = -5.0f;
 	const float LINEPOSMIN = -8.0f;
-	const float LINEMOVE = 0.06f;
+	const float LINEMOVE = 0.075f;
 
 	//当たり判定（スフィア）
 	const float SPHEREGROUNDHITSIZEMULTI = -0.05f;
@@ -63,12 +75,20 @@ private:
 	const float FALLSPEEDMAX = -0.4f;
 	const float JUMPPOWER = 0.15f;
 	const float HITJUMP = 0.08f;
+	const float HITJUMP_DEAD = 0.16f;
 	const float HITJUMP_VOID = 0.25f;
 
 	//基礎
 	float m_moveY = 0.0f;
-	float m_animCnt = 0.0f;
 	bool m_isJump = false;
+	bool m_isAttack = false;
+	int m_attackF = 0;
+	int m_attackWaitF = 0;
+
+	//攻撃
+	static const int ATTACKWAITF_FAIL = 10;
+	static const int ATTACKWAITF = 30;
+	static const int ATTACKSPAWNF = 4;
 
 	//体力
 	static const int STARTHEALTH = 5;
@@ -96,7 +116,7 @@ private:
 	const float AIRJUMPLIMIT = -0.04f;
 
 	//被弾フラグ
-	static const int HITIMMUNEF = 20;
+	static const int HITIMMUNEF = 10;
 
 	bool m_isInvinsible = false;
 	int m_immuneF = 0;
@@ -106,9 +126,15 @@ private:
 
 	//ステージスクロール量
 	const float STAGESCROLL_ONHIT = -1.2f;
+	const float STAGESCROLL_ONDEAD = -2.5f;
 	const float STAGESCROLL_VOID = -2.0f;
 	const float STAGESCROLLADD = 0.05f;
 	const float STAGESCROLLMAX = 1.0f;
+	const float STAGESCROLLADD_DEAD = 0.025f;
+	const float STAGESCROLL_GAMEEND = 0.0f;
 
 	float m_stageScrollMulti = STAGESCROLLMAX;
+
+	//キー
+	bool m_isAttackKey = false;
 };

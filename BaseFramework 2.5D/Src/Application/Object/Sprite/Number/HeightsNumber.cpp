@@ -1,14 +1,22 @@
 ﻿#include "HeightsNumber.h"
 #include "../../../Scene/SceneManager.h"
+#include "../../Character/Player/Player.h"
+#include "../../Character/CharaManager.h"
 
 void HeightsNumber::Update()
 {
+	//プレイヤーが死んでいたらスキップ
+	if (CHARAMGR.GetPlayer()->GetIsDead())return;
+
 	float scroll = SCENEMGR.GetScrollSpeedMulti();
 	m_nowHeight += scroll * 0.05f;
 }
 
 void HeightsNumber::PostUpdate()
 {
+	//プレイヤーが死んでいたらスキップ
+	if (CHARAMGR.GetPlayer()->GetIsDead())return;
+
 	float scrollBack = SCENEMGR.GetScrollBack();
 	m_nowHeight -= scrollBack * 0.05f;
 }

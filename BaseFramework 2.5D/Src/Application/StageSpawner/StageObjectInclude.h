@@ -1,0 +1,9 @@
+﻿#pragma once
+#include "../Object/Terrain/Stair/Stair.h"
+#include "../Object/Terrain/Pillar/Pillar.h"
+#include "../Object/Terrain/Wall/Wall.h"
+#include "../Object/Terrain/Void/Void.h"
+#include "../Object/Hazard/Boulder/Boulder.h"
+#include "../Object/Hazard/RollingWood/RollingWood.h"
+#include "../Object/Hazard/Spear/Spear.h"
+#include "../Object/Hazard/SideSpear/SideSpear.h"

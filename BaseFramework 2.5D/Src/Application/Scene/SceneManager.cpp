@@ -32,9 +32,9 @@ void SceneManager::Update()
 
 	m_currentScene->Update();
 
-	testScroll += TERRAINBASEROTATY * m_scrollSpeedMulti;
-	if (testScroll >= 360.0f)testScroll -= 360.0f;
-	else if (testScroll < 0.0f)testScroll += 360.0f;
+	m_currentDeg += TERRAINBASEROTATY * m_scrollSpeedMulti;
+	if (m_currentDeg >= 360.0f)m_currentDeg -= 360.0f;
+	else if (m_currentDeg < 0.0f)m_currentDeg += 360.0f;
 }
 
 void SceneManager::PostUpdate()
@@ -42,13 +42,14 @@ void SceneManager::PostUpdate()
 	m_currentScene->HitCheck();
 	m_currentScene->PostUpdate();
 
-	testScroll -= m_scrollBackDeg;
-	if (testScroll >= 360.0f)testScroll -= 360.0f;
-	else if (testScroll < 0.0f)testScroll += 360.0f;
+	m_currentDeg -= m_scrollBackDeg;
+	if (m_currentDeg >= 360.0f)m_currentDeg -= 360.0f;
+	else if (m_currentDeg < 0.0f)m_currentDeg += 360.0f;
 
-	KdDebugGUI::Instance().AddLog("ScrollThisFrame : %.2f\n", testScroll - testLastScroll);
-	KdDebugGUI::Instance().AddLog("StageScrollDeg : %.2f\n", testScroll);
-	testLastScroll = testScroll;
+	m_diffDeg = m_currentDeg - m_lastDeg;
+	KdDebugGUI::Instance().AddLog("ScrollThisFrame : %.2f\n", m_diffDeg);
+	KdDebugGUI::Instance().AddLog("StageScrollDeg : %.2f\n", m_currentDeg);
+	m_lastDeg = m_currentDeg;
 }
 
 void SceneManager::PreDraw()

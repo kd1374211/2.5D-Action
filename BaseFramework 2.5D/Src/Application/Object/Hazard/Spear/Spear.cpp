@@ -79,6 +79,15 @@ void Spear::DrawLit()
 	if (m_isSpear)KdShaderManager::Instance().m_StandardShader.DrawModel(*m_spearModel, m_mWorld);
 }
 
+void Spear::GenerateDepthMapFromLight()
+{
+	//穴
+	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_holeModel, m_mHoleWorld);
+
+	//槍（出現済み）
+	if (m_isSpear)KdShaderManager::Instance().m_StandardShader.DrawModel(*m_spearModel, m_mWorld);
+}
+
 void Spear::Init()
 {
 	m_holeModel = std::make_shared<KdModelData>();

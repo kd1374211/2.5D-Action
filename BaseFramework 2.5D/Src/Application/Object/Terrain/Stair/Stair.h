@@ -16,6 +16,7 @@ public:
 
 	//セッター
 	void SetStairFlg(bool a_flg) { test = a_flg; }
+	void SetIsDisappear(bool a_flg) { m_isDisappear = a_flg; }
 
 	//ゲッター
 	bool GetIsDisappear()const { return m_isDisappear; }

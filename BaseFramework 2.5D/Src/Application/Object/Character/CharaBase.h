@@ -12,6 +12,7 @@ public:
 
 protected:
 
+	float m_animCnt = 0.0f;
 	bool m_isDead = false;
 
 };

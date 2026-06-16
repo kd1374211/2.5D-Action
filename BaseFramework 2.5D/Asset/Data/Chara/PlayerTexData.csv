@@ -2,7 +2,8 @@ RectX,RectY,ScaleDiv,
 96,62,45,
 ‰æ‘œŽí,Path,AnimMax,AnimAdd
 Run,Asset/Textures/Chara/Player/PlayerRun.png,8,0.25
-Jump,Asset/Textures/Chara/Player/PlayerJump.png,5,0
+Jump,Asset/Textures/Chara/Player/PlayerJump.png,3,0.2
+Fall,Asset/Textures/Chara/Player/PlayerFall.png,2,0.2
 Attack,Asset/Textures/Chara/Player/PlayerAttack.png,6,0.25
-Hit,Asset/Textures/Chara/Player/PlayerHit.png,4,0
+Hit,Asset/Textures/Chara/Player/PlayerHit.png,4,0.25
 Dead,Asset/Textures/Chara/Player/PlayerDead.png,12,0.25

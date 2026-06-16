@@ -11,7 +11,7 @@ void GameScene::Event()
 	{
 		std::shared_ptr<Player> player = m_wpPlayer.lock();
 
-		if (player->GetIsDead())
+		if (player->GetIsGameEnd())
 		{
 			player->Respawn();
 			STAGESPAWNER.ResetStage();
@@ -112,12 +112,12 @@ void GameScene::Init()
 	m_camera->SetProjectionMatrix(90);
 	m_camera->SetCameraMatrix(Math::Matrix::CreateTranslation(0.0f, 5.0f, -45.0f));
 
-	//ステージ
-	STAGESPAWNER.StartGame(this);
-
 	//プレイヤー
 	CHARAMGR.StartGame(this);
 	m_wpPlayer = CHARAMGR.GetPlayer();
+
+	//ステージ
+	STAGESPAWNER.StartGame(this);
 
 	//現在の高さ
 	AddObject(std::make_shared<HeightsNumber>());
