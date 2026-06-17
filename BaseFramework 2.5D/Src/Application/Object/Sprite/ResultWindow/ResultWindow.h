@@ -15,4 +15,6 @@ private:
 	void Init()override;
 	void Release();
 
+	std::shared_ptr<KdTexture> m_tex = nullptr;
+
 };
