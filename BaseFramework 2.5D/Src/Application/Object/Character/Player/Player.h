@@ -12,6 +12,7 @@ public:
 	void PreUpdate()override;
 	void Update()override;
 	void HitCheck()override;
+	void PostUpdate()override;
 	void PreDraw()override;
 	void DrawLit()override;
 	void GenerateDepthMapFromLight()override;
@@ -19,10 +20,12 @@ public:
 	void OnHit();
 	void FallVoid();
 
-	void Respawn();
+	void Respawn(Math::Vector3 a_pos);
+	void Respawn() { Respawn(BASESPAWNPOS); }
 
 	//セッター
 	void SetPolygonData(std::map<PlayerAnimType, PolygonData>* a_data) { m_polygons = a_data; }
+	void SetIsHeartTex(bool a_flg) { m_isHeartTex = a_flg; }
 
 	//ゲッター
 	bool GetIsGameEnd()const { return m_isGameEnd; }
@@ -66,6 +69,9 @@ private:
 	const float LINEPOSMIN = -8.0f;
 	const float LINEMOVE = 0.075f;
 
+	//基礎位置
+	const Math::Vector3 BASESPAWNPOS = { 0,0.2f,LINEPOSSTART };
+
 	//当たり判定（スフィア）
 	const float SPHEREGROUNDHITSIZEMULTI = -0.05f;
 	const float SPHEREHITSIZEMULTI = -0.04f;
@@ -81,6 +87,7 @@ private:
 	//基礎
 	float m_moveY = 0.0f;
 	bool m_isJump = false;
+	bool m_isVoidJump = false;
 	bool m_isAttack = false;
 	int m_attackF = 0;
 	int m_attackWaitF = 0;
@@ -94,6 +101,8 @@ private:
 	static const int STARTHEALTH = 5;
 	const float HEALTHANIMSPEED = 0.5f;
 	static const int HEALTHANIMEND = 5;
+
+	bool m_isHeartTex = false;
 
 	//ゲーム終了フラグ
 	bool m_isGameEnd = false;
@@ -116,7 +125,7 @@ private:
 	const float AIRJUMPLIMIT = -0.04f;
 
 	//被弾フラグ
-	static const int HITIMMUNEF = 10;
+	static const int HITIMMUNEF = 11;
 
 	bool m_isInvinsible = false;
 	int m_immuneF = 0;

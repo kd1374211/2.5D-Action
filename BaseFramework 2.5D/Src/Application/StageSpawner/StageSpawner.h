@@ -35,12 +35,12 @@ private:
 	static const int PILLARWALLNUM = 3;
 
 	//角度関連
-	const float STAIRDEGBASE = -180.0f;
+	const float STAIRDEGBASE = 0.0f;
 	const float STAIRDEGDIFF = 9.0f;
 
 	//位置関連
-	const float STAIRSPAWNRANGE = 5.36f;
-	const float STAIRSPAWNBASE_Y = -6.16f;
+	const float STAIRSPAWNRANGE = 5.0f;
+	const float STAIRSPAWNBASE_Y = -3.28f;
 	const float STAIRSPAWNDIFF_Y = 0.144f;
 
 	//階段80個(後ろにあるほど上にある)

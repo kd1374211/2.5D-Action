@@ -4,7 +4,7 @@ class RollingWood :public KdGameObject
 {
 public:
 
-	RollingWood(Math::Vector3 a_startPos, float a_startDeg, float a_linePos, float a_length);
+	RollingWood(Math::Vector3 a_baseStartPos, float a_startDeg, float a_linePos, float a_length);
 	~RollingWood() { Release(); }
 
 	void Update()override;
@@ -13,6 +13,9 @@ public:
 	void GenerateDepthMapFromLight()override;
 
 private:
+
+	//出現位置
+	const Math::Vector3 SPAWNPOS = Math::Vector3(0, 0.8f, 0);
 
 	//地形とのスピード差
 	const float SPEEDMULTIADD = 0.5f;

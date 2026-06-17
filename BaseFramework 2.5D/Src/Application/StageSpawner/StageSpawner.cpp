@@ -45,6 +45,7 @@ void StageSpawner::Update()
 	switch (SCENEMGR.GetSceneType())
 	{
 	case SceneManager::SceneType::Title:
+	case SceneManager::SceneType::Result:
 		//準方向スクロール
 		if (SCENEMGR.GetFrameScroll() >= 0.0f)
 		{
@@ -80,7 +81,7 @@ void StageSpawner::Update()
 		while (m_stairVisibleLog_future.size() < MAXFUTUREROLL)
 		{
 			//テスト
-			if (rand() % 10 == 0 && !noSpawnFlg)
+			if (rand() % 5 == 0 && !noSpawnFlg)
 			{
 				noSpawnFlg = true;
 				noSpawnStairCnt = rand() % 2 + 2;
@@ -98,19 +99,28 @@ void StageSpawner::Update()
 		//仮置き（階段があるかどうか）
 		bool isStair = false;
 
+		//ワープ後に取得する座標
+		float respawnPosY = 0.0f;
+
 		//準方向スクロール
 		if (SCENEMGR.GetFrameScroll() >= 0.0f)
 		{
 			//Front（一番下）のワープフラグがある間
 			while (LOWEST->GetIsDisappear())
 			{
+				//ワープ
+				LOWEST->Respawn();
+
+				//ワープ後の座標取得
+				respawnPosY = LOWEST->GetPos().y;
+
 				//次に出現する階段のデータを取得（あり得ないが空ならfalse）
 				if (!m_stairVisibleLog_future.empty())
 				{
 					isStair = m_stairVisibleLog_future.front();
 					m_stairVisibleLog_future.pop_front();
 				}
-				
+
 				//戻り数カウントが0でないなら減少
 				if (m_countBackScroll > 0)m_countBackScroll--;
 				//0ならギミックの出現チェック
@@ -120,7 +130,7 @@ void StageSpawner::Update()
 					{
 						float angleDeg = LOWEST->GetAngleDeg();
 						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 3.2f) + LINEPLAYAREA_MIN + 1.6f;
-						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,7.16f,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 						SCENEMGR.AddObject(std::make_shared<Boulder>(pos, angleDeg, linePos));
 					}
 					else if (rand() % 40 == 0)
@@ -128,20 +138,20 @@ void StageSpawner::Update()
 						float scale = (rand() % 4 + 1) * 0.5f;
 						float angleDeg = LOWEST->GetAngleDeg();
 						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 3.2f) + LINEPLAYAREA_MIN + 1.6f;
-						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,6.16f,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 						SCENEMGR.AddObject(std::make_shared<RollingWood>(pos, angleDeg, linePos, scale));
 					}
 
 					static int spearWait = 0;
 					bool canSpear = spearWait <= 0 ? true : false;
 					if (spearWait > 0)spearWait--;
-	
+
 					if (m_isSideSpearNext)
 					{
 						if (!m_stairVisibleLog_future.front())
 						{
 							float angleDeg = LOWEST->GetAngleDeg();
-							SCENEMGR.AddObject(std::make_shared<SideSpear>(angleDeg));
+							SCENEMGR.AddObject(std::make_shared<SideSpear>(respawnPosY, angleDeg));
 						}
 						m_isSideSpearNext = false;
 						spearWait++;
@@ -153,7 +163,7 @@ void StageSpawner::Update()
 						{
 							float angleDeg = LOWEST->GetAngleDeg();
 							float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 3.2f) + LINEPLAYAREA_MIN + 1.6f;
-							Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,5.6f,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+							Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 							CHARAMGR.SpawnEnemy(EnemyName_Goblin, pos, angleDeg, linePos);
 						}
 						else if (rand() % 10 == 0 && canSpear)
@@ -163,7 +173,7 @@ void StageSpawner::Update()
 
 							for (int i = 0; i < 5; i++)
 							{
-								Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,5.76f,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+								Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 								SCENEMGR.AddObject(std::make_shared<Spear>(pos, angleDeg, linePos));
 								linePos += 0.5f;
 								spearWait++;
@@ -182,8 +192,8 @@ void StageSpawner::Update()
 					}
 				}
 
-				//ワープ
-				LOWEST->Respawn(isStair);
+				//透明フラグ設定
+				LOWEST->SetStairFlg(isStair);
 
 				//今ワープした物を階段リストのBackに移動
 				m_stairs.push_back(LOWEST);
@@ -205,7 +215,7 @@ void StageSpawner::Update()
 					isStair = m_stairVisibleLog_past.front();
 					m_stairVisibleLog_past.pop_front();
 				}
-				
+
 				//ワープ
 				HIGHEST->Respawn(isStair);
 

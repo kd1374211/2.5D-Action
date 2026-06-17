@@ -18,12 +18,6 @@ void TitleScene::Event()
 
 	//地形更新
 	STAGESPAWNER.Update();
-
-	Math::Matrix trans = Math::Matrix::CreateTranslation(m_cameraPos);
-	Math::Matrix rotatX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(m_cameraDeg.x));
-	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_cameraDeg.y));
-	Math::Matrix mat = rotatY * rotatX * trans;
-	m_camera->SetCameraMatrix(mat);
 }
 
 void TitleScene::Init()
@@ -31,8 +25,9 @@ void TitleScene::Init()
 	m_camera = std::make_shared<KdCamera>();
 	m_camera->SetProjectionMatrix(90);
 
-	//プレイヤー
-	CHARAMGR.StartGame(this);
+	//プレイヤー（一応リセット）
+	CHARAMGR.ResetPlayer();
+	CHARAMGR.SpawnPlayer(this);
 
 	//地形生成
 	STAGESPAWNER.StartGame(this);
@@ -59,4 +54,10 @@ void TitleScene::Init()
 
 		fclose(fp);
 	}
+
+	Math::Matrix trans = Math::Matrix::CreateTranslation(m_cameraPos);
+	Math::Matrix rotatX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(m_cameraDeg.x));
+	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_cameraDeg.y));
+	Math::Matrix mat = rotatY * rotatX * trans;
+	m_camera->SetCameraMatrix(mat);
 }

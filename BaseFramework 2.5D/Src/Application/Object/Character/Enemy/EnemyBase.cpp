@@ -71,13 +71,13 @@ void EnemyBase::HitCheck()
 	sphere.m_sphere.Center = m_pos + Math::Vector3(0, 0.6f, 0);
 
 	//スフィアの半径
-	sphere.m_sphere.Radius = m_linePos * 0.075f;
+	sphere.m_sphere.Radius = m_linePos * 0.125f;
 
 	//当たり判定をしたいタイプ
 	sphere.m_type = KdCollider::Type::TypeDamage_Enemy;
 
 	//デバッグ用
-	//m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius, kRedColor);
+	m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius, kRedColor);
 
 	//スフィアに当たったオブジェクト情報を格納するリスト
 	std::list<KdCollider::CollisionResult> retSphereList;

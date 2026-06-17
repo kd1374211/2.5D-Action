@@ -3,6 +3,7 @@
 #include "BaseScene/BaseScene.h"
 #include "TitleScene/TitleScene.h"
 #include "GameScene/GameScene.h"
+#include "ResultScene/ResultScene.h"
 
 #include "../StageSpawner/StageSpawner.h"
 #include "../Const/StageConst.h"
@@ -33,8 +34,6 @@ void SceneManager::Update()
 	m_currentScene->Update();
 
 	m_currentDeg += TERRAINBASEROTATY * m_scrollSpeedMulti;
-	if (m_currentDeg >= 360.0f)m_currentDeg -= 360.0f;
-	else if (m_currentDeg < 0.0f)m_currentDeg += 360.0f;
 }
 
 void SceneManager::PostUpdate()
@@ -43,10 +42,11 @@ void SceneManager::PostUpdate()
 	m_currentScene->PostUpdate();
 
 	m_currentDeg -= m_scrollBackDeg;
+	m_diffDeg = m_currentDeg - m_lastDeg;
+
 	if (m_currentDeg >= 360.0f)m_currentDeg -= 360.0f;
 	else if (m_currentDeg < 0.0f)m_currentDeg += 360.0f;
 
-	m_diffDeg = m_currentDeg - m_lastDeg;
 	KdDebugGUI::Instance().AddLog("ScrollThisFrame : %.2f\n", m_diffDeg);
 	KdDebugGUI::Instance().AddLog("StageScrollDeg : %.2f\n", m_currentDeg);
 	m_lastDeg = m_currentDeg;
@@ -93,6 +93,16 @@ void SceneManager::ChangeScene(SceneType _sceneType)
 	case SceneType::Game:
 		m_currentScene = std::make_shared<GameScene>();
 		break;
+	case SceneType::Result:
+		m_currentScene = std::make_shared<ResultScene>();
+		break;
+	}
+
+	//新しいシーンに持ち越しオブジェクトを追加
+	while (!m_sceneCarryOverObj.empty())
+	{
+		AddObject(m_sceneCarryOverObj.front());
+		m_sceneCarryOverObj.pop_front();
 	}
 	
 	// 現在のシーン情報を更新

@@ -4,30 +4,45 @@
 #include "../../Object/Character/CharaManager.h"
 #include "../../StageSpawner/StageSpawner.h"
 #include "../../Object/Sprite/Number/HeightsNumber.h"
+#include "../Transition/Transition.h"
 
 void GameScene::Event()
 {
-	if (!m_wpPlayer.expired())
-	{
-		std::shared_ptr<Player> player = m_wpPlayer.lock();
-
-		if (player->GetIsGameEnd())
-		{
-			player->Respawn();
-			STAGESPAWNER.ResetStage();
-
-			SceneManager::Instance().SetNextScene
-			(
-				SceneManager::SceneType::Title
-			);
-		}
-	}
-
 	//キャラ更新
 	CHARAMGR.Update();
 
 	//ステージ更新
 	STAGESPAWNER.Update();
+
+	if (!m_wpPlayer.expired())
+	{
+		std::shared_ptr<Player> player = m_wpPlayer.lock();
+
+		if (player->GetIsGameEnd() && !m_isTransition)
+		{
+			std::shared_ptr <Transition> transition = std::make_shared<Transition>();
+			AddObject(transition);
+			m_wpTransition = transition;
+			m_isTransition = true;
+		}
+
+		if (m_isTransition)
+		{
+			if (!m_wpTransition.expired())
+			{
+				if (m_wpTransition.lock()->GetIsReset())
+				{
+					STAGESPAWNER.ResetStage();
+					player->SetIsHeartTex(false);
+					SCENEMGR.AddCarryObject(m_wpTransition.lock());
+					SceneManager::Instance().SetNextScene
+					(
+						SceneManager::SceneType::Result
+					);
+				}
+			}
+		}
+	}
 
 	if (GetAsyncKeyState('H') & 0x8000)
 	{
@@ -110,10 +125,10 @@ void GameScene::Init()
 {
 	m_camera = std::make_shared<KdCamera>();
 	m_camera->SetProjectionMatrix(90);
-	m_camera->SetCameraMatrix(Math::Matrix::CreateTranslation(0.0f, 5.0f, -45.0f));
-
+	
 	//プレイヤー
-	CHARAMGR.StartGame(this);
+	CHARAMGR.SpawnPlayer(this);
+	CHARAMGR.GetPlayer()->SetIsHeartTex(true);
 	m_wpPlayer = CHARAMGR.GetPlayer();
 
 	//ステージ

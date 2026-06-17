@@ -294,8 +294,10 @@
     <ClInclude Include="Src\Application\Object\Terrain\Wall\Wall.h" />
     <ClInclude Include="Src\Application\Scene\BaseScene\BaseScene.h" />
     <ClInclude Include="Src\Application\Scene\GameScene\GameScene.h" />
+    <ClInclude Include="Src\Application\Scene\ResultScene\ResultScene.h" />
     <ClInclude Include="Src\Application\Scene\SceneManager.h" />
     <ClInclude Include="Src\Application\Scene\TitleScene\TitleScene.h" />
+    <ClInclude Include="Src\Application\Scene\Transition\Transition.h" />
     <ClInclude Include="Src\Application\StageSpawner\StageObjectInclude.h" />
     <ClInclude Include="Src\Application\StageSpawner\StageSpawner.h" />
     <ClInclude Include="Src\Framework\Direct3D\KdMaterial.h" />
@@ -364,8 +366,10 @@
     <ClCompile Include="Src\Application\Object\Terrain\Wall\Wall.cpp" />
     <ClCompile Include="Src\Application\Scene\BaseScene\BaseScene.cpp" />
     <ClCompile Include="Src\Application\Scene\GameScene\GameScene.cpp" />
+    <ClCompile Include="Src\Application\Scene\ResultScene\ResultScene.cpp" />
     <ClCompile Include="Src\Application\Scene\SceneManager.cpp" />
     <ClCompile Include="Src\Application\Scene\TitleScene\TitleScene.cpp" />
+    <ClCompile Include="Src\Application\Scene\Transition\Transition.cpp" />
     <ClCompile Include="Src\Application\StageSpawner\StageSpawner.cpp" />
     <ClCompile Include="Src\Framework\Direct3D\KdMaterial.cpp">
       <SubType>

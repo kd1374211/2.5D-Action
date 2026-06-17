@@ -58,7 +58,7 @@ void HeightsNumber::Init()
 	m_nowHeight = 0.0f;
 
 	m_tex = std::make_shared<KdTexture>();
-	m_tex->Load("Asset/Textures/Number.png");
+	m_tex->Load("Asset/Textures/Scene/Game/HeightNumber.png");
 }
 
 void HeightsNumber::Release()

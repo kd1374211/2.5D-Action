@@ -1,8 +1,8 @@
 ﻿#pragma once
 
 //階段の最大（最小）座標
-const float STAIRPOSY_MIN = -6.16f;
-const float STAIRPOSY_MAX = 5.36f;
+const float STAIRPOSY_MIN = -3.28f;
+const float STAIRPOSY_MAX = 8.24f;
 
 //再生成時の位置変化
 const float STAIRRESPAWNY = 11.52f;

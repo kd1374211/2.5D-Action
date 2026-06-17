@@ -1,10 +1,10 @@
 ﻿#include "RollingWood.h"
 #include "../../../Scene/SceneManager.h"
 
-RollingWood::RollingWood(Math::Vector3 a_startPos, float a_startDeg, float a_linePos, float a_length)
+RollingWood::RollingWood(Math::Vector3 a_baseStartPos, float a_startDeg, float a_linePos, float a_length)
 {
 	Init();
-	m_pos = a_startPos;
+	m_pos = a_baseStartPos + SPAWNPOS;
 	m_angleDeg = a_startDeg;
 	m_linePos = a_linePos;
 	m_length = a_length;

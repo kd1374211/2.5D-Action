@@ -270,7 +270,7 @@ void KdFontSprite::CreateFontTexture(HDC hdc, const std::string& text, int antiA
 void KdFontManager::Init(HWND hWnd)
 {
 	m_LoadedFontMap.clear();
-
+	
 	m_hWnd	= hWnd;
 	m_hDC	= GetDC(m_hWnd);
 }

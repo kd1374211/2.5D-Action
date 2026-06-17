@@ -4,7 +4,7 @@ class Boulder :public KdGameObject
 {
 public:
 
-	Boulder(Math::Vector3 a_startPos, float a_startDeg, float a_linePos);
+	Boulder(Math::Vector3 a_baseStartPos, float a_startDeg, float a_linePos);
 	~Boulder()override { Release(); }
 
 	void Update()override;
@@ -13,6 +13,9 @@ public:
 	void GenerateDepthMapFromLight()override;
 
 private:
+
+	//召喚時にずらすY
+	const Math::Vector3 SPAWNPOS = Math::Vector3(0, 1.8f, 0);
 
 	//地形とのスピード差
 	const float SPEEDMULTIADD = 0.5f;

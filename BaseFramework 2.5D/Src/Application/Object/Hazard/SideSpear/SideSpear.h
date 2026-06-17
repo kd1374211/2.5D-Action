@@ -4,7 +4,7 @@ class SideSpear :public KdGameObject
 {
 public:
 
-	SideSpear(float a_startDeg);
+	SideSpear(float a_baseStartPosY, float a_startDeg);
 	~SideSpear()override { Release(); }
 
 	void Update()override;
@@ -14,7 +14,7 @@ public:
 
 private:
 
-	const float SPAWNPOSY = 6.21f;
+	const float SPAWNPOSY = 0.85f;
 	const float BASELINEPOS = 2.02f;
 
 	void Init()override;

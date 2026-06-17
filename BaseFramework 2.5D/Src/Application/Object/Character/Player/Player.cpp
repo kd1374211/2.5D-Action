@@ -27,6 +27,9 @@ void Player::Update()
 	{
 		m_moveY -= GRAVITY;
 		if (m_moveY <= FALLSPEEDMAX)m_moveY = FALLSPEEDMAX;
+
+		//奈落ジャンプ状態解除
+		if (m_isVoidJump && m_moveY <= 0.0f)m_isVoidJump = false;
 	}
 	
 	//死んでいたら操作不可
@@ -128,9 +131,9 @@ void Player::HitCheck()
 	//当たり判定を実装するときは当たる側と当たられる側が存在する
 	//当たる側の処理
 
-	//上飛び中は地面判定スキップ
+	//奈落による上飛び中は地面判定スキップ
 	SCENEMGR.SetScrollBack(0.0f);
-	if (m_moveY <= 0.0f)
+	if (!m_isVoidJump)
 	{
 		//↓ここからレイ判定
 
@@ -184,67 +187,67 @@ void Player::HitCheck()
 			if (m_nowAnim == PlayerAnimType::Fall)ChangeAnim(PlayerAnimType::Run);
 		}
 
-		//2
-		//当たり判定（スフィア判定）
-
-		//変数作成
-		KdCollider::SphereInfo sphere;
-
-		//スフィアの中心座標
-		sphere.m_sphere.Center = m_pos + Math::Vector3(0, 0.4f, 0);
-
-		//スフィアの半径
-		sphere.m_sphere.Radius = m_pos.z * SPHEREGROUNDHITSIZEMULTI;
-
-		//当たり判定をしたいタイプ
-		sphere.m_type = KdCollider::TypeGround;
-
-		//デバッグ用
-		m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius);
-
-		//スフィアに当たったオブジェクト情報を格納するリスト
-		std::list<KdCollider::CollisionResult> retSphereList;
-
-		//全オブジェクトとの当たり判定
-		for (auto& obj : SCENEMGR.GetObjList())
+		//↑で地面に立っている（isHitがtrue）ならスキップ
+		if (!isHit)
 		{
-			//↓スフィア当たり判定
-			obj->Intersects(sphere, &retSphereList);
-		}
+			//2
+			//当たり判定（スフィア判定）
 
-		//スフィアに当たったリストから一番近いオブジェクトを探す
+			//変数作成
+			KdCollider::SphereInfo sphere;
 
-		//↓レイの時にあるので使いまわし
-		maxOverLap = 0.0f;		//スフィアのときはめり込んだ長さ
-		isHit = false;
+			//スフィアの中心座標
+			sphere.m_sphere.Center = m_pos + Math::Vector3(0, 0.4f, 0);
 
-		//当たった方向
-		float deg;
-		Math::Vector3 hitDir;
-		
-		for (auto& ret : retSphereList)
-		{
-			//スフィアにめり込んだ長さが一番長いものを探す
-			if (maxOverLap < ret.m_overlapDistance)
+			//スフィアの半径
+			sphere.m_sphere.Radius = m_pos.z * SPHEREGROUNDHITSIZEMULTI;
+
+			//当たり判定をしたいタイプ
+			sphere.m_type = KdCollider::TypeGround;
+
+			//デバッグ用
+			m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius);
+
+			//スフィアに当たったオブジェクト情報を格納するリスト
+			std::list<KdCollider::CollisionResult> retSphereList;
+
+			//全オブジェクトとの当たり判定
+			for (auto& obj : SCENEMGR.GetObjList())
 			{
-				hitPos = ret.m_hitPos;
-
-				//衝突方向を見る(Y消し)
-				hitDir = ret.m_hitDir;
-				
-				//衝突位置の角度を求める
-				deg = DirectX::XMConvertToDegrees(atan2f(hitPos.z, hitPos.x));
-
-				//更新
-				maxOverLap = ret.m_overlapDistance;
-				isHit = true;
+				//↓スフィア当たり判定
+				obj->Intersects(sphere, &retSphereList);
 			}
-		}
 
-		if (isHit)
-		{
-			//一定以上プレイヤーのYが低ければ当たり判定
-			if (m_pos.y <= -0.15f)
+			//スフィアに当たったリストから一番近いオブジェクトを探す
+
+			//↓レイの時にあるので使いまわし
+			maxOverLap = 0.0f;		//スフィアのときはめり込んだ長さ
+			isHit = false;
+
+			//当たった方向
+			float deg;
+			Math::Vector3 hitDir;
+
+			for (auto& ret : retSphereList)
+			{
+				//スフィアにめり込んだ長さが一番長いものを探す
+				if (maxOverLap < ret.m_overlapDistance)
+				{
+					hitPos = ret.m_hitPos;
+
+					//衝突方向を見る
+					hitDir = ret.m_hitDir;
+
+					//衝突位置の角度を求める
+					deg = DirectX::XMConvertToDegrees(atan2f(hitPos.z, hitPos.x));
+
+					//更新
+					maxOverLap = ret.m_overlapDistance;
+					isHit = true;
+				}
+			}
+
+			if (isHit)
 			{
 				//押した先の位置を見る
 				Math::Vector3 pushPos = m_pos + hitDir * maxOverLap;
@@ -254,6 +257,14 @@ void Player::HitCheck()
 
 				//スクロールを戻す
 				SCENEMGR.SetScrollBack(-90.0f - deg);
+
+				//プレイヤーのYを押す
+				m_pos.y = pushPos.y;
+
+				if (m_pos.y + enableStepHigh > hitPos.y)
+				{
+					m_moveY = 0.0f;
+				}
 			}
 		}
 	}
@@ -302,6 +313,15 @@ void Player::HitCheck()
 
 	KdDebugGUI::Instance().AddLog("PlayerPosY : %.2f\n", m_pos.y);
 	KdDebugGUI::Instance().AddLog("PlayerLinePos : %.2f\n", m_pos.z);
+}
+
+void Player::PostUpdate()
+{
+	//戻ったスクロール量で変動するY座標を取得
+	float ScrollBackY = SCENEMGR.GetScrollBack() * TERRAINBASEMOVEY;
+
+	//Y変化
+	m_pos.y -= ScrollBackY;
 
 	//マトリックス
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
@@ -328,6 +348,8 @@ void Player::GenerateDepthMapFromLight()
 
 void Player::DrawSprite()
 {
+	if (!m_isHeartTex)return;
+
 	int heartNum = m_healthTexData.size();
 	float left = -630.0f;
 	for (auto &itr : m_healthTexData)
@@ -379,6 +401,7 @@ void Player::FallVoid()
 {
 	//ジャンプ不可に
 	m_isJump = true;
+	m_isVoidJump = true;
 	//上方向に飛ばす
 	m_moveY = HITJUMP_VOID;
 
@@ -406,12 +429,13 @@ void Player::FallVoid()
 	OnDamage();
 }
 
-void Player::Respawn()
+void Player::Respawn(Math::Vector3 a_pos)
 {
 	//初期化
-	m_pos = { 0,0.2f,LINEPOSSTART };
+	m_pos = a_pos;
 	m_moveY = 0.0f;
 	m_isJump = false;
+	m_isVoidJump = false;
 	m_isAttack = false;
 	m_attackF = 0;
 	m_attackWaitF = 0;
@@ -420,6 +444,7 @@ void Player::Respawn()
 	m_isGameEnd = false;
 	ChangeAnim(PlayerAnimType::Run);
 
+	m_healthTexData.clear();
 	m_health = STARTHEALTH;
 	for (int i = 0; i < STARTHEALTH; i++)
 	{
@@ -436,7 +461,7 @@ void Player::Init()
 {
 	//ハート画像
 	m_heartTex = std::make_shared<KdTexture>();
-	m_heartTex->Load("Asset/Textures/Heart.png");
+	m_heartTex->Load("Asset/Textures/Chara/Player/Heart.png");
 
 	//デバッグ
 	m_pDebugWire = std::make_unique<KdDebugWireFrame>();

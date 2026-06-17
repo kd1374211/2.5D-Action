@@ -8,10 +8,13 @@ class CharaManager
 {
 public:
 
-	void StartGame(BaseScene* a_scene);
+	void SpawnPlayer(BaseScene* a_scene);
+	void SpawnPlayer();
 
 	void Update();
 
+	void ResetPlayer(Math::Vector3 a_respawnPos);
+	void ResetPlayer();
 	std::shared_ptr<Player> GetPlayer()const { return m_player; }
 
 	//召喚

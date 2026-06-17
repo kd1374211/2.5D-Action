@@ -11,6 +11,7 @@ public :
 	{
 		Title,
 		Game,
+		Result
 	};
 
 	void PreUpdate();
@@ -37,8 +38,11 @@ public :
 	// 現在のシーンにオブジェクトを追加
 	void AddObject(const std::shared_ptr<KdGameObject>& _obj);
 
+	//持ち越しオブジェクトを追加
+	void AddCarryObject(const std::shared_ptr<KdGameObject> a_obj) { m_sceneCarryOverObj.push_back(a_obj); }
+
 	//現在のシーンにスクロール量を設定
-	void SetScrollSpeedMulti(float a_speed) {
+	void SetScrollSpeedMulti(float a_speed = 1.0f) {
 		if (!test)m_scrollSpeedMulti = 0.0f;
 		else m_scrollSpeedMulti = a_speed; }
 
@@ -84,6 +88,9 @@ private :
 
 	//テスト
 	bool test = true;
+
+	//シーン持越しオブジェクト
+	std::list<std::shared_ptr<KdGameObject>> m_sceneCarryOverObj = {};
 	
 private:
 

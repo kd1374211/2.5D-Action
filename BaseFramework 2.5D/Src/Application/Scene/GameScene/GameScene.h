@@ -3,6 +3,7 @@
 #include"../BaseScene/BaseScene.h"
 
 class Player;
+class Transition;
 
 class GameScene : public BaseScene
 {
@@ -16,6 +17,7 @@ public :
 
 private:
 
+	std::weak_ptr<Transition> m_wpTransition;
 	std::weak_ptr<Player> m_wpPlayer;
 	Math::Vector3 m_cameraPos;
 	Math::Vector3 m_cameraDeg;
@@ -23,4 +25,6 @@ private:
 	void Init()  override;
 	void Event() override;
 
+	bool m_isTransition = false;
+	
 };

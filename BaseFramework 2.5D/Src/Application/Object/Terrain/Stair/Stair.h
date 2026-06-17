@@ -12,7 +12,8 @@ public:
 	void DrawLit()override;
 
 	//再生成（ワープ）
-	void Respawn(bool a_test);
+	void Respawn();
+	void Respawn(bool a_isStair);
 
 	//セッター
 	void SetStairFlg(bool a_flg) { test = a_flg; }

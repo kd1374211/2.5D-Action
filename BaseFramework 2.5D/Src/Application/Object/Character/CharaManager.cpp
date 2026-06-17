@@ -3,13 +3,28 @@
 #include "../../Scene/BaseScene/BaseScene.h"
 #include "CharacterInclude.h"
 
-void CharaManager::StartGame(BaseScene* a_scene)
+void CharaManager::SpawnPlayer(BaseScene* a_scene)
 {
 	a_scene->AddObject(m_player);
 }
 
+void CharaManager::SpawnPlayer()
+{
+	SCENEMGR.AddObject(m_player);
+}
+
 void CharaManager::Update()
 {
+}
+
+void CharaManager::ResetPlayer(Math::Vector3 a_respawnPos)
+{
+	m_player->Respawn(a_respawnPos);
+}
+
+void CharaManager::ResetPlayer()
+{
+	m_player->Respawn();
 }
 
 void CharaManager::SpawnEnemy(EnemyName a_name, Math::Vector3 a_pos, float a_deg, float a_linePos)

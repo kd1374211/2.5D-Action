@@ -4,7 +4,7 @@ class Spear :public KdGameObject
 {
 public:
 
-	Spear(Math::Vector3 a_startPos, float a_startDeg, float a_linePos);
+	Spear(Math::Vector3 a_baseStartPos, float a_startDeg, float a_linePos);
 	~Spear()override { Release(); }
 
 	void Update()override;
@@ -16,6 +16,9 @@ private:
 
 	void Init()override;
 	void Release();
+
+	//出現位置
+	const Math::Vector3 SPAWNPOS = Math::Vector3(0, 0.4f, 0);
 
 	//槍の位置
 	const float SPEARPOSMAX = 1.0f;

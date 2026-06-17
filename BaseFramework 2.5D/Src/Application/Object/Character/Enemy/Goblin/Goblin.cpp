@@ -1,10 +1,10 @@
 ﻿#include "Goblin.h"
 #include "../../../../Scene/SceneManager.h"
 
-Goblin::Goblin(Math::Vector3 a_startPos, float a_startDeg, float a_linePos)
+Goblin::Goblin(Math::Vector3 a_baseStartPos, float a_startDeg, float a_linePos)
 {
 	Init();
-	m_pos = a_startPos;
+	m_pos = a_baseStartPos + SPAWNPOS;
 	m_angleDeg = a_startDeg;
 	m_linePos = a_linePos;
 }

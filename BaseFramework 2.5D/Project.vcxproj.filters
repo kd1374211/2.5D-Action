@@ -139,6 +139,12 @@
     <Filter Include="Src\Application\Object\Effect\Slash">
       <UniqueIdentifier>{610b6860-6f82-414a-92b8-b45cabe78eb0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Scene\ResultScene">
+      <UniqueIdentifier>{dc2b8bb8-a117-4e48-a8bd-ea6af021bf7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Scene\Transition">
+      <UniqueIdentifier>{fc0b97b3-d8c2-47ac-9270-98d0cfe4e5ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -375,6 +381,12 @@
     <ClInclude Include="Src\Application\Object\Effect\Slash\Slash.h">
       <Filter>Src\Application\Object\Effect\Slash</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Scene\ResultScene\ResultScene.h">
+      <Filter>Src\Application\Scene\ResultScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Scene\Transition\Transition.h">
+      <Filter>Src\Application\Scene\Transition</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -568,6 +580,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Effect\Slash\Slash.cpp">
       <Filter>Src\Application\Object\Effect\Slash</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Scene\ResultScene\ResultScene.cpp">
+      <Filter>Src\Application\Scene\ResultScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Scene\Transition\Transition.cpp">
+      <Filter>Src\Application\Scene\Transition</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -2,10 +2,10 @@
 #include "../../../Scene/SceneManager.h"
 #include "../../../Const/StageConst.h"
 
-SideSpear::SideSpear(float a_startDeg)
+SideSpear::SideSpear(float a_baseStartPosY, float a_startDeg)
 {
 	Init();
-	m_pos = { sinf(DirectX::XMConvertToRadians(m_angleDeg)) * BASELINEPOS,SPAWNPOSY,cosf(DirectX::XMConvertToRadians(m_angleDeg)) * BASELINEPOS };
+	m_pos = { sinf(DirectX::XMConvertToRadians(m_angleDeg)) * BASELINEPOS,a_baseStartPosY + SPAWNPOSY,cosf(DirectX::XMConvertToRadians(m_angleDeg)) * BASELINEPOS };
 	m_angleDeg = a_startDeg;
 }
 
