@@ -288,6 +288,7 @@
     <ClInclude Include="Src\Application\Object\Hazard\SideSpear\SideSpear.h" />
     <ClInclude Include="Src\Application\Object\Hazard\Spear\Spear.h" />
     <ClInclude Include="Src\Application\Object\Sprite\Number\HeightsNumber.h" />
+    <ClInclude Include="Src\Application\Object\Sprite\ResultWindow\ResultWindow.h" />
     <ClInclude Include="Src\Application\Object\Terrain\Pillar\Pillar.h" />
     <ClInclude Include="Src\Application\Object\Terrain\Stair\Stair.h" />
     <ClInclude Include="Src\Application\Object\Terrain\Void\Void.h" />
@@ -360,6 +361,7 @@
     <ClCompile Include="Src\Application\Object\Hazard\SideSpear\SideSpear.cpp" />
     <ClCompile Include="Src\Application\Object\Hazard\Spear\Spear.cpp" />
     <ClCompile Include="Src\Application\Object\Sprite\Number\HeightsNumber.cpp" />
+    <ClCompile Include="Src\Application\Object\Sprite\ResultWindow\ResultWindow.cpp" />
     <ClCompile Include="Src\Application\Object\Terrain\Pillar\Pillar.cpp" />
     <ClCompile Include="Src\Application\Object\Terrain\Stair\Stair.cpp" />
     <ClCompile Include="Src\Application\Object\Terrain\Void\Void.cpp" />

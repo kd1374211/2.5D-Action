@@ -145,6 +145,9 @@
     <Filter Include="Src\Application\Scene\Transition">
       <UniqueIdentifier>{fc0b97b3-d8c2-47ac-9270-98d0cfe4e5ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Object\Sprite\ResultWindow">
+      <UniqueIdentifier>{d89d1e34-27bf-45dc-af5b-2921d5655646}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -387,6 +390,9 @@
     <ClInclude Include="Src\Application\Scene\Transition\Transition.h">
       <Filter>Src\Application\Scene\Transition</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Object\Sprite\ResultWindow\ResultWindow.h">
+      <Filter>Src\Application\Object\Sprite\ResultWindow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -586,6 +592,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Scene\Transition\Transition.cpp">
       <Filter>Src\Application\Scene\Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Sprite\ResultWindow\ResultWindow.cpp">
+      <Filter>Src\Application\Object\Sprite\ResultWindow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
