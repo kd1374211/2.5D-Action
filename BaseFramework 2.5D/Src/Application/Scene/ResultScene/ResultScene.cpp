@@ -2,6 +2,7 @@
 #include "../../StageSpawner/StageSpawner.h"
 #include "../../Object/Character/CharaManager.h"
 #include "../SceneManager.h"
+#include "../../Object/Sprite/ResultWindow/ResultWindow.h"
 
 void ResultScene::Init()
 {
@@ -10,6 +11,9 @@ void ResultScene::Init()
 
 	//地形生成
 	STAGESPAWNER.StartGame(this);
+
+	//リザルトウィンドウ
+	AddObject(std::make_shared<ResultWindow>());
 
 	//スクロール
 	SCENEMGR.SetScrollSpeedMulti();
