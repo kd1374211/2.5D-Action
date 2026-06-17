@@ -2,7 +2,7 @@
 #include "../../StageSpawner/StageSpawner.h"
 #include "../../Object/Character/CharaManager.h"
 #include "../SceneManager.h"
-#include "../../Object/Sprite/ResultWindow/ResultWindow.h"
+#include "../../Object/Sprite/Scene/ResultWindow/ResultWindow.h"
 
 void ResultScene::Init()
 {
@@ -13,7 +13,9 @@ void ResultScene::Init()
 	STAGESPAWNER.StartGame(this);
 
 	//リザルトウィンドウ
-	AddObject(std::make_shared<ResultWindow>());
+	std::shared_ptr<ResultWindow> window = std::make_shared<ResultWindow>();
+	m_wpResultWindow = window;
+	AddObject(window);
 
 	//スクロール
 	SCENEMGR.SetScrollSpeedMulti();
@@ -55,64 +57,79 @@ void ResultScene::Event()
 	//リザルト開始後
 	else
 	{
-		if (!m_isResultEnd)
+		if (!m_canResultEnd)
 		{
 			//リザルトスキップ
 			if (GetAsyncKeyState(VK_SPACE) & 0x8000 && !m_isSpaceKey)
 			{
-				m_isResultEnd = true;
+				m_canResultEnd = true;
 			}
 
-			if (m_countF >= RESULTENDF)m_isResultEnd = true;
+			if (m_countF >= RESULTENDF)m_canResultEnd = true;
 		}
 		//リザルト終了（操作可能）
 		else
 		{
-			if (GetAsyncKeyState(VK_SPACE) & 0x8000 && !m_isSpaceKey)
+			if (GetAsyncKeyState(VK_SPACE) & 0x8000 && !m_isSpaceKey && !m_isResultEnd)
 			{
-				m_isTitleTransition = true;
+				if (!m_wpResultWindow.expired())
+				{
+					m_wpResultWindow.lock()->ResultEnd();
+					m_isResultEnd = true;
+				}
 			}
 
-			if (m_isTitleTransition)
+			if (m_isResultEnd)
 			{
-				//タイトルへのスクロール
-				if (m_scrollSpeed < TRANSITIONSCROLLMAX && !m_isTitleTransitionStop)
+				if (!m_wpResultWindow.expired())
 				{
-					m_scrollSpeed += TRANSITIONSCROLLADD;
-					if (m_scrollSpeed >= TRANSITIONSCROLLMAX)
+					if(m_wpResultWindow.lock()->GetIsWindowOut())
 					{
-						m_scrollSpeed = TRANSITIONSCROLLMAX;
-						m_isTitleTransitionStop = true;
-						m_transitionScroll += 360.0f;
-					}
-				}
-				else if (m_isTitleTransitionStop)
-				{
-					if (m_transitionScroll <= 180.0f && !m_isPlayerSpawned)
-					{
-						CHARAMGR.ResetPlayer();
-						CHARAMGR.SpawnPlayer();
-						m_isPlayerSpawned = true;
-					}
-					else if (m_isPlayerSpawned)
-					{
-						m_scrollSpeed = m_transitionScroll / 12.0f;
-						if (m_scrollSpeed < 1.0f)m_scrollSpeed = 1.0f;
-						else if (m_scrollSpeed > 10.0f)m_scrollSpeed = 10.0f;
+						m_isTitleTransition = true;
 					}
 				}
 
-				//角度更新
-				m_transitionScroll -= m_scrollSpeed;
-				if (m_transitionScroll < 0.0f)m_transitionScroll += 360.0f;
-
-				//タイトル移行
-				if (m_isPlayerSpawned && m_transitionScroll < 1.0f)
+				if (m_isTitleTransition)
 				{
-					SceneManager::Instance().SetNextScene
-					(
-						SceneManager::SceneType::Title
-					);
+					//タイトルへのスクロール
+					if (m_scrollSpeed < TRANSITIONSCROLLMAX && !m_isTitleTransitionStop)
+					{
+						m_scrollSpeed += TRANSITIONSCROLLADD;
+						if (m_scrollSpeed >= TRANSITIONSCROLLMAX)
+						{
+							m_scrollSpeed = TRANSITIONSCROLLMAX;
+							m_isTitleTransitionStop = true;
+							m_transitionScroll += 360.0f;
+						}
+					}
+					else if (m_isTitleTransitionStop)
+					{
+						if (m_transitionScroll <= 180.0f && !m_isPlayerSpawned)
+						{
+							CHARAMGR.ResetPlayer();
+							CHARAMGR.SpawnPlayer();
+							m_isPlayerSpawned = true;
+						}
+						else if (m_isPlayerSpawned)
+						{
+							m_scrollSpeed = m_transitionScroll / 12.0f;
+							if (m_scrollSpeed < 1.0f)m_scrollSpeed = 1.0f;
+							else if (m_scrollSpeed > 10.0f)m_scrollSpeed = 10.0f;
+						}
+					}
+
+					//角度更新
+					m_transitionScroll -= m_scrollSpeed;
+					if (m_transitionScroll < 0.0f)m_transitionScroll += 360.0f;
+
+					//タイトル移行
+					if (m_isPlayerSpawned && m_transitionScroll < 1.0f)
+					{
+						SceneManager::Instance().SetNextScene
+						(
+							SceneManager::SceneType::Title
+						);
+					}
 				}
 			}
 		}

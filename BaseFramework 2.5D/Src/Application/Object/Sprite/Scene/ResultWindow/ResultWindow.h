@@ -10,6 +10,12 @@ public:
 	void Update()override;
 	void DrawSprite()override;
 
+	//リザルト終了
+	void ResultEnd() { m_isResultEnd = true; }
+
+	//ウィンドウ撤去
+	bool GetIsWindowOut()const { return m_isWindowOut; }
+	
 private:
 
 	void Init()override;
@@ -21,9 +27,17 @@ private:
 	int m_texSplit = 0;
 	int m_mapSizeX = 0;
 	int m_mapSizeY = 0;
-
+	
 	//マップ配置
 	std::vector<std::vector<int>> m_texMap;
 	std::shared_ptr<KdTexture> m_tex = nullptr;
+
+	//リザルト終了
+	bool m_isResultEnd = false;
+
+	const float WINDOWMOVESPEED = 32.0f;
+
+	//ウィンドウが画面外に出て行った
+	bool m_isWindowOut = false;
 
 };

@@ -2,6 +2,8 @@
 
 #include"../BaseScene/BaseScene.h"
 
+class ResultWindow;
+
 class ResultScene : public BaseScene
 {
 public:
@@ -37,8 +39,13 @@ private:
 
 	//リザルト終了可能フラグ
 	static const int RESULTENDF = 200;
+	bool m_canResultEnd = false;
+
+	//リザルト終了フラグ
 	bool m_isResultEnd = false;
 
 	//スペースキー
 	bool m_isSpaceKey = true;
+
+	std::weak_ptr<ResultWindow> m_wpResultWindow;
 };

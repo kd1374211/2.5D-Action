@@ -50,6 +50,8 @@ void SceneManager::PostUpdate()
 	KdDebugGUI::Instance().AddLog("ScrollThisFrame : %.2f\n", m_diffDeg);
 	KdDebugGUI::Instance().AddLog("StageScrollDeg : %.2f\n", m_currentDeg);
 	m_lastDeg = m_currentDeg;
+
+	KdDebugGUI::Instance().AddLog("Object Count : %d\n", (int)m_currentScene->GetObjList().size());
 }
 
 void SceneManager::PreDraw()

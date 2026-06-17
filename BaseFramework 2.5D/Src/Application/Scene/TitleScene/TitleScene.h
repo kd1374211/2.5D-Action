@@ -2,6 +2,8 @@
 
 #include"../BaseScene/BaseScene.h"
 
+class TitleObject;
+
 class TitleScene : public BaseScene
 {
 public :
@@ -16,5 +18,13 @@ private :
 
 	Math::Vector3 m_cameraPos;
 	Math::Vector3 m_cameraDeg;
+
+	//スペースキー
+	bool m_isSpaceKey = true;
+
+	std::weak_ptr<TitleObject> m_wpTitleObject;
+
+	//フェードアウト
+	bool m_isFadeStart = false;
 
 };

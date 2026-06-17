@@ -1,16 +1,22 @@
 ﻿#include "ResultWindow.h"
+#include "../../../../Const/ScreenConst.h"
 
 #define TEXDRAWSIZEHALF (m_texDrawSize * 0.5f)
 
 void ResultWindow::Update()
 {
+	if (m_isResultEnd && !m_isWindowOut)
+	{
+		m_pos.y -= WINDOWMOVESPEED;
+		if (m_pos.y < -(SCREENSIZEHALF.y + TEXDRAWSIZEHALF.y * m_mapSizeY))m_isWindowOut = true;
+	}
 }
 
 void ResultWindow::DrawSprite()
 {
 	//Posをもとにテクスチャマップから座標を計算して描画
-	float DrawPosStartX = m_pos.x - (TEXDRAWSIZEHALF.x) * (m_mapSizeX - 1);
-	float DrawPosStartY = m_pos.y + (TEXDRAWSIZEHALF.y) * (m_mapSizeY - 1);
+	float DrawPosStartX = m_pos.x - TEXDRAWSIZEHALF.x * (m_mapSizeX - 1);
+	float DrawPosStartY = m_pos.y + TEXDRAWSIZEHALF.y * (m_mapSizeY - 1);
 
 	for (int i = 0; i < m_mapSizeY; i++)
 	{
