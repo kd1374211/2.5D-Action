@@ -214,7 +214,10 @@ bool Application::Init(int w, int h)
 	// フォント初期化
 	//===================================================================
 	KdFontManager::Instance().Init(GetWindowHandle());
-	//KdFontManager::Instance().AddFont(0, "a", 48);
+
+	//メモ・リソースはパス、フォントはタイトル
+	//KdFontManager::Instance().AddFontResource("Asset/cp_period.otf");
+	//KdFontManager::Instance().AddFont(0,"チェックポイント.　（ピリオド）", 48);
 	
 	//===================================================================
 	// ゲーム固有の初期化
