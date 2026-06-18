@@ -288,7 +288,8 @@
     <ClInclude Include="Src\Application\Object\Hazard\RollingWood\RollingWood.h" />
     <ClInclude Include="Src\Application\Object\Hazard\SideSpear\SideSpear.h" />
     <ClInclude Include="Src\Application\Object\Hazard\Spear\Spear.h" />
-    <ClInclude Include="Src\Application\Object\Sprite\Number\HeightsNumber.h" />
+    <ClInclude Include="Src\Application\Object\Sprite\HeightsNumber\HeightsNumber.h" />
+    <ClInclude Include="Src\Application\Object\Sprite\KillCount\KillCount.h" />
     <ClInclude Include="Src\Application\Object\Sprite\Scene\ResultWindow\ResultWindow.h" />
     <ClInclude Include="Src\Application\Object\Sprite\Scene\TitleObject\TitleObject.h" />
     <ClInclude Include="Src\Application\Object\Terrain\Pillar\Pillar.h" />
@@ -301,6 +302,7 @@
     <ClInclude Include="Src\Application\Scene\SceneManager.h" />
     <ClInclude Include="Src\Application\Scene\TitleScene\TitleScene.h" />
     <ClInclude Include="Src\Application\Scene\Transition\Transition.h" />
+    <ClInclude Include="Src\Application\Score\ScoreManager.h" />
     <ClInclude Include="Src\Application\Sound\SoundManager.h" />
     <ClInclude Include="Src\Application\StageSpawner\StageObjectInclude.h" />
     <ClInclude Include="Src\Application\StageSpawner\StageSpawner.h" />
@@ -363,7 +365,8 @@
     <ClCompile Include="Src\Application\Object\Hazard\RollingWood\RollingWood.cpp" />
     <ClCompile Include="Src\Application\Object\Hazard\SideSpear\SideSpear.cpp" />
     <ClCompile Include="Src\Application\Object\Hazard\Spear\Spear.cpp" />
-    <ClCompile Include="Src\Application\Object\Sprite\Number\HeightsNumber.cpp" />
+    <ClCompile Include="Src\Application\Object\Sprite\HeightsNumber\HeightsNumber.cpp" />
+    <ClCompile Include="Src\Application\Object\Sprite\KillCount\KillCount.cpp" />
     <ClCompile Include="Src\Application\Object\Sprite\Scene\ResultWindow\ResultWindow.cpp" />
     <ClCompile Include="Src\Application\Object\Sprite\Scene\TitleObject\TitleObject.cpp" />
     <ClCompile Include="Src\Application\Object\Terrain\Pillar\Pillar.cpp" />
@@ -376,6 +379,7 @@
     <ClCompile Include="Src\Application\Scene\SceneManager.cpp" />
     <ClCompile Include="Src\Application\Scene\TitleScene\TitleScene.cpp" />
     <ClCompile Include="Src\Application\Scene\Transition\Transition.cpp" />
+    <ClCompile Include="Src\Application\Score\ScoreManager.cpp" />
     <ClCompile Include="Src\Application\Sound\SoundManager.cpp" />
     <ClCompile Include="Src\Application\StageSpawner\StageSpawner.cpp" />
     <ClCompile Include="Src\Framework\Direct3D\KdMaterial.cpp">

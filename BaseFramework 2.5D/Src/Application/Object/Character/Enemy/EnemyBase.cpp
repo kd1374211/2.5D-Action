@@ -1,5 +1,6 @@
 ﻿#include "EnemyBase.h"
 #include "../../../Scene/SceneManager.h"
+#include "../../../Score/ScoreManager.h"
 
 void EnemyBase::HitCheck()
 {
@@ -167,6 +168,7 @@ void EnemyBase::UpdateAnim()
 
 void EnemyBase::OnHit()
 {
+	SCOREMGR.AddKillCount();
 	m_isDead = true;
 	m_isDissolve = true;
 	m_pCollider->SetEnableAll(false);

@@ -34,7 +34,7 @@ protected :
 	// 継承先シーンで必要ならオーバーライドする
 	virtual void Init();
 	virtual void Event();
-
+	
 	std::shared_ptr<KdCamera> m_camera = nullptr;
 
 	// 全オブジェクトのアドレスをリストで管理

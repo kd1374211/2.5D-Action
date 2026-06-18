@@ -24,7 +24,7 @@ private:
 
 	void Init()  override;
 	void Event() override;
-
+	
 	bool m_isTransition = false;
 	
 };

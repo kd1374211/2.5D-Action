@@ -3,9 +3,11 @@
 #include "../../Object/Character/Player/Player.h"
 #include "../../Object/Character/CharaManager.h"
 #include "../../StageSpawner/StageSpawner.h"
-#include "../../Object/Sprite/Number/HeightsNumber.h"
+#include "../../Object/Sprite/HeightsNumber/HeightsNumber.h"
+#include "../../Object/Sprite/KillCount/KillCount.h"
 #include "../Transition/Transition.h"
 #include "../../Sound/SoundManager.h"
+#include "../../Score/ScoreManager.h"
 
 void GameScene::Event()
 {
@@ -140,6 +142,12 @@ void GameScene::Init()
 
 	//現在の高さ
 	AddObject(std::make_shared<HeightsNumber>());
+
+	//キルカウント
+	AddObject(std::make_shared<KillCount>());
+
+	//スコアリセット
+	SCOREMGR.Reset();
 
 	//テスト用
 	FILE* fp = nullptr;

@@ -118,9 +118,6 @@
     <Filter Include="Src\Application\Object\Sprite">
       <UniqueIdentifier>{e1a201e8-3bb8-466f-8479-394998b59bf6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Application\Object\Sprite\Number">
-      <UniqueIdentifier>{d5417413-0f0e-4061-98f7-dd8610bbafb1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Application\Object\Hazard\SideSpear">
       <UniqueIdentifier>{449c68d5-5433-41e9-b8a2-094ccd699e8f}</UniqueIdentifier>
     </Filter>
@@ -156,6 +153,15 @@
     </Filter>
     <Filter Include="Src\Application\Sound">
       <UniqueIdentifier>{6df0d2d4-48ac-4cb9-881c-862c2488918b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Sprite\HeightsNumber">
+      <UniqueIdentifier>{d5417413-0f0e-4061-98f7-dd8610bbafb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Sprite\KillCount">
+      <UniqueIdentifier>{939856fe-0f94-4580-a039-47eafded5f91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Score">
+      <UniqueIdentifier>{d1a0c26b-2843-46eb-b82e-8e1c55c11b8c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -360,9 +366,6 @@
     <ClInclude Include="Src\Application\Object\Hazard\Spear\Spear.h">
       <Filter>Src\Application\Object\Hazard\Spear</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\Object\Sprite\Number\HeightsNumber.h">
-      <Filter>Src\Application\Object\Sprite\Number</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\Object\Hazard\SideSpear\SideSpear.h">
       <Filter>Src\Application\Object\Hazard\SideSpear</Filter>
     </ClInclude>
@@ -410,6 +413,15 @@
     </ClInclude>
     <ClInclude Include="Src\Application\Sound\SoundManager.h">
       <Filter>Src\Application\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Sprite\HeightsNumber\HeightsNumber.h">
+      <Filter>Src\Application\Object\Sprite\HeightsNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Sprite\KillCount\KillCount.h">
+      <Filter>Src\Application\Object\Sprite\KillCount</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Score\ScoreManager.h">
+      <Filter>Src\Application\Score</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -581,9 +593,6 @@
     <ClCompile Include="Src\Application\Object\Hazard\Spear\Spear.cpp">
       <Filter>Src\Application\Object\Hazard\Spear</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\Object\Sprite\Number\HeightsNumber.cpp">
-      <Filter>Src\Application\Object\Sprite\Number</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Application\Object\Hazard\SideSpear\SideSpear.cpp">
       <Filter>Src\Application\Object\Hazard\SideSpear</Filter>
     </ClCompile>
@@ -619,6 +628,15 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Sound\SoundManager.cpp">
       <Filter>Src\Application\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Sprite\HeightsNumber\HeightsNumber.cpp">
+      <Filter>Src\Application\Object\Sprite\HeightsNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Sprite\KillCount\KillCount.cpp">
+      <Filter>Src\Application\Object\Sprite\KillCount</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Score\ScoreManager.cpp">
+      <Filter>Src\Application\Score</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
