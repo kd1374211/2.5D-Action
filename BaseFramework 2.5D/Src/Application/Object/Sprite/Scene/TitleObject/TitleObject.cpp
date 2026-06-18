@@ -1,10 +1,28 @@
 ﻿#include "TitleObject.h"
 
+TitleObject::TitleObject(bool a_isFadeIn)
+{
+	m_isFadeIn = a_isFadeIn;
+	m_alpha = m_isFadeIn ? 0.0f : 1.0f;
+
+	Init();
+}
+
 void TitleObject::Update()
 {
+	if (m_isFadeIn)
+	{
+		m_alpha += FADESPEED;
+		if (m_alpha >= 1.0f)
+		{
+			m_alpha = 1.0f;
+			m_isFadeIn = false;
+		}
+	}
+
 	if (m_isFade)
 	{
-		m_alpha -= FADEOUTSPEED;
+		m_alpha -= FADESPEED;
 		if (m_alpha <= 0.0f)
 		{
 			m_alpha = 0.0f;

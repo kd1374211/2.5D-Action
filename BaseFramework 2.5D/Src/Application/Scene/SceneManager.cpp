@@ -90,7 +90,9 @@ void SceneManager::ChangeScene(SceneType _sceneType)
 	switch (_sceneType)
 	{
 	case SceneType::Title:
-		m_currentScene = std::make_shared<TitleScene>();
+		//最初のタイトルシーンかどうかでフェードインするかしないかを決める
+		m_currentScene = std::make_shared<TitleScene>(!m_isFirstTitle);
+		if (m_isFirstTitle)m_isFirstTitle = false;
 		break;
 	case SceneType::Game:
 		m_currentScene = std::make_shared<GameScene>();

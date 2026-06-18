@@ -6,27 +6,41 @@
 
 void TitleScene::Event()
 {
-	if (GetAsyncKeyState(VK_SPACE) & 0x8000 && !m_isSpaceKey && !m_isFadeStart)
+	if (m_isFadeIn)
 	{
-		// タイトルオブジェクトのフェードアウト処理
+		//フェードイン処理
 		if (!m_wpTitleObject.expired())
 		{
-			m_wpTitleObject.lock()->SetFadeFlg(true);
-			m_isFadeStart = true;
+			if (m_wpTitleObject.lock()->GetIsFadeInEnd())
+			{
+				m_isFadeIn = false;
+			}
 		}
 	}
-
-	if (m_isFadeStart)
+	else
 	{
-		//消滅確認
-		if (!m_wpTitleObject.expired())
+		if (GetAsyncKeyState(VK_SPACE) & 0x8000 && !m_isSpaceKey && !m_isFadeStart)
 		{
-			if (m_wpTitleObject.lock()->GetIsFadeEnd())
+			// タイトルオブジェクトのフェードアウト処理
+			if (!m_wpTitleObject.expired())
 			{
-				SceneManager::Instance().SetNextScene
-				(
-					SceneManager::SceneType::Game
-				);
+				m_wpTitleObject.lock()->SetFadeFlg(true);
+				m_isFadeStart = true;
+			}
+		}
+
+		if (m_isFadeStart)
+		{
+			//消滅確認
+			if (!m_wpTitleObject.expired())
+			{
+				if (m_wpTitleObject.lock()->GetIsFadeEnd())
+				{
+					SceneManager::Instance().SetNextScene
+					(
+						SceneManager::SceneType::Game
+					);
+				}
 			}
 		}
 	}
@@ -40,13 +54,20 @@ void TitleScene::Event()
 	STAGESPAWNER.Update();
 }
 
+TitleScene::TitleScene(bool a_isFadeIn)
+{
+	m_isFadeIn = a_isFadeIn;
+	
+	Init();
+}
+
 void TitleScene::Init()
 {
 	m_camera = std::make_shared<KdCamera>();
 	m_camera->SetProjectionMatrix(90);
 
 	//タイトル画像関連
-	std::shared_ptr<TitleObject> titleObj = std::make_shared<TitleObject>();
+	std::shared_ptr<TitleObject> titleObj = std::make_shared<TitleObject>(m_isFadeIn);
 	m_wpTitleObject = titleObj;
 	AddObject(titleObj);
 

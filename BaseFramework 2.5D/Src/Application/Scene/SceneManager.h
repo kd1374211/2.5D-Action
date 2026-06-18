@@ -91,6 +91,9 @@ private :
 
 	//シーン持越しオブジェクト
 	std::list<std::shared_ptr<KdGameObject>> m_sceneCarryOverObj = {};
+
+	//ゲーム最初のタイトルシーンかどうか
+	bool m_isFirstTitle = true;
 	
 private:
 

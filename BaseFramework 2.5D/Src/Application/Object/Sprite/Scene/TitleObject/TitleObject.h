@@ -4,7 +4,7 @@ class TitleObject :public KdGameObject
 {
 public:
 
-	TitleObject() { Init(); }
+	TitleObject(bool a_isFadeIn);
 	~TitleObject()override { Release(); }
 
 	void Update() override;
@@ -13,6 +13,7 @@ public:
 	//フェードアウト
 	void SetFadeFlg(bool a_isFade) { m_isFade = a_isFade; }
 	bool GetIsFadeEnd()const { return m_isFadeEnd; }
+	bool GetIsFadeInEnd()const { return !m_isFadeIn; }
 
 private:
 
@@ -28,10 +29,12 @@ private:
 	std::shared_ptr<KdTexture> m_pressSpaceTex = nullptr;
 
 	//フェードアウト用
-	const float FADEOUTSPEED = 0.025f;
+	const float FADESPEED = 0.025f;
 
 	bool m_isFade = false;
 	float m_alpha = 1.0f;
 	bool m_isFadeEnd = false;
 
+	//フェードイン
+	bool m_isFadeIn = false;
 };

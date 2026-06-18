@@ -8,7 +8,7 @@ class TitleScene : public BaseScene
 {
 public :
 
-	TitleScene() { Init(); }
+	TitleScene(bool a_isFadeIn);
 	~TitleScene() {}
 
 private :
@@ -26,5 +26,8 @@ private :
 
 	//フェードアウト
 	bool m_isFadeStart = false;
+
+	//フェードインフラグ
+	bool m_isFadeIn = false;
 
 };
