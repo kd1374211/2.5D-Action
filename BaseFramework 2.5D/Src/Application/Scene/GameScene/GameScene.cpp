@@ -5,6 +5,7 @@
 #include "../../StageSpawner/StageSpawner.h"
 #include "../../Object/Sprite/Number/HeightsNumber.h"
 #include "../Transition/Transition.h"
+#include "../../Sound/SoundManager.h"
 
 void GameScene::Event()
 {
@@ -39,6 +40,9 @@ void GameScene::Event()
 					(
 						SceneManager::SceneType::Result
 					);
+
+					//サウンドの停止
+					SOUNDMGR.Stop(SoundName::BGM_Ingame);
 				}
 			}
 		}
@@ -165,4 +169,7 @@ void GameScene::Init()
 		m_cameraPos = Math::Vector3(0.0f, 5.0f, -45.0f);
 		m_cameraDeg = Math::Vector3(0.0f, 0.0f, 0.0f);
 	}
+
+	//サウンド再生(仮)
+	SOUNDMGR.Play(SoundName::BGM_Ingame);
 }

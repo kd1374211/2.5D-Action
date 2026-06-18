@@ -154,6 +154,9 @@
     <Filter Include="Src\Application\Object\Sprite\Scene\TitleObject">
       <UniqueIdentifier>{aff76920-0460-4394-a826-d3f5bbce2317}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Sound">
+      <UniqueIdentifier>{6df0d2d4-48ac-4cb9-881c-862c2488918b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -405,6 +408,9 @@
     <ClInclude Include="Src\Application\Object\Sprite\Scene\TitleObject\TitleObject.h">
       <Filter>Src\Application\Object\Sprite\Scene\TitleObject</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Sound\SoundManager.h">
+      <Filter>Src\Application\Sound</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -610,6 +616,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Sprite\Scene\TitleObject\TitleObject.cpp">
       <Filter>Src\Application\Object\Sprite\Scene\TitleObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Sound\SoundManager.cpp">
+      <Filter>Src\Application\Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

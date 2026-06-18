@@ -1,6 +1,7 @@
 ﻿#include "Player.h"
 #include "../../../Scene/SceneManager.h"
 #include "../../Effect/Slash/Slash.h"
+#include "../../../Sound/SoundManager.h"
 
 Player::Player()
 {
@@ -55,11 +56,18 @@ void Player::Update()
 				m_isJump = true;
 				m_moveY = JUMPPOWER;
 				ChangeAnimCheck(PlayerAnimType::Jump);
+				SOUNDMGR.Play(SoundName::SE_Jump);
+				m_isLanding = false;
 			}
 		}
 
-		//空中ジャンプ規制
-		if (m_moveY < AIRJUMPLIMIT && !m_isJump)m_isJump = true;
+		//空中ジャンプ規制(ついでに落下モーション)
+		if (m_moveY < AIRJUMPLIMIT && !m_isJump)
+		{
+			m_isJump = true;
+			m_isLanding = false;
+			ChangeAnimCheck(PlayerAnimType::Fall);
+		}
 
 		//攻撃クールタイム
 		if (m_attackWaitF > 0)m_attackWaitF--;
@@ -74,6 +82,7 @@ void Player::Update()
 					m_isAttack = true;
 					m_attackF = 0;
 					m_attackWaitF = ATTACKWAITF;
+					SOUNDMGR.Play(SoundName::SE_Attack);
 				}
 				else
 				{
@@ -184,7 +193,19 @@ void Player::HitCheck()
 			m_pos = hitPos;
 			m_isJump = false;
 			m_moveY = 0.0f;
+
+			//着地
+			if (!m_isLanding)
+			{
+				m_isLanding = true;
+				SOUNDMGR.Play(SoundName::SE_Landing);
+			}
 			if (m_nowAnim == PlayerAnimType::Fall)ChangeAnim(PlayerAnimType::Run);
+		}
+		else
+		{
+			//着地していない
+			m_isLanding = false;
 		}
 
 		//↑で地面に立っている（isHitがtrue）ならスキップ
@@ -264,6 +285,13 @@ void Player::HitCheck()
 				if (m_pos.y + enableStepHigh > hitPos.y)
 				{
 					m_moveY = 0.0f;
+
+					//ここも着地か？
+					if(!m_isLanding)
+					{
+						m_isLanding = true;
+						SOUNDMGR.Play(SoundName::SE_Landing);
+					}
 				}
 			}
 		}
@@ -326,6 +354,8 @@ void Player::PostUpdate()
 	//マトリックス
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	m_mWorld = trans;
+
+	KdDebugGUI::Instance().AddLog("Landing : %d\n", m_isLanding);
 }
 
 void Player::PreDraw()
@@ -368,6 +398,7 @@ void Player::OnHit()
 	if (m_isInvinsible)return;
 	//ジャンプ不可に
 	m_isJump = true;
+	m_isLanding = false;
 
 	//体力減少
 	m_health--;
@@ -401,6 +432,7 @@ void Player::FallVoid()
 {
 	//ジャンプ不可に
 	m_isJump = true;
+	m_isLanding = false;
 	m_isVoidJump = true;
 	//上方向に飛ばす
 	m_moveY = HITJUMP_VOID;
@@ -435,6 +467,7 @@ void Player::Respawn(Math::Vector3 a_pos)
 	m_pos = a_pos;
 	m_moveY = 0.0f;
 	m_isJump = false;
+	m_isLanding = true;
 	m_isVoidJump = false;
 	m_isAttack = false;
 	m_attackF = 0;
@@ -557,6 +590,9 @@ void Player::UpdateHeartAnim()
 
 void Player::OnDamage()
 {
+	//効果音
+	SOUNDMGR.Play(SoundName::SE_Hit);
+
 	//被弾後無敵
 	m_isInvinsible = true;
 	m_immuneF = HITIMMUNEF;

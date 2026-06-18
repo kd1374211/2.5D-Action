@@ -146,4 +146,7 @@ private:
 
 	//キー
 	bool m_isAttackKey = false;
+
+	//着地フラグ
+	bool m_isLanding = true;
 };

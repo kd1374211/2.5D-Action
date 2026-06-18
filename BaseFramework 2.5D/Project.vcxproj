@@ -301,6 +301,7 @@
     <ClInclude Include="Src\Application\Scene\SceneManager.h" />
     <ClInclude Include="Src\Application\Scene\TitleScene\TitleScene.h" />
     <ClInclude Include="Src\Application\Scene\Transition\Transition.h" />
+    <ClInclude Include="Src\Application\Sound\SoundManager.h" />
     <ClInclude Include="Src\Application\StageSpawner\StageObjectInclude.h" />
     <ClInclude Include="Src\Application\StageSpawner\StageSpawner.h" />
     <ClInclude Include="Src\Framework\Direct3D\KdMaterial.h" />
@@ -375,6 +376,7 @@
     <ClCompile Include="Src\Application\Scene\SceneManager.cpp" />
     <ClCompile Include="Src\Application\Scene\TitleScene\TitleScene.cpp" />
     <ClCompile Include="Src\Application\Scene\Transition\Transition.cpp" />
+    <ClCompile Include="Src\Application\Sound\SoundManager.cpp" />
     <ClCompile Include="Src\Application\StageSpawner\StageSpawner.cpp" />
     <ClCompile Include="Src\Framework\Direct3D\KdMaterial.cpp">
       <SubType>
