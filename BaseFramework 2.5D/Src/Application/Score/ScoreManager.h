@@ -11,12 +11,16 @@ class ScoreManager
 {
 public:
 
-	void Update();
+	//最大桁数
+	static const int DIGITS_HEIGHTS = 4;
+	static const int DIGITS_KILLS = 3;
+
+	//スコアリセット
 	void Reset();
 
 	//セッター（アッダー）
-	void AddKillCount() { m_currentKill++; }
-	void AddHeight(float a_height) { m_currentHeight += a_height; }
+	void AddKillCount();
+	void AddHeight(float a_height);
 
 	//ゲッターs
 	int GetCurrentHeight()const { return (int)m_currentHeight; }
@@ -35,6 +39,10 @@ private:
 
 	void Init();
 	void Release();
+
+	//最大値
+	const float HEIGHTS_MAX = 9999.9f;
+	const int KILLS_MAX = 999;
 
 	float m_currentHeight = 0.0f;
 	int m_currentKill = 0;

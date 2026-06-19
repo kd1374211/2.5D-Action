@@ -1,21 +1,88 @@
 ﻿#include "KillCount.h"
 
-void KillCount::Update()
-{}
+void KillCount::PreDraw()
+{
+	if (!m_isNumScroll)
+	{
+		//目標の高さを取得
+		int targetHeight = SCOREMGR.GetCurrentKillCount();
+
+		//スクロール方向を設定
+		m_scrollDir = SCOREMGR.CompareNum(m_drawNum, targetHeight);
+
+		//Equalならリターン
+		if (m_scrollDir == CompareResult::Equal)return;
+
+		//スクロールオン
+		m_isNumScroll = true;
+		m_numScroll = 0.0f;
+	}
+	else
+	{
+		//スクロール
+		m_numScroll += SCROLLSPEED * (int)m_scrollDir;
+
+		//次の数字
+		if (m_numScroll >= 1.0f)
+		{
+			m_drawNum++;
+			m_isNumScroll = false;
+		}
+		//前の数字
+		else if (m_numScroll <= -1.0f)
+		{
+			m_drawNum--;
+			m_isNumScroll = false;
+		}
+	}
+}
 
 void KillCount::DrawSprite()
 {
+	Math::Rectangle rec;
 
+	//アイコン
+	rec = Math::Rectangle(0, 0, (long)BASEICONSIZE, (long)BASEICONSIZE);
+	KdShaderManager::Instance().m_spriteShader.DrawTex(m_iconTex, 350.0f, 320.0f, ICONSIZE, ICONSIZE, &rec);
+
+	//数字
+	//次の高さで変わる数字を取得
+	for (int i = SCOREMGR.DIGITS_KILLS; i > 0; i--)
+	{
+		int digit = (int)pow(10, i - 1);
+		int number = SCOREMGR.CalcDigit(m_drawNum, digit);
+
+		//スクロール確認
+		if (m_isNumScroll)
+		{
+			int nextNum = SCOREMGR.CalcDigit(m_drawNum + (int)m_scrollDir, digit);
+
+			if (number != nextNum)
+			{
+				rec = Math::Rectangle(0, (long)(BASENUMSIZE * (number + m_numScroll)), (long)BASENUMSIZE, (long)BASENUMSIZE);
+			}
+			else
+			{
+				rec = Math::Rectangle(0, (long)(BASENUMSIZE * number), (long)BASENUMSIZE, (long)BASENUMSIZE);
+			}
+		}
+		else
+		{
+			rec = Math::Rectangle(0, (long)(BASENUMSIZE * number), (long)BASENUMSIZE, (long)BASENUMSIZE);
+		}
+
+		KdShaderManager::Instance().m_spriteShader.SetMatrix(Math::Matrix::Identity);
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_numTex, 635 - i * NUMSIZE, 320, NUMSIZE, NUMSIZE, &rec);
+	}
 }
 
 void KillCount::Init()
 {
 	m_numTex = std::make_shared<KdTexture>();
-	m_numTex->Load("Assets/Texture/Scene/Game/Number.png");
+	m_numTex->Load("Asset/Textures/Scene/Game/Number.png");
 
-	m_skullIconTex = std::make_shared<KdTexture>();
-	m_skullIconTex->Load("Assets/Texture/Scene/Game/SkullIcon.png");
-
+	m_iconTex = std::make_shared<KdTexture>();
+	m_iconTex->Load("Asset/Textures/Scene/Game/KillsIcon.png");
 }
 
 void KillCount::Release()

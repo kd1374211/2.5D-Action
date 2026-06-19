@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "../../../../Fonts/FontsManager.h"
 
 class ResultWindow :public KdGameObject
 {
@@ -10,6 +11,9 @@ public:
 	void Update()override;
 	void DrawSprite()override;
 
+	//CountF追加
+	void SetCountF(int a_frame) { m_countF = a_frame; }
+
 	//リザルト終了
 	void ResultEnd() { m_isResultEnd = true; }
 
@@ -18,8 +22,30 @@ public:
 	
 private:
 
+	enum ResultTexts
+	{
+		Result,
+		Heights,
+		HeightsScore,
+		Kills,
+		KillsScore,
+		Rank,
+		RankText,
+		Max
+	};
+
+	struct TextData
+	{
+		ResultTexts m_index;
+		FontsManager::FontType m_font;
+		std::string m_text;
+		Math::Vector2 m_pos;
+		KdSpriteShader::TextDrawBase m_base;
+	};
+
 	void Init()override;
-	void LoadData();
+	void LoadWindowData();
+	void LoadTextData();
 	void Release();
 
 	Math::Vector2 m_texSize = Math::Vector2::Zero;
@@ -32,6 +58,9 @@ private:
 	std::vector<std::vector<int>> m_texMap;
 	std::shared_ptr<KdTexture> m_tex = nullptr;
 
+	//テキスト情報
+	std::vector<TextData> m_texts;
+
 	//リザルト終了
 	bool m_isResultEnd = false;
 
@@ -39,5 +68,14 @@ private:
 
 	//ウィンドウが画面外に出て行った
 	bool m_isWindowOut = false;
+
+	//それぞれの描画
+	static const int RANDDRAWSTARTF = 30;
+	static const int HEIGHTDRAWF = 70;
+	static const int KILLSDRAWF = 110;
+	static const int RANKTEXTDRAWF = 150;
+
+	//リザルトカウント(ResultSceneからセットされる)
+	int m_countF = 0;
 
 };

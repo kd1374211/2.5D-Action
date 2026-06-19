@@ -9,6 +9,13 @@ class KdFontSprite;
 class KdSpriteShader {
 public:
 
+	enum TextDrawBase
+	{
+		Left,
+		Center,
+		Right
+	};
+
 	struct Vertex
 	{
 		Math::Vector3 Pos;
@@ -133,11 +140,11 @@ public:
 	void SetScissorRect(const Math::Rectangle& rect);
 
 	// フォント描画
-	void DrawFont(const Math::Vector2& Pos, const Math::Color* color, const char* format, ...);
+	void DrawFont(const int Index, const Math::Vector2& Pos, TextDrawBase& Base, const Math::Color* color, const char* format, ...);
 
 private:
 	// フォント描画
-	void DrawFont(std::shared_ptr<KdFontSprite>& fontSprite, const Math::Vector2& Pos, const Math::Color* color, const int antiAliasingFlag);
+	void DrawFont(std::shared_ptr<KdFontSprite>& fontSprite, const Math::Vector2& Pos, TextDrawBase& Base, const Math::Color* color, const int antiAliasingFlag);
 
 	ID3D11VertexShader*		m_VS = nullptr;				// 頂点シェーダー
 	ID3D11InputLayout*		m_VLayout = nullptr;		// 頂点レイアウト

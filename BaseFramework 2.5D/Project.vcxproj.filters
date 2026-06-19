@@ -163,6 +163,9 @@
     <Filter Include="Src\Application\Score">
       <UniqueIdentifier>{d1a0c26b-2843-46eb-b82e-8e1c55c11b8c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Fonts">
+      <UniqueIdentifier>{e9decbb2-820e-485e-9e4a-10167f0bee84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -423,6 +426,9 @@
     <ClInclude Include="Src\Application\Score\ScoreManager.h">
       <Filter>Src\Application\Score</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Fonts\FontsManager.h">
+      <Filter>Src\Application\Fonts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -637,6 +643,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Score\ScoreManager.cpp">
       <Filter>Src\Application\Score</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Fonts\FontsManager.cpp">
+      <Filter>Src\Application\Fonts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

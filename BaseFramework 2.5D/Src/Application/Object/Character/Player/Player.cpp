@@ -437,12 +437,16 @@ void Player::FallVoid()
 	//上方向に飛ばす
 	m_moveY = HITJUMP_VOID;
 
-	//無敵or死ならスキップ
-	if (m_isInvinsible || m_isDead)return;
+	//死ならスキップ
+	if (m_isDead)return;
 
 	//生きていたらスクロールを戻す
 	m_stageScrollMulti = STAGESCROLL_VOID;
 
+	//無敵ならこの先スキップ
+	if (m_isInvinsible)return;
+
+	//HP減少
 	m_health--;
 	if (m_health <= 0)
 	{

@@ -275,6 +275,7 @@
     <ClInclude Include="..\Library\tinygltf\tiny_gltf.h" />
     <ClInclude Include="Src\Application\Const\ScreenConst.h" />
     <ClInclude Include="Src\Application\Const\StageConst.h" />
+    <ClInclude Include="Src\Application\Fonts\FontsManager.h" />
     <ClInclude Include="Src\Application\main.h" />
     <ClInclude Include="Src\Application\Object\Character\CharaBase.h" />
     <ClInclude Include="Src\Application\Object\Character\CharacterInclude.h" />
@@ -354,6 +355,7 @@
     <ClCompile Include="..\Library\imgui\imgui_stdlib.cpp" />
     <ClCompile Include="..\Library\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\Library\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Src\Application\Fonts\FontsManager.cpp" />
     <ClCompile Include="Src\Application\main.cpp" />
     <ClCompile Include="Src\Application\Object\Character\CharaBase.cpp" />
     <ClCompile Include="Src\Application\Object\Character\CharaManager.cpp" />

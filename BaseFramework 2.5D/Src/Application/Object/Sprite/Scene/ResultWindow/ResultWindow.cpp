@@ -1,5 +1,6 @@
 ﻿#include "ResultWindow.h"
 #include "../../../../Const/ScreenConst.h"
+#include "../../../../Score/ScoreManager.h"
 
 #define TEXDRAWSIZEHALF (m_texDrawSize * 0.5f)
 
@@ -29,16 +30,58 @@ void ResultWindow::DrawSprite()
 			KdShaderManager::Instance().m_spriteShader.DrawTex(m_tex, drawPos.x, drawPos.y, m_texDrawSize.x, m_texDrawSize.y, &rec);
 		}
 	}
+
+	//テキスト
+	for (auto &text : m_texts)
+	{
+		std::string str = "";
+
+		//値を追加する必要があるもの
+		switch (text.m_index)
+		{
+		case ResultTexts::HeightsScore:
+			if (m_countF >= RANDDRAWSTARTF)
+			{
+				str = "";
+				std::string score = std::to_string(SCOREMGR.GetCurrentHeight());
+				int digit = score.size();
+				for (int i = 0; i < SCOREMGR.DIGITS_HEIGHTS - digit; i++)str += "0";
+				str += score;
+			}
+			break;
+		case ResultTexts::KillsScore:
+			if (m_countF >= RANDDRAWSTARTF)
+			{
+				str = "";
+				std::string score = std::to_string(SCOREMGR.GetCurrentHeight());
+				int digit = score.size();
+				for (int i = 0; i < SCOREMGR.DIGITS_KILLS - digit; i++)str += "0";
+				str += score;
+			}
+			break;
+		case ResultTexts::RankText:
+			if (m_countF >= RANDDRAWSTARTF)str = "すごい！！！";
+			else str = " ";
+			break;
+		default:
+			str = text.m_text;
+			break;
+		}
+
+		KdShaderManager::Instance().m_spriteShader.DrawFont(text.m_font, m_pos + text.m_pos, text.m_base, &kBlackColor, str.c_str());
+		KdShaderManager::Instance().m_spriteShader.DrawCircle(m_pos.x + text.m_pos.x, m_pos.y + text.m_pos.y, 10, &kBlueColor, true);
+	}
 }
 
 void ResultWindow::Init()
 {
 	m_pos = Math::Vector3::Zero;
 	m_tex = std::make_shared<KdTexture>();
-	LoadData();
+	LoadWindowData();
+	LoadTextData();
 }
 
-void ResultWindow::LoadData()
+void ResultWindow::LoadWindowData()
 {
 	FILE* fp = nullptr;
 
@@ -81,6 +124,40 @@ void ResultWindow::LoadData()
 				line.push_back(num);
 			}
 			m_texMap.push_back(line);
+		}
+
+		fclose(fp);
+	}
+}
+
+void ResultWindow::LoadTextData()
+{
+	FILE* fp = nullptr;
+
+	if (fopen_s(&fp, "Asset/Data/Scene/ResultWindowTextData.csv", "r") == 0)
+	{
+		const int STRLENG = 250;
+		char dummy[STRLENG] = {};
+		char text[STRLENG] = {};
+		
+		for (int i = 0; i < ResultTexts::Max; i++)
+		{
+			if (fgets(dummy, STRLENG, fp) != nullptr)
+			{
+				TextData data;
+
+				fscanf_s(fp, "%d,%d,%[^,],%d,%f,%f,",
+					&data.m_index,
+					&data.m_font,
+					text, STRLENG,
+					&data.m_base,
+					&data.m_pos.x,
+					&data.m_pos.y);
+
+				data.m_text = text;
+
+				m_texts.push_back(data);
+			}
 		}
 
 		fclose(fp);

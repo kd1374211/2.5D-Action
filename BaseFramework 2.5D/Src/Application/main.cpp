@@ -1,6 +1,7 @@
 ﻿#include "main.h"
 
 #include "Scene/SceneManager.h"
+#include "Fonts/FontsManager.h"
 
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
 // エントリーポイント
@@ -153,10 +154,11 @@ bool Application::Init(int w, int h)
 	//===================================================================
 	// ウィンドウ作成
 	//===================================================================
-	if (m_window.Create(w, h, "Spiral Steps", "Window") == false) {
+	if (m_window.Create(w, h, "Spiral Steps", "Window", true) == false) {
 		MessageBoxA(nullptr, "ウィンドウ作成に失敗", "エラー", MB_OK);
 		return false;
 	}
+	
 
 	//===================================================================
 	// フルスクリーン確認
@@ -214,16 +216,13 @@ bool Application::Init(int w, int h)
 	// フォント初期化
 	//===================================================================
 	KdFontManager::Instance().Init(GetWindowHandle());
-
-	//メモ・リソースはパス、フォントはタイトル
-	//KdFontManager::Instance().AddFontResource("Asset/cp_period.otf");
-	//KdFontManager::Instance().AddFont(0,"チェックポイント.　（ピリオド）", 48);
+	FONTMGR.Init();
 	
 	//===================================================================
 	// ゲーム固有の初期化
 	//===================================================================
 	// 例えばカーソルを消したい場合
-	//ShowCursor(false);
+	ShowCursor(false);
 	srand(timeGetTime());
 
 	return true;

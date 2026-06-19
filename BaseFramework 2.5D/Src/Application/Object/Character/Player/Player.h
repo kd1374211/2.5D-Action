@@ -59,7 +59,7 @@ private:
 	
 	//体力画像
 	const Math::Vector2 HEARTTEXBASESIZE = Math::Vector2(17.0f, 17.0f);
-	const Math::Vector2 HEARTTEXDRAWSIZE = HEARTTEXBASESIZE * 5.0f;
+	const Math::Vector2 HEARTTEXDRAWSIZE = HEARTTEXBASESIZE * 4.0f;
 	
 	std::shared_ptr<KdTexture> m_heartTex = nullptr;
 
@@ -125,7 +125,8 @@ private:
 	const float AIRJUMPLIMIT = -0.04f;
 
 	//被弾フラグ
-	static const int HITIMMUNEF = 11;
+	static const int HITIMMUNEF = 5;
+	//static const int HITIMMUNEF = 150;
 
 	bool m_isInvinsible = false;
 	int m_immuneF = 0;

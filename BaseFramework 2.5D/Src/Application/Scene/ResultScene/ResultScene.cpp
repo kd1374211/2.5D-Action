@@ -18,7 +18,7 @@ void ResultScene::Init()
 	AddObject(window);
 
 	//スクロール
-	SCENEMGR.SetScrollSpeedMulti();
+	SCENEMGR.SetScrollSpeedMulti(1.0f);
 
 	//カメラ
 	FILE* fp = nullptr;
@@ -62,9 +62,13 @@ void ResultScene::Event()
 			//リザルトスキップ
 			if (GetAsyncKeyState(VK_SPACE) & 0x8000 && !m_isSpaceKey)
 			{
-				m_canResultEnd = true;
+				m_countF = RESULTENDF;
 			}
 
+			//カウントセット
+			if (!m_wpResultWindow.expired())m_wpResultWindow.lock()->SetCountF(m_countF);
+
+			//リザルト終了可能かフラグ
 			if (m_countF >= RESULTENDF)m_canResultEnd = true;
 		}
 		//リザルト終了（操作可能）

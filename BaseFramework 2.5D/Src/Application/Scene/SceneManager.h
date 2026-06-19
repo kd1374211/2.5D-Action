@@ -42,9 +42,10 @@ public :
 	void AddCarryObject(const std::shared_ptr<KdGameObject> a_obj) { m_sceneCarryOverObj.push_back(a_obj); }
 
 	//現在のシーンにスクロール量を設定
-	void SetScrollSpeedMulti(float a_speed = 1.0f) {
+	void SetScrollSpeedMulti(float a_speed) {
 		if (!test)m_scrollSpeedMulti = 0.0f;
-		else m_scrollSpeedMulti = a_speed; }
+		else m_scrollSpeedMulti = a_speed;
+	}
 
 	//スクロール速度を取得
 	float GetScrollSpeedMulti()const { return m_scrollSpeedMulti; }

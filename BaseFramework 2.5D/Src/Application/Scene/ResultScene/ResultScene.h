@@ -38,7 +38,7 @@ private:
 	bool m_isResultStart = false;
 
 	//リザルト終了可能フラグ
-	static const int RESULTENDF = 200;
+	static const int RESULTENDF = 150;
 	bool m_canResultEnd = false;
 
 	//リザルト終了フラグ

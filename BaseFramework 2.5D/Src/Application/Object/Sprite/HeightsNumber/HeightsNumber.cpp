@@ -2,7 +2,6 @@
 #include "../../../Scene/SceneManager.h"
 #include "../../Character/Player/Player.h"
 #include "../../Character/CharaManager.h"
-#include "../../../Score/ScoreManager.h"
 
 void HeightsNumber::Update()
 {
@@ -66,8 +65,13 @@ void HeightsNumber::DrawSprite()
 {
 	Math::Rectangle rec;
 
+	//アイコン
+	rec = Math::Rectangle(0, 0, (long)BASEICONSIZE, (long)BASEICONSIZE);
+	KdShaderManager::Instance().m_spriteShader.DrawTex(m_iconTex, -180.0f, 320.0f, ICONSIZE, ICONSIZE, &rec);
+
+	//数字
 	//次の高さで変わる数字を取得
-	for (int i = DIGITS; i > 0; i--)
+	for (int i = SCOREMGR.DIGITS_HEIGHTS; i > 0; i--)
 	{
 		int digit = (int)pow(10, i - 1);
 		int number = SCOREMGR.CalcDigit(m_drawNum, digit);

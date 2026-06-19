@@ -18,9 +18,13 @@ private:
 	void Init()override;
 	void Release();
 
-	static const int DIGITS = 3;
+	//数字画像
 	const float BASENUMSIZE = 12.0f;
-	const float NUMSIZE = 96.0f;
+	const float NUMSIZE = 72.0f;
+
+	//アイコン画像
+	const float BASEICONSIZE = 64.0f;
+	const float ICONSIZE = 96.0f;
 
 	//数字のスクロール
 	const float SCROLLSPEED = 0.25f;
