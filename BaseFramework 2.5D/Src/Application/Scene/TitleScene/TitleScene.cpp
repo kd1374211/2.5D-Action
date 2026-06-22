@@ -89,7 +89,7 @@ void TitleScene::Init()
 	//曲再生
 	SOUNDMGR.Play(SoundName::BGM_Title);
 	//最初以外ならフェードイン
-	m_titleVolumeMulti = m_isFadeIn ? 0.0f : 1.0f;
+	m_titleVolumeMulti = m_isFadeIn ? 0.2f : 1.0f;
 	SOUNDMGR.VolumeChange(SoundName::BGM_Title, m_titleVolumeMulti);
 
 	//プレイヤー（一応リセット）

@@ -12,21 +12,22 @@ enum class SoundName
 	BGM_Title,
 	BGM_Ingame,
 	BGM_Result,
-	SE_Cursor,
-	SE_Decision,
-	SE_Run,
 	SE_Jump,
 	SE_Landing,
 	SE_Attack,
 	SE_Hit,
 	SE_LowHP,
 	SE_GameStart,
+	SE_ResultRoll,
+	SE_RollEnd,
 	Max,
 };
 
 class SoundManager
 {
 public:
+
+	void Update();
 
 	//再生
 	void Play(SoundName a_name);

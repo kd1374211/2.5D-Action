@@ -37,9 +37,6 @@ void SideSpear::Update()
 			if (m_spearPos >= SPEARPOSMAX)m_spearPos = SPEARPOSMAX;
 		}
 	}
-	
-	//消去
-	if (m_pos.y < -8.0f)m_isExpired = true;
 
 	//槍
 	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_angleDeg));
@@ -58,6 +55,11 @@ void SideSpear::PostUpdate()
 
 	//角度に合わせて位置変更
 	m_pos = { sinf(DirectX::XMConvertToRadians(m_angleDeg)) * BASELINEPOS,m_pos.y - TERRAINBASEMOVEY * backDeg,cosf(DirectX::XMConvertToRadians(m_angleDeg)) * BASELINEPOS };
+
+	//消去
+	if (m_pos.y < -8.0f)m_isExpired = true;
+	//影
+	m_isShadow = m_pos.y < SHADOWDRAWSTART ? true : false;
 
 	//穴
 	Math::Matrix rotatX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(90));
@@ -81,6 +83,8 @@ void SideSpear::DrawLit()
 
 void SideSpear::GenerateDepthMapFromLight()
 {
+	if (!m_isShadow)return;
+
 	//穴
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_holeModel, m_mHoleWorld);
 

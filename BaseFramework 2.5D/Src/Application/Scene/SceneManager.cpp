@@ -7,6 +7,7 @@
 
 #include "../StageSpawner/StageSpawner.h"
 #include "../Const/StageConst.h"
+#include "../Sound/SoundManager.h"
 
 void SceneManager::PreUpdate()
 {
@@ -15,6 +16,9 @@ void SceneManager::PreUpdate()
 	{
 		ChangeScene(m_nextSceneType);
 	}
+
+	//音消滅確認
+	SOUNDMGR.Update();
 
 	m_currentScene->PreUpdate();
 }

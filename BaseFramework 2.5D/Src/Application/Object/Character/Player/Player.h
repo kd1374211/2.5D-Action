@@ -73,6 +73,7 @@ private:
 	const Math::Vector3 BASESPAWNPOS = { 0,0,LINEPOSSTART };
 
 	//当たり判定（スフィア）
+	const float SPHEREGROUNDHITSIZEMIN = 0.2f;
 	const float SPHEREGROUNDHITSIZEMULTI = -0.05f;
 	const float SPHEREHITSIZEMULTI = -0.04f;
 
@@ -125,8 +126,8 @@ private:
 	const float AIRJUMPLIMIT = -0.04f;
 
 	//被弾フラグ
-	//static const int HITIMMUNEF = 5;
-	static const int HITIMMUNEF = 150;
+	static const int HITIMMUNEF = 5;
+	//static const int HITIMMUNEF = 150;
 
 	bool m_isInvinsible = false;
 	int m_immuneF = 0;

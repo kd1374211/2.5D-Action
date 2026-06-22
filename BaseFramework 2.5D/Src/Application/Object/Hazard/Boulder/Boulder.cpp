@@ -22,8 +22,6 @@ void Boulder::Update()
 	//角度に合わせて位置変更
 	m_pos = { sinf(DirectX::XMConvertToRadians(m_angleDeg)) * m_linePos,m_pos.y += TERRAINBASEMOVEY * (speedMulti + SPEEDMULTIADD),cosf(DirectX::XMConvertToRadians(m_angleDeg)) * m_linePos};
 
-	if (m_pos.y < -8.0f)m_isExpired = true;
-
 	//回転
 	m_angleDegZ -= 2.0f;
 	if (m_angleDegZ < 0.0f)m_angleDeg += 360.0f;
@@ -46,6 +44,11 @@ void Boulder::PostUpdate()
 	//角度に合わせて位置変更
 	m_pos = { sinf(DirectX::XMConvertToRadians(m_angleDeg)) * m_linePos,m_pos.y - TERRAINBASEMOVEY * backDeg,cosf(DirectX::XMConvertToRadians(m_angleDeg)) * m_linePos };
 
+	//消滅
+	if (m_pos.y < -8.0f)m_isExpired = true;
+	//影
+	m_isShadow = m_pos.y < SHADOWDRAWSTART ? true : false;
+
 	Math::Matrix rotatZ = Math::Matrix::CreateRotationZ(DirectX::XMConvertToRadians(m_angleDegZ));
 	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_angleDeg));
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
@@ -59,6 +62,7 @@ void Boulder::DrawLit()
 
 void Boulder::GenerateDepthMapFromLight()
 {
+	if (!m_isShadow)return;
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
 

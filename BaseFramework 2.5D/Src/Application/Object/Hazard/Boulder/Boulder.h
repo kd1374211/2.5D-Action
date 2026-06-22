@@ -28,4 +28,7 @@ private:
 	float m_linePos;
 	float m_angleDegZ = 0.0f;
 
+	//影対策
+	bool m_isShadow = false;
+
 };

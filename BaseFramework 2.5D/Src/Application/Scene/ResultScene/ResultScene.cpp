@@ -48,7 +48,23 @@ void ResultScene::Event()
 	SCENEMGR.SetScrollSpeedMulti(1.0f);
 
 	//リザルト終了になるまで数える
-	if (!m_isResultEnd)m_countF++;
+	if (!m_canResultEnd)
+	{
+		m_countF++;
+
+		//効果音（ジャン）
+		if (m_countF == RANKTEXTDRAWF && !m_isRankEndSE)
+		{
+			SOUNDMGR.Stop(SoundName::SE_ResultRoll);
+			SOUNDMGR.Play(SoundName::SE_RollEnd);
+			m_isRankEndSE = true;
+		}
+		if (m_countF == HEIGHTDRAWF || m_countF == KILLSDRAWF)
+		{
+			SOUNDMGR.Play(SoundName::SE_RollEnd);
+		}
+		else if (m_countF == RANKTEXTRANDF)SOUNDMGR.Play(SoundName::SE_ResultRoll);
+	}
 
 	//リザルト開始前
 	if (!m_isResultStart)
@@ -63,7 +79,9 @@ void ResultScene::Event()
 			//リザルトスキップ
 			if (GetAsyncKeyState(VK_SPACE) & 0x8000 && !m_isSpaceKey)
 			{
-				m_countF = RESULTENDF;
+				m_countF = RANKTEXTDRAWF;
+				SOUNDMGR.Stop(SoundName::SE_ResultRoll);
+				SOUNDMGR.Play(SoundName::SE_RollEnd);
 			}
 
 			//カウントセット
@@ -141,14 +159,14 @@ void ResultScene::Event()
 
 						SOUNDMGR.Stop(SoundName::BGM_Result);
 					}
-
-					//音量変化
-					m_resultVolumeMulti -= BGMFADESPEED;
-					if (m_resultVolumeMulti < 0.0f)m_resultVolumeMulti = 0.0f;
-					
-					//セット
-					SOUNDMGR.VolumeChange(SoundName::BGM_Result, m_resultVolumeMulti);
 				}
+
+				//音量変化
+				m_resultVolumeMulti -= BGMFADESPEED;
+				if (m_resultVolumeMulti < 0.0f)m_resultVolumeMulti = 0.0f;
+
+				//セット
+				SOUNDMGR.VolumeChange(SoundName::BGM_Result, m_resultVolumeMulti);
 			}
 		}
 	}

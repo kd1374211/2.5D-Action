@@ -28,3 +28,6 @@ const float LINEPLAYAREA_MAX = 8.0f;
 //地形の基礎スクロール速度
 const float TERRAINBASEMOVEY = -0.016f;
 const float TERRAINBASEROTATY = 1.0f;
+
+//影の生成開始位置
+const float SHADOWDRAWSTART = 2.88f;

@@ -8,6 +8,13 @@ class ResultScene : public BaseScene
 {
 public:
 
+	//それぞれの描画(リザルトウィンドウから見るのでここに置く)
+	static const int RANDDRAWSTARTF = 20;
+	static const int HEIGHTDRAWF = 50;
+	static const int KILLSDRAWF = 80;
+	static const int RANKTEXTRANDF = 100;
+	static const int RANKTEXTDRAWF = 150;
+
 	ResultScene() { Init(); }
 	~ResultScene() {}
 
@@ -38,7 +45,7 @@ private:
 	bool m_isResultStart = false;
 
 	//リザルト終了可能フラグ
-	static const int RESULTENDF = 150;
+	static const int RESULTENDF = 180;
 	bool m_canResultEnd = false;
 
 	//リザルト終了フラグ
@@ -50,7 +57,10 @@ private:
 	std::weak_ptr<ResultWindow> m_wpResultWindow;
 
 	//音フェード
-	const float BGMFADESPEED = 0.015f;
+	const float BGMFADESPEED = 0.005f;
 	//BGM音量
 	float m_resultVolumeMulti = 1.0f;
+
+	//SE連打防止
+	bool m_isRankEndSE = false;
 };

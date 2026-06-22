@@ -1,5 +1,24 @@
 ﻿#include "SoundManager.h"
 
+void SoundManager::Update()
+{
+	for (auto itr = m_storedSoundInstances.begin(); itr != m_storedSoundInstances.end();)
+	{
+		if (!itr->second.expired())
+		{
+			//止まっていたら削除
+			if (itr->second.lock()->IsStopped())
+			{
+				itr = m_storedSoundInstances.erase(itr);
+			}
+			else
+			{
+				itr++;
+			}
+		}
+	}
+}
+
 void SoundManager::Play(SoundName a_name)
 {
 	SoundData data = GetSoundData(a_name);
@@ -8,8 +27,8 @@ void SoundManager::Play(SoundName a_name)
 		std::shared_ptr<KdSoundInstance> soundInstance = KdAudioManager::Instance().Play(data.m_path, data.m_isLoop);
 		soundInstance->SetVolume(data.m_baseVolume);
 
-		//ループする音はインスタンスを保存しておく
-		if(data.m_isLoop)m_storedSoundInstances.emplace(a_name, soundInstance);
+		//インスタンスを保存しておく
+		m_storedSoundInstances.emplace(a_name, soundInstance);
 	}
 }
 
@@ -21,8 +40,7 @@ void SoundManager::Stop(SoundName a_name)
 		//再生中のインスタンスが存在する場合は停止する
 		if (it->second.expired())return;
 
-		it->second.lock()->Stop();
-		m_storedSoundInstances.erase(it);
+		if (it->second.lock()->IsPlaying())it->second.lock()->Stop();
 	}
 }
 

@@ -45,4 +45,7 @@ private:
 	std::shared_ptr<KdModelData> m_holeModel;
 	std::shared_ptr<KdModelData> m_spearModel;
 
+	//影対策
+	bool m_isShadow = false;
+
 };

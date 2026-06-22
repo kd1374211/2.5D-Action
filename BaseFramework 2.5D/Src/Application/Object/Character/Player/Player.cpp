@@ -199,7 +199,7 @@ void Player::HitCheck()
 				m_isLanding = true;
 
 				//ある程度以上の落下速度なら
-				if (m_moveY <= AIRJUMPLIMIT)SOUNDMGR.Play(SoundName::SE_Landing);
+				if (m_moveY <= AIRJUMPLIMIT && !m_isDead)SOUNDMGR.Play(SoundName::SE_Landing);
 			}
 
 			//落下速度リセット
@@ -223,6 +223,7 @@ void Player::HitCheck()
 
 			//スフィアの半径
 			sphere.m_sphere.Radius = m_pos.z * SPHEREGROUNDHITSIZEMULTI;
+			if (sphere.m_sphere.Radius < SPHEREGROUNDHITSIZEMIN)sphere.m_sphere.Radius = SPHEREGROUNDHITSIZEMIN;
 
 			//当たり判定をしたいタイプ
 			sphere.m_type = KdCollider::TypeGround;
@@ -291,7 +292,7 @@ void Player::HitCheck()
 					if(!m_isLanding)
 					{
 						m_isLanding = true;
-						SOUNDMGR.Play(SoundName::SE_Landing);
+						if (!m_isDead)SOUNDMGR.Play(SoundName::SE_Landing);
 					}
 				}
 			}
