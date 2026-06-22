@@ -24,7 +24,7 @@ void Slash::Update()
 
 	if (m_animCnt >= HITEND)m_pCollider->SetEnableAll(false);
 	//デバッグ
-	else m_pDebugWire->AddDebugSphere(m_pos, m_scale * 0.4f, kRedColor);
+	//else m_pDebugWire->AddDebugSphere(m_pos, m_scale * 0.4f, kRedColor);
 
 	//マトリックス
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);

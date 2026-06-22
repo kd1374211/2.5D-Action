@@ -48,4 +48,9 @@ private:
 	bool m_isSpaceKey = true;
 
 	std::weak_ptr<ResultWindow> m_wpResultWindow;
+
+	//音フェード
+	const float BGMFADESPEED = 0.015f;
+	//BGM音量
+	float m_resultVolumeMulti = 1.0f;
 };

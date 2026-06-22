@@ -30,4 +30,9 @@ private :
 	//フェードインフラグ
 	bool m_isFadeIn = false;
 
+	//音量フェード
+	const float BGMFADESPEED = 0.025f;
+
+	//BGM音量
+	float m_titleVolumeMulti = 1.0f;
 };

@@ -78,7 +78,7 @@ void EnemyBase::HitCheck()
 	sphere.m_type = KdCollider::Type::TypeDamage_Enemy;
 
 	//デバッグ用
-	m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius, kRedColor);
+	//m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius, kRedColor);
 
 	//スフィアに当たったオブジェクト情報を格納するリスト
 	std::list<KdCollider::CollisionResult> retSphereList;

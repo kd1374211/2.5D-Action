@@ -3,7 +3,7 @@
 struct SoundData
 {
 	std::string m_path = "Error";
-	float m_volume = 0.0f;
+	float m_baseVolume = 0.0f;
 	bool m_isLoop = false;
 };
 
@@ -33,6 +33,9 @@ public:
 
 	//停止
 	void Stop(SoundName a_name);
+
+	//音量変更
+	void VolumeChange(SoundName a_name, float a_volumeMulti);
 
 private:
 

@@ -159,7 +159,7 @@ void Player::HitCheck()
 		ray.m_type = KdCollider::TypeGround;
 
 		//デバッグ用
-		m_pDebugWire->AddDebugLine(ray.m_pos, ray.m_dir, ray.m_range);
+		//m_pDebugWire->AddDebugLine(ray.m_pos, ray.m_dir, ray.m_range);
 
 		//レイに当たったオブジェクト情報を格納するリスト
 		std::list<KdCollider::CollisionResult> retRayList;
@@ -228,7 +228,7 @@ void Player::HitCheck()
 			sphere.m_type = KdCollider::TypeGround;
 
 			//デバッグ用
-			m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius);
+			//m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius);
 
 			//スフィアに当たったオブジェクト情報を格納するリスト
 			std::list<KdCollider::CollisionResult> retSphereList;
@@ -317,7 +317,7 @@ void Player::HitCheck()
 		sphere.m_type = KdCollider::Type::TypeDamage;
 
 		//デバッグ用
-		m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius, kRedColor);
+		//m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius, kRedColor);
 
 		//スフィアに当たったオブジェクト情報を格納するリスト
 		std::list<KdCollider::CollisionResult> retSphereList;

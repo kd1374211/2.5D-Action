@@ -95,7 +95,6 @@ void ResultScene::Event()
 					if(m_wpResultWindow.lock()->GetIsWindowOut())
 					{
 						m_isTitleTransition = true;
-						SOUNDMGR.Stop(SoundName::BGM_Result);
 					}
 				}
 
@@ -139,7 +138,16 @@ void ResultScene::Event()
 						(
 							SceneManager::SceneType::Title
 						);
+
+						SOUNDMGR.Stop(SoundName::BGM_Result);
 					}
+
+					//音量変化
+					m_resultVolumeMulti -= BGMFADESPEED;
+					if (m_resultVolumeMulti < 0.0f)m_resultVolumeMulti = 0.0f;
+					
+					//セット
+					SOUNDMGR.VolumeChange(SoundName::BGM_Result, m_resultVolumeMulti);
 				}
 			}
 		}

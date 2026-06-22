@@ -6,7 +6,7 @@ void SoundManager::Play(SoundName a_name)
 	if (data.m_path != "Error")
 	{
 		std::shared_ptr<KdSoundInstance> soundInstance = KdAudioManager::Instance().Play(data.m_path, data.m_isLoop);
-		soundInstance->SetVolume(data.m_volume);
+		soundInstance->SetVolume(data.m_baseVolume);
 
 		//ループする音はインスタンスを保存しておく
 		if(data.m_isLoop)m_storedSoundInstances.emplace(a_name, soundInstance);
@@ -23,6 +23,20 @@ void SoundManager::Stop(SoundName a_name)
 
 		it->second.lock()->Stop();
 		m_storedSoundInstances.erase(it);
+	}
+}
+
+void SoundManager::VolumeChange(SoundName a_name, float a_volumeMulti)
+{
+	auto it = m_storedSoundInstances.find(a_name);
+	if (it != m_storedSoundInstances.end())
+	{
+		//再生中のインスタンスが存在する場合は停止する
+		if (it->second.expired())return;
+
+		//音量計算
+		float baseVolume = m_soundData.find(a_name)->second.m_baseVolume;
+		it->second.lock()->SetVolume(baseVolume * a_volumeMulti);
 	}
 }
 
@@ -54,7 +68,7 @@ void SoundManager::LoadData()
 		char dummy[STRLENG] = {};
 		int nameTag = 0;
 		char path[STRLENG] = {};
-		float volume = 0.0f;
+		float baseVolume = 0.0f;
 		int isLoop = 0;
 
 		while (1)
@@ -65,10 +79,10 @@ void SoundManager::LoadData()
 				fscanf_s(fp, "%d,%[^,],%f,%d,",
 					&nameTag,
 					path, STRLENG,
-					&volume,
+					&baseVolume,
 					&isLoop);
 
-				m_soundData.emplace((SoundName)nameTag, SoundData{ path,volume,(bool)isLoop });
+				m_soundData.emplace((SoundName)nameTag, SoundData{ path,baseVolume,(bool)isLoop });
 			}
 			else break;
 		}

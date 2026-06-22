@@ -12,13 +12,15 @@ void TitleScene::Event()
 		//フェードイン処理
 		if (!m_wpTitleObject.expired())
 		{
+			m_titleVolumeMulti += BGMFADESPEED;
+
 			if (m_wpTitleObject.lock()->GetIsFadeInEnd())
 			{
 				m_isFadeIn = false;
-
-				//最初以外はFadeInが終わったタイミングで再生
-				SOUNDMGR.Play(SoundName::BGM_Title);
+				m_titleVolumeMulti = 1.0f;
 			}
+
+			if (m_titleVolumeMulti > 1.0f)m_titleVolumeMulti = 1.0f;
 		}
 	}
 	else
@@ -48,6 +50,9 @@ void TitleScene::Event()
 
 					SOUNDMGR.Stop(SoundName::BGM_Title);
 				}
+
+				m_titleVolumeMulti -= BGMFADESPEED;
+				if (m_titleVolumeMulti < 0.0f)m_titleVolumeMulti = 0.0f;
 			}
 		}
 	}
@@ -59,6 +64,9 @@ void TitleScene::Event()
 
 	//地形更新
 	STAGESPAWNER.Update();
+
+	//音量更新
+	SOUNDMGR.VolumeChange(SoundName::BGM_Title, m_titleVolumeMulti);
 }
 
 TitleScene::TitleScene(bool a_isFadeIn)
@@ -78,8 +86,11 @@ void TitleScene::Init()
 	m_wpTitleObject = titleObj;
 	AddObject(titleObj);
 
-	//最初なら曲再生
-	if (!m_isFadeIn)SOUNDMGR.Play(SoundName::BGM_Title);
+	//曲再生
+	SOUNDMGR.Play(SoundName::BGM_Title);
+	//最初以外ならフェードイン
+	m_titleVolumeMulti = m_isFadeIn ? 0.0f : 1.0f;
+	SOUNDMGR.VolumeChange(SoundName::BGM_Title, m_titleVolumeMulti);
 
 	//プレイヤー（一応リセット）
 	CHARAMGR.SpawnPlayer(this);
