@@ -70,12 +70,12 @@ private:
 	bool m_isWindowOut = false;
 
 	//それぞれの描画
-	static const int RANDDRAWSTARTF = 30;
-	static const int HEIGHTDRAWF = 70;
-	static const int KILLSDRAWF = 110;
+	static const int RANDDRAWSTARTF = 20;
+	static const int HEIGHTDRAWF = 50;
+	static const int KILLSDRAWF = 80;
+	static const int RANKTEXTRANDF = 100;
 	static const int RANKTEXTDRAWF = 150;
 
 	//リザルトカウント(ResultSceneからセットされる)
 	int m_countF = 0;
-
 };

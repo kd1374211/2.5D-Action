@@ -3,6 +3,7 @@
 #include "../../Object/Character/CharaManager.h"
 #include "../SceneManager.h"
 #include "../../Object/Sprite/Scene/ResultWindow/ResultWindow.h"
+#include "../../Sound/SoundManager.h"
 
 void ResultScene::Init()
 {
@@ -16,9 +17,6 @@ void ResultScene::Init()
 	std::shared_ptr<ResultWindow> window = std::make_shared<ResultWindow>();
 	m_wpResultWindow = window;
 	AddObject(window);
-
-	//スクロール
-	SCENEMGR.SetScrollSpeedMulti(1.0f);
 
 	//カメラ
 	FILE* fp = nullptr;
@@ -46,6 +44,9 @@ void ResultScene::Init()
 
 void ResultScene::Event()
 {
+	//スクロールリセット
+	SCENEMGR.SetScrollSpeedMulti(1.0f);
+
 	//リザルト終了になるまで数える
 	if (!m_isResultEnd)m_countF++;
 
@@ -69,7 +70,11 @@ void ResultScene::Event()
 			if (!m_wpResultWindow.expired())m_wpResultWindow.lock()->SetCountF(m_countF);
 
 			//リザルト終了可能かフラグ
-			if (m_countF >= RESULTENDF)m_canResultEnd = true;
+			if (m_countF >= RESULTENDF)
+			{
+				m_canResultEnd = true;
+				SOUNDMGR.Play(SoundName::BGM_Result);
+			}
 		}
 		//リザルト終了（操作可能）
 		else
@@ -90,6 +95,7 @@ void ResultScene::Event()
 					if(m_wpResultWindow.lock()->GetIsWindowOut())
 					{
 						m_isTitleTransition = true;
+						SOUNDMGR.Stop(SoundName::BGM_Result);
 					}
 				}
 

@@ -62,8 +62,8 @@ void KdDebugGUI::GuiProcess()
 //	ImGui::End();
 
 	// ログウィンドウ
-	m_uqLog->Draw("Log Window");
-	KdDebugGUI::Instance().ClearLog();
+	//m_uqLog->Draw("Log Window");
+	//KdDebugGUI::Instance().ClearLog();
 
 	//=====================================================
 	// ログ出力 ・・・ AddLog("～") で追加

@@ -32,12 +32,33 @@ public:
 	//桁分解
 	int CalcDigit(int a_baseNumber, int retDigit);
 
+	//ランク名
+	std::string RandRankText();
+	std::string GetRankText();
+
 private:
+
+	static const int RANKS = 5;
+	enum RankCompare
+	{
+		Height,
+		Kills,
+		Balance,
+		Number
+	};
+
+	struct RankData
+	{
+		std::string m_rankName;
+		float m_rankTarget_Height;
+		int m_rankTarget_Kills;
+	};
 
 	ScoreManager() { Init(); }
 	~ScoreManager() { Release(); }
 
 	void Init();
+	void LoadData();
 	void Release();
 
 	//最大値
@@ -46,6 +67,10 @@ private:
 
 	float m_currentHeight = 0.0f;
 	int m_currentKill = 0;
+
+	//ランク関連
+	std::vector<RankData> m_rankTextData_First;
+	std::vector<std::string> m_rankTextData_Second;
 
 public:
 

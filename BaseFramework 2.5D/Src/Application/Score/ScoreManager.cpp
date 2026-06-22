@@ -39,8 +39,118 @@ int ScoreManager::CalcDigit(int a_baseNumber, int retDigit)
 	return a_baseNumber;
 }
 
+std::string ScoreManager::RandRankText()
+{
+	//ランダム
+	int first = rand() % RANKS;
+	int second = rand() % RankCompare::Number;
+
+	//ランクテキスト生成
+	std::string rankText = m_rankTextData_First[first].m_rankName + m_rankTextData_Second[second];
+
+	return rankText;
+}
+
+std::string ScoreManager::GetRankText()
+{
+	int heightRank = 0;
+	int killRank = 0;
+	int totalRank = 0;
+
+	//ランク計算
+	for (int i = 0; i < RANKS; i++)
+	{
+		//超えている間は増やす(それに上書きする)
+		if (m_currentHeight > m_rankTextData_First[i].m_rankTarget_Height)
+		{
+			heightRank = i;
+		}
+
+		//超えている間は増やす(それに上書きする)
+		if (m_currentKill > m_rankTextData_First[i].m_rankTarget_Kills)
+		{
+			killRank = i;
+		}
+	}
+
+	RankCompare compare = RankCompare::Number;
+
+	//ランク比べ
+	if (heightRank > killRank)
+	{
+		compare = RankCompare::Height;
+		totalRank = heightRank;
+	}
+	else if (heightRank < killRank)
+	{
+		compare = RankCompare::Kills;
+		totalRank = killRank;
+	}
+	else
+	{
+		compare = RankCompare::Balance;
+		totalRank = heightRank;
+	}
+
+	//ランクテキスト生成
+	std::string rankText = m_rankTextData_First[totalRank].m_rankName + m_rankTextData_Second[compare];
+
+	return rankText;
+}
+
 void ScoreManager::Init()
-{}
+{
+	LoadData();
+}
+
+void ScoreManager::LoadData()
+{
+	FILE* fp = nullptr;
+
+	if (fopen_s(&fp, "Asset/Data/Scene/RankScoreTargetData.csv", "r") == 0)
+	{
+		const int STRLENG = 250;
+		char dummy[STRLENG] = {};
+		int index = 0;
+		char text[STRLENG] = {};
+
+		RankData data;
+		
+		//上の句
+		for (int i = 0; i < RANKS; i++)
+		{
+			if (fgets(dummy, STRLENG, fp) != nullptr)
+			{
+				fscanf_s(fp, "%d,%[^,],%f,%d,",
+					&index,
+					text, STRLENG,
+					&data.m_rankTarget_Height,
+					&data.m_rankTarget_Kills);
+
+				data.m_rankName = text;
+				m_rankTextData_First.push_back(data);
+			}
+		}
+
+		//1行読み
+		fgets(dummy, STRLENG, fp);
+
+		//下の句
+		for (int i = 0; i < RankCompare::Number; i++)
+		{
+			if (fgets(dummy, STRLENG, fp) != nullptr)
+			{
+				fscanf_s(fp, "%d,%[^,],",
+					&index,
+					text, STRLENG);
+
+				m_rankTextData_Second.push_back(text);
+			}
+		}
+
+		fclose(fp);
+	}
+}
 
 void ScoreManager::Release()
 {}

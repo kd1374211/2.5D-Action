@@ -40,28 +40,34 @@ void ResultWindow::DrawSprite()
 		switch (text.m_index)
 		{
 		case ResultTexts::HeightsScore:
-			if (m_countF >= RANDDRAWSTARTF)
+			if (m_countF >= HEIGHTDRAWF)
 			{
-				str = "";
 				std::string score = std::to_string(SCOREMGR.GetCurrentHeight());
 				int digit = score.size();
 				for (int i = 0; i < SCOREMGR.DIGITS_HEIGHTS - digit; i++)str += "0";
 				str += score;
 			}
+			else if (m_countF >= RANDDRAWSTARTF)
+			{
+				for (int i = 0; i < SCOREMGR.DIGITS_HEIGHTS; i++)str += std::to_string(rand() % 10);
+			}
 			break;
 		case ResultTexts::KillsScore:
-			if (m_countF >= RANDDRAWSTARTF)
+			if (m_countF >= KILLSDRAWF)
 			{
-				str = "";
-				std::string score = std::to_string(SCOREMGR.GetCurrentHeight());
+				std::string score = std::to_string(SCOREMGR.GetCurrentKillCount());
 				int digit = score.size();
 				for (int i = 0; i < SCOREMGR.DIGITS_KILLS - digit; i++)str += "0";
 				str += score;
 			}
+			else if (m_countF >= RANDDRAWSTARTF)
+			{
+				for (int i = 0; i < SCOREMGR.DIGITS_KILLS; i++)str += std::to_string(rand() % 10);
+			}
 			break;
 		case ResultTexts::RankText:
-			if (m_countF >= RANDDRAWSTARTF)str = "すごい！！！";
-			else str = " ";
+			if (m_countF >= RANKTEXTDRAWF)str = text.m_text;
+			else if (m_countF >= RANKTEXTRANDF && m_countF % 3)str = SCOREMGR.RandRankText();
 			break;
 		default:
 			str = text.m_text;
@@ -69,7 +75,6 @@ void ResultWindow::DrawSprite()
 		}
 
 		KdShaderManager::Instance().m_spriteShader.DrawFont(text.m_font, m_pos + text.m_pos, text.m_base, &kBlackColor, str.c_str());
-		KdShaderManager::Instance().m_spriteShader.DrawCircle(m_pos.x + text.m_pos.x, m_pos.y + text.m_pos.y, 10, &kBlueColor, true);
 	}
 }
 
@@ -79,6 +84,9 @@ void ResultWindow::Init()
 	m_tex = std::make_shared<KdTexture>();
 	LoadWindowData();
 	LoadTextData();
+
+	//リザルトテキスト（本物）生成
+	m_texts[ResultTexts::RankText].m_text = SCOREMGR.GetRankText();
 }
 
 void ResultWindow::LoadWindowData()

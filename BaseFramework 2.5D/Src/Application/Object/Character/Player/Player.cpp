@@ -192,20 +192,21 @@ void Player::HitCheck()
 		{
 			m_pos = hitPos;
 			m_isJump = false;
-			m_moveY = 0.0f;
 
 			//着地
 			if (!m_isLanding)
 			{
 				m_isLanding = true;
-				SOUNDMGR.Play(SoundName::SE_Landing);
+
+				//ある程度以上の落下速度なら
+				if (m_moveY <= AIRJUMPLIMIT)SOUNDMGR.Play(SoundName::SE_Landing);
 			}
+
+			//落下速度リセット
+			m_moveY = 0.0f;
+
+
 			if (m_nowAnim == PlayerAnimType::Fall)ChangeAnim(PlayerAnimType::Run);
-		}
-		else
-		{
-			//着地していない
-			m_isLanding = false;
 		}
 
 		//↑で地面に立っている（isHitがtrue）ならスキップ
@@ -596,6 +597,7 @@ void Player::OnDamage()
 {
 	//効果音
 	SOUNDMGR.Play(SoundName::SE_Hit);
+	if (m_health == 1)SOUNDMGR.Play(SoundName::SE_LowHP);
 
 	//被弾後無敵
 	m_isInvinsible = true;

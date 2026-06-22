@@ -3,6 +3,7 @@
 #include "../../StageSpawner/StageSpawner.h"
 #include "../../Object/Character/CharaManager.h"
 #include "../../Object/Sprite/Scene/TitleObject/TitleObject.h"
+#include "../../Sound/SoundManager.h"
 
 void TitleScene::Event()
 {
@@ -14,6 +15,9 @@ void TitleScene::Event()
 			if (m_wpTitleObject.lock()->GetIsFadeInEnd())
 			{
 				m_isFadeIn = false;
+
+				//最初以外はFadeInが終わったタイミングで再生
+				SOUNDMGR.Play(SoundName::BGM_Title);
 			}
 		}
 	}
@@ -26,6 +30,7 @@ void TitleScene::Event()
 			{
 				m_wpTitleObject.lock()->SetFadeFlg(true);
 				m_isFadeStart = true;
+				SOUNDMGR.Play(SoundName::SE_GameStart);
 			}
 		}
 
@@ -40,6 +45,8 @@ void TitleScene::Event()
 					(
 						SceneManager::SceneType::Game
 					);
+
+					SOUNDMGR.Stop(SoundName::BGM_Title);
 				}
 			}
 		}
@@ -70,6 +77,9 @@ void TitleScene::Init()
 	std::shared_ptr<TitleObject> titleObj = std::make_shared<TitleObject>(m_isFadeIn);
 	m_wpTitleObject = titleObj;
 	AddObject(titleObj);
+
+	//最初なら曲再生
+	if (!m_isFadeIn)SOUNDMGR.Play(SoundName::BGM_Title);
 
 	//プレイヤー（一応リセット）
 	CHARAMGR.SpawnPlayer(this);

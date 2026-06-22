@@ -19,6 +19,8 @@ enum class SoundName
 	SE_Landing,
 	SE_Attack,
 	SE_Hit,
+	SE_LowHP,
+	SE_GameStart,
 	Max,
 };
 
