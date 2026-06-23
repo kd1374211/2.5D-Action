@@ -68,12 +68,15 @@ void ResultWindow::DrawSprite()
 			break;
 		case ResultTexts::RankText:
 			if (m_countF >= ResultScene::RANKTEXTDRAWF)str = text.m_text;
-			else if (m_countF >= ResultScene::RANKTEXTRANDF)
+			else if (m_countF >= ResultScene::RANDDRAWSTARTF)
 			{
 				//リロール
 				if (m_countF % 2 == 0)m_randRankText = SCOREMGR.RandRankText();
 				str = m_randRankText;
 			}
+			break;
+		case ResultTexts::ReturnTitle:
+			if (m_countF >= ResultScene::RESULTENDF)str = text.m_text;
 			break;
 		default:
 			str = text.m_text;

@@ -8,6 +8,7 @@
 #include "../Transition/Transition.h"
 #include "../../Sound/SoundManager.h"
 #include "../../Score/ScoreManager.h"
+#include "../../Camera/CameraManager.h"
 
 void GameScene::Event()
 {
@@ -50,79 +51,12 @@ void GameScene::Event()
 		}
 	}
 
-	if (GetAsyncKeyState('H') & 0x8000)
-	{
-		m_cameraPos.x += 0.2f;
-	}
-	if (GetAsyncKeyState('F') & 0x8000)
-	{
-		m_cameraPos.x -= 0.2f;
-	}
-	if (GetAsyncKeyState('Y') & 0x8000)
-	{
-		m_cameraPos.y += 0.2f;
-	}
-	if (GetAsyncKeyState('V') & 0x8000)
-	{
-		m_cameraPos.y -= 0.2f;
-	}
-	if (GetAsyncKeyState('T') & 0x8000)
-	{
-		m_cameraPos.z += 0.2f;
-	}
-	if (GetAsyncKeyState('B') & 0x8000)
-	{
-		m_cameraPos.z -= 0.2f;
-	}
-	KdDebugGUI::Instance().AddLog("CameraMoveCenter : G\n");
-	if (GetAsyncKeyState(VK_UP) & 0x8000)
-	{
-		m_cameraDeg.x -= 0.5f;
-	}
-	if (GetAsyncKeyState(VK_DOWN) & 0x8000)
-	{
-		m_cameraDeg.x += 0.5f;
-	}
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-	{
-		m_cameraDeg.y -= 0.5f;
-	}
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
-	{
-		m_cameraDeg.y += 0.5f;
-	}
-	if (m_cameraDeg.x > 360.0f)m_cameraDeg.x -= 360.0f;
-	else if (m_cameraDeg.x < 0.0f)m_cameraDeg.x += 360.0f;
-	if (m_cameraDeg.y > 360.0f)m_cameraDeg.y -= 360.0f;
-	else if (m_cameraDeg.y < 0.0f)m_cameraDeg.y += 360.0f;
-	
-	//仮セーブ
-	if (GetAsyncKeyState(VK_RETURN) & 0x8000)
-	{
-		//一旦ストップ
-		if (0)
-		{
-			FILE* fp = nullptr;
+	//データ回収
+	CameraBaseData data = CAMERAMGR.GetCameraData();
 
-			if (fopen_s(&fp, "Asset/Data/Test/TestCameraData.csv", "w") == 0)
-			{
-				fprintf_s(fp, "%f,%f,%f,\n%f,%f,%f,",
-					m_cameraPos.x,
-					m_cameraPos.y,
-					m_cameraPos.z,
-					m_cameraDeg.x,
-					m_cameraDeg.y,
-					m_cameraDeg.z
-				);
-
-				fclose(fp);
-			}
-		}
-	}
-
-	Math::Matrix trans = Math::Matrix::CreateTranslation(m_cameraPos);
-	Math::Matrix rotatX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(m_cameraDeg.x));
-	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_cameraDeg.y));
+	Math::Matrix trans = Math::Matrix::CreateTranslation(data.m_cameraPos);
+	Math::Matrix rotatX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(data.m_cameraDeg.x));
+	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(data.m_cameraDeg.y));
 	Math::Matrix mat = rotatY * rotatX * trans;
 	m_camera->SetCameraMatrix(mat);
 }
@@ -149,34 +83,7 @@ void GameScene::Init()
 	//スコアリセット
 	SCOREMGR.Reset();
 
-	//テスト用
-	FILE* fp = nullptr;
-	
-	if (fopen_s(&fp, "Asset/Data/Test/TestCameraData.csv", "r") == 0)
-	{
-		fscanf_s(fp, "%f,%f,%f,",
-			&m_cameraPos.x,
-			&m_cameraPos.y,
-			&m_cameraPos.z
-		);
-
-		char dummy[250];
-		fgets(dummy, 250, fp);
-
-		fscanf_s(fp, "%f,%f,%f,",
-			&m_cameraDeg.x,
-			&m_cameraDeg.y,
-			&m_cameraDeg.z
-		);
-
-		fclose(fp);
-	}
-
-	if (0)
-	{
-		m_cameraPos = Math::Vector3(0.0f, 5.0f, -45.0f);
-		m_cameraDeg = Math::Vector3(0.0f, 0.0f, 0.0f);
-	}
+	//カメラデータ
 
 	//サウンド再生(仮)
 	SOUNDMGR.Play(SoundName::BGM_Ingame);

@@ -102,6 +102,9 @@ void StageSpawner::Update()
 		//ワープ後に取得する座標
 		float respawnPosY = 0.0f;
 
+		//敵がスポーンしたか
+		bool isEnemySpawn = false;
+
 		//準方向スクロール
 		if (SCENEMGR.GetFrameScroll() >= 0.0f)
 		{
@@ -142,6 +145,17 @@ void StageSpawner::Update()
 						SCENEMGR.AddObject(std::make_shared<RollingWood>(pos, angleDeg, linePos, scale));
 					}
 
+					//目
+					if (rand() % 15 == 0)
+					{
+						float angleDeg = LOWEST->GetAngleDeg();
+						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 3.2f) + LINEPLAYAREA_MIN + 1.6f;
+						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+						CHARAMGR.SpawnEnemy(EnemyName_FlyEye, pos, angleDeg, linePos);
+
+						isEnemySpawn = true;
+					}
+
 					static int spearWait = 0;
 					bool canSpear = spearWait <= 0 ? true : false;
 					if (spearWait > 0)spearWait--;
@@ -159,7 +173,7 @@ void StageSpawner::Update()
 					//階段があるかを見る
 					else if (!isStair)
 					{
-						if (rand() % 8 == 0)
+						if (rand() % 12 == 0 && !isEnemySpawn)
 						{
 							float angleDeg = LOWEST->GetAngleDeg();
 							float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 3.2f) + LINEPLAYAREA_MIN + 1.6f;
@@ -228,9 +242,6 @@ void StageSpawner::Update()
 		if (m_pillar->GetIsDisappear())m_pillar->Respawn();
 		if (m_wall->GetIsDisappear())m_wall->Respawn();
 
-		KdDebugGUI::Instance().AddLog("StairStoreP : %d\n", m_stairVisibleLog_past.size());
-		KdDebugGUI::Instance().AddLog("StairStoreF : %d\n", m_stairVisibleLog_future.size());
-		KdDebugGUI::Instance().AddLog("ScrollBack : %d\n", m_countBackScroll);
 		break;
 	}
 }

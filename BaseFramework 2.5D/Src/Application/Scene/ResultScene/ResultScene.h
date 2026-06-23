@@ -9,11 +9,11 @@ class ResultScene : public BaseScene
 public:
 
 	//それぞれの描画(リザルトウィンドウから見るのでここに置く)
-	static const int RANDDRAWSTARTF = 20;
-	static const int HEIGHTDRAWF = 50;
-	static const int KILLSDRAWF = 80;
-	static const int RANKTEXTRANDF = 100;
-	static const int RANKTEXTDRAWF = 150;
+	static const int RANDDRAWSTARTF = 30;
+	static const int HEIGHTDRAWF = 90;
+	static const int KILLSDRAWF = 120;
+	static const int RANKTEXTDRAWF = 180;
+	static const int RESULTENDF = 210;
 
 	ResultScene() { Init(); }
 	~ResultScene() {}
@@ -22,9 +22,6 @@ private:
 
 	void Init()  override;
 	void Event() override;
-
-	Math::Vector3 m_cameraPos;
-	Math::Vector3 m_cameraDeg;
 
 	//リザルト終了フラグ
 	const float TRANSITIONSCROLLADD = 1.0f;
@@ -45,7 +42,6 @@ private:
 	bool m_isResultStart = false;
 
 	//リザルト終了可能フラグ
-	static const int RESULTENDF = 180;
 	bool m_canResultEnd = false;
 
 	//リザルト終了フラグ

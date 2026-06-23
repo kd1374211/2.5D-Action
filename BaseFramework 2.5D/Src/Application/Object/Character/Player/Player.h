@@ -126,8 +126,8 @@ private:
 	const float AIRJUMPLIMIT = -0.04f;
 
 	//被弾フラグ
-	static const int HITIMMUNEF = 5;
-	//static const int HITIMMUNEF = 150;
+	//static const int HITIMMUNEF = 5;
+	static const int HITIMMUNEF = 150;
 
 	bool m_isInvinsible = false;
 	int m_immuneF = 0;

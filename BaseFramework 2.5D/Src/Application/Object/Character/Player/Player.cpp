@@ -93,9 +93,6 @@ void Player::Update()
 		}
 		else m_isAttackKey = false;
 
-		KdDebugGUI::Instance().AddLog("AttackWait : %d\n", m_attackWaitF);
-		KdDebugGUI::Instance().AddLog("IsAttack : %d\n", m_isAttack);
-
 		if (m_isAttack)
 		{
 			m_attackF++;
@@ -340,9 +337,6 @@ void Player::HitCheck()
 	{
 		FallVoid();
 	}
-
-	KdDebugGUI::Instance().AddLog("PlayerPosY : %.2f\n", m_pos.y);
-	KdDebugGUI::Instance().AddLog("PlayerLinePos : %.2f\n", m_pos.z);
 }
 
 void Player::PostUpdate()

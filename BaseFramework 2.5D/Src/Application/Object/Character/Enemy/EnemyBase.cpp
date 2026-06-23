@@ -69,7 +69,7 @@ void EnemyBase::HitCheck()
 	KdCollider::SphereInfo sphere;
 
 	//スフィアの中心座標
-	sphere.m_sphere.Center = m_pos + Math::Vector3(0, 0.6f, 0);
+	sphere.m_sphere.Center = m_pos + m_sphereHitOfs;
 
 	//スフィアの半径
 	sphere.m_sphere.Radius = m_linePos * 0.125f;

@@ -31,6 +31,7 @@ private:
 		KillsScore,
 		Rank,
 		RankText,
+		ReturnTitle,
 		Max
 	};
 

@@ -4,6 +4,7 @@
 #include "../SceneManager.h"
 #include "../../Object/Sprite/Scene/ResultWindow/ResultWindow.h"
 #include "../../Sound/SoundManager.h"
+#include "../../Camera/CameraManager.h"
 
 void ResultScene::Init()
 {
@@ -17,29 +18,6 @@ void ResultScene::Init()
 	std::shared_ptr<ResultWindow> window = std::make_shared<ResultWindow>();
 	m_wpResultWindow = window;
 	AddObject(window);
-
-	//カメラ
-	FILE* fp = nullptr;
-
-	if (fopen_s(&fp, "Asset/Data/Test/TestCameraData.csv", "r") == 0)
-	{
-		fscanf_s(fp, "%f,%f,%f,",
-			&m_cameraPos.x,
-			&m_cameraPos.y,
-			&m_cameraPos.z
-		);
-
-		char dummy[250];
-		fgets(dummy, 250, fp);
-
-		fscanf_s(fp, "%f,%f,%f,",
-			&m_cameraDeg.x,
-			&m_cameraDeg.y,
-			&m_cameraDeg.z
-		);
-
-		fclose(fp);
-	}
 }
 
 void ResultScene::Event()
@@ -47,23 +25,20 @@ void ResultScene::Event()
 	//スクロールリセット
 	SCENEMGR.SetScrollSpeedMulti(1.0f);
 
-	//リザルト終了になるまで数える
 	if (!m_canResultEnd)
 	{
+		//カウント
 		m_countF++;
 
 		//効果音（ジャン）
-		if (m_countF == RANKTEXTDRAWF && !m_isRankEndSE)
+		if (m_countF == RANDDRAWSTARTF)SOUNDMGR.Play(SoundName::SE_ResultRoll);
+		else if (m_countF == HEIGHTDRAWF || m_countF == KILLSDRAWF)SOUNDMGR.Play(SoundName::SE_RollEnd);
+		else if (m_countF == RANKTEXTDRAWF && !m_isRankEndSE)
 		{
 			SOUNDMGR.Stop(SoundName::SE_ResultRoll);
 			SOUNDMGR.Play(SoundName::SE_RollEnd);
 			m_isRankEndSE = true;
 		}
-		if (m_countF == HEIGHTDRAWF || m_countF == KILLSDRAWF)
-		{
-			SOUNDMGR.Play(SoundName::SE_RollEnd);
-		}
-		else if (m_countF == RANKTEXTRANDF)SOUNDMGR.Play(SoundName::SE_ResultRoll);
 	}
 
 	//リザルト開始前
@@ -177,9 +152,12 @@ void ResultScene::Event()
 	//地形更新
 	STAGESPAWNER.Update();
 
-	Math::Matrix trans = Math::Matrix::CreateTranslation(m_cameraPos);
-	Math::Matrix rotatX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(m_cameraDeg.x));
-	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_cameraDeg.y));
+	//カメラ
+	CameraBaseData data = CAMERAMGR.GetCameraData();
+
+	Math::Matrix trans = Math::Matrix::CreateTranslation(data.m_cameraPos);
+	Math::Matrix rotatX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(data.m_cameraDeg.x));
+	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(data.m_cameraDeg.y));
 	Math::Matrix rotatY2 = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_transitionScroll));
 	Math::Matrix mat = rotatY * rotatX * trans * rotatY2;
 	m_camera->SetCameraMatrix(mat);

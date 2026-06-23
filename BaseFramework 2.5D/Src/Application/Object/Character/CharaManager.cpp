@@ -35,6 +35,9 @@ void CharaManager::SpawnEnemy(EnemyName a_name, Math::Vector3 a_pos, float a_deg
 	case EnemyName::EnemyName_Goblin:
 		enemy = std::make_shared<Goblin>(a_pos, a_deg, a_linePos);
 		break;
+	case EnemyName::EnemyName_FlyEye:
+		enemy = std::make_shared<FlyEye>(a_pos, a_deg, a_linePos);
+		break;
 	}
 
 	enemy->SetPolygonData(&m_enemyPolygonData[(int)a_name]);
@@ -104,6 +107,7 @@ void CharaManager::LoadEnemyTexData()
 
 		Math::Vector2 rect = Math::Vector2::Zero;
 		float scaleDiv = 0.0f;
+		KdSquarePolygon::PivotType pivot = KdSquarePolygon::PivotType::Center_Middle;
 		char path[STRLENG] = {};
 		float animMax = 0.0f;
 		float animAdd = 0.0f;
@@ -112,8 +116,9 @@ void CharaManager::LoadEnemyTexData()
 		{
 			if (fgets(dummy, STRLENG, fp) != nullptr)//1行読み
 			{
-				fscanf_s(fp, "%[^,],%f,%f,%f,",
+				fscanf_s(fp, "%[^,],%d,%f,%f,%f,",
 					dummy, STRLENG, 
+					&pivot,
 					&rect.x,
 					&rect.y,
 					&scaleDiv);
@@ -128,7 +133,7 @@ void CharaManager::LoadEnemyTexData()
 					std::shared_ptr<KdSquarePolygon> polygon = std::make_shared<KdSquarePolygon>();
 					polygon->SetMaterial(path);
 					polygon->SetSplit((int)animMax, 1);
-					polygon->SetPivot(KdSquarePolygon::PivotType::Center_Bottom);
+					polygon->SetPivot(pivot);
 					polygon->SetScale(rect / scaleDiv);
 					PolygonData data = { animMax,animAdd,polygon };
 

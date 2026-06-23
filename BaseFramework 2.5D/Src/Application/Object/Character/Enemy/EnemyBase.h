@@ -8,7 +8,7 @@ public:
 	EnemyBase() {}
 	~EnemyBase()override {}
 
-	void HitCheck()override;
+	virtual void HitCheck()override;
 	void PostUpdate()override;
 	void PreDraw()override;
 	void DrawLit()override;
@@ -33,5 +33,8 @@ protected:
 	float m_linePos = 0.0f;
 	EnemyAnimType m_nowAnim = EnemyAnimType::Idle;
 	std::map<EnemyAnimType, PolygonData>* m_polygons = nullptr;
+
+	//スフィア判定Pos差
+	Math::Vector3 m_sphereHitOfs = Math::Vector3::Zero;
 
 };

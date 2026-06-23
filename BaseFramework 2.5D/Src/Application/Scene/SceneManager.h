@@ -95,7 +95,7 @@ private :
 
 	//ゲーム最初のタイトルシーンかどうか
 	bool m_isFirstTitle = true;
-	
+
 private:
 
 	SceneManager() { Init(); }

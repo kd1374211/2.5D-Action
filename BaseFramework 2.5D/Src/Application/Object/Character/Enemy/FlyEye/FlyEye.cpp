@@ -1,7 +1,7 @@
-﻿#include "Goblin.h"
+﻿#include "FlyEye.h"
 #include "../../../../Scene/SceneManager.h"
 
-Goblin::Goblin(Math::Vector3 a_baseStartPos, float a_startDeg, float a_linePos)
+FlyEye::FlyEye(Math::Vector3 a_baseStartPos, float a_startDeg, float a_linePos)
 {
 	Init();
 	m_pos = a_baseStartPos + SPAWNPOS;
@@ -9,7 +9,7 @@ Goblin::Goblin(Math::Vector3 a_baseStartPos, float a_startDeg, float a_linePos)
 	m_linePos = a_linePos;
 }
 
-void Goblin::Update()
+void FlyEye::Update()
 {
 	float speedMulti = SCENEMGR.GetScrollSpeedMulti();
 
@@ -23,19 +23,19 @@ void Goblin::Update()
 
 	//アニメーション更新
 	UpdateAnim();
-	
+
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	m_mWorld = trans;
 }
 
-void Goblin::Init()
+void FlyEye::Init()
 {
 	m_pDebugWire = std::make_unique<KdDebugWireFrame>();
 
 	m_sphereHitOfs = SPHEREHITOFS;
 	m_pCollider = std::make_unique<KdCollider>();
-	m_pCollider->RegisterCollisionShape("Goblin", SPHEREHITOFS, 0.6f, KdCollider::TypeDamage);
+	m_pCollider->RegisterCollisionShape("Fly Eye", SPHEREHITOFS, 0.6f, KdCollider::TypeDamage);
 }
 
-void Goblin::Release()
+void FlyEye::Release()
 {}

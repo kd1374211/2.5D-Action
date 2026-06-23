@@ -8,6 +8,7 @@
 #include "../StageSpawner/StageSpawner.h"
 #include "../Const/StageConst.h"
 #include "../Sound/SoundManager.h"
+#include "../Camera/CameraManager.h"
 
 void SceneManager::PreUpdate()
 {
@@ -25,6 +26,9 @@ void SceneManager::PreUpdate()
 
 void SceneManager::Update()
 {
+	//カメラ
+	CAMERAMGR.Update();
+
 	//仮
 	if (GetAsyncKeyState('1') & 0x8000)
 	{
@@ -51,11 +55,11 @@ void SceneManager::PostUpdate()
 	if (m_currentDeg >= 360.0f)m_currentDeg -= 360.0f;
 	else if (m_currentDeg < 0.0f)m_currentDeg += 360.0f;
 
-	KdDebugGUI::Instance().AddLog("ScrollThisFrame : %.2f\n", m_diffDeg);
-	KdDebugGUI::Instance().AddLog("StageScrollDeg : %.2f\n", m_currentDeg);
+	//KdDebugGUI::Instance().AddLog("ScrollThisFrame : %.2f\n", m_diffDeg);
+	//KdDebugGUI::Instance().AddLog("StageScrollDeg : %.2f\n", m_currentDeg);
 	m_lastDeg = m_currentDeg;
 
-	KdDebugGUI::Instance().AddLog("Object Count : %d\n", (int)m_currentScene->GetObjList().size());
+	//KdDebugGUI::Instance().AddLog("Object Count : %d\n", (int)m_currentScene->GetObjList().size());
 }
 
 void SceneManager::PreDraw()

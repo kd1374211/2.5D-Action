@@ -3,7 +3,7 @@
 #include "KdDebugGUI.h"
 
 //仮置き
-#include "../../../Application/StageSpawner/StageSpawner.h"
+#include "../../../Application/Camera/CameraManager.h"
 
 KdDebugGUI::KdDebugGUI()
 {}
@@ -54,12 +54,20 @@ void KdDebugGUI::GuiProcess()
 	//===========================================================
 
 	// デバッグウィンドウ(日本語を表示したい場合はこう書く)
-//	if (ImGui::Begin(U8("えふぴぃえす")))
-//	{
+	if (ImGui::Begin(U8("えふぴぃえす")))
+	{
 		// FPS
-//		ImGui::Text("FPS : %d", Application::Instance().GetNowFPS());
-//	}
-//	ImGui::End();
+		ImGui::Text("FPS : %d", Application::Instance().GetNowFPS());
+
+		//カメラ
+		if (ImGui::Button("Save", ImVec2(40.0f, 20.0f)))CAMERAMGR.Save();
+		ImGui::SliderFloat("CameraPosX", &CAMERAMGR.GetCameraData().m_cameraPos.x, -5.0f, 5.0f, "%.2f");
+		ImGui::SliderFloat("CameraPosY", &CAMERAMGR.GetCameraData().m_cameraPos.y, -1.0f, 10.0f, "%.2f");
+		ImGui::SliderFloat("CameraPosZ", &CAMERAMGR.GetCameraData().m_cameraPos.z, -18.0f, -8.0f, "%.2f");
+		ImGui::SliderFloat("CameraDegX", &CAMERAMGR.GetCameraData().m_cameraDeg.x, 0.0f, 60.0f, "%.1f");
+		ImGui::SliderFloat("CameraDegY", &CAMERAMGR.GetCameraData().m_cameraDeg.y, -40.0f, 40.0f, "%.1f");
+ 	}	
+	ImGui::End();
 
 	// ログウィンドウ
 	//m_uqLog->Draw("Log Window");

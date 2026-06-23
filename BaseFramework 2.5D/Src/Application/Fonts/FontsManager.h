@@ -8,9 +8,10 @@ public:
 
 	enum FontType
 	{
-		CP_36,
-		CP_48,
 		CP_72,
+		CP_48,
+		CP_36,
+		CP_24,
 		FontsMax
 	};
 

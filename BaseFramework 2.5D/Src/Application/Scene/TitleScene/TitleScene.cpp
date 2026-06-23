@@ -4,6 +4,7 @@
 #include "../../Object/Character/CharaManager.h"
 #include "../../Object/Sprite/Scene/TitleObject/TitleObject.h"
 #include "../../Sound/SoundManager.h"
+#include "../../Camera/CameraManager.h"
 
 void TitleScene::Event()
 {
@@ -99,31 +100,11 @@ void TitleScene::Init()
 	STAGESPAWNER.StartGame(this);
 
 	//カメラ
-	FILE* fp = nullptr;
+	CameraBaseData data = CAMERAMGR.GetCameraData();
 
-	if (fopen_s(&fp, "Asset/Data/Test/TestCameraData.csv", "r") == 0)
-	{
-		fscanf_s(fp, "%f,%f,%f,",
-			&m_cameraPos.x,
-			&m_cameraPos.y,
-			&m_cameraPos.z
-		);
-
-		char dummy[250];
-		fgets(dummy, 250, fp);
-
-		fscanf_s(fp, "%f,%f,%f,",
-			&m_cameraDeg.x,
-			&m_cameraDeg.y,
-			&m_cameraDeg.z
-		);
-
-		fclose(fp);
-	}
-
-	Math::Matrix trans = Math::Matrix::CreateTranslation(m_cameraPos);
-	Math::Matrix rotatX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(m_cameraDeg.x));
-	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_cameraDeg.y));
+	Math::Matrix trans = Math::Matrix::CreateTranslation(data.m_cameraPos);
+	Math::Matrix rotatX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(data.m_cameraDeg.x));
+	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(data.m_cameraDeg.y));
 	Math::Matrix mat = rotatY * rotatX * trans;
 	m_camera->SetCameraMatrix(mat);
 }

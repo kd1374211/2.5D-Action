@@ -57,8 +57,6 @@ void HeightsNumber::PreDraw()
 			m_isNumScroll = false;
 		}
 	}
-
-	KdDebugGUI::Instance().AddLog("DrawNum : %d\n", m_drawNum);
 }
 
 void HeightsNumber::DrawSprite()
