@@ -6,7 +6,7 @@ class FlyEye :public EnemyBase
 public:
 
 	FlyEye(Math::Vector3 a_baseStartPos, float a_startDeg, float a_linePos);
-	~FlyEye() { Release(); }
+	~FlyEye()override { Release(); }
 
 	void Update()override;
 	

@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "FontsManagerConst.h"
 
 class FontsManager
 {
@@ -6,14 +7,8 @@ public:
 
 	void Init();
 
-	enum FontType
-	{
-		CP_72,
-		CP_48,
-		CP_36,
-		CP_24,
-		FontsMax
-	};
+	//データゲット
+	std::list<TextData>& GetTextData(TextScene a_scene) { return m_textData[a_scene]; }
 
 private:
 
@@ -21,7 +16,10 @@ private:
 	~FontsManager() { Release(); }
 
 	void LoadFontData();
+	void LoadTextData();
 	void Release();
+
+	std::list<TextData> m_textData[TextScene::Max];
 
 public:
 

@@ -277,6 +277,7 @@
     <ClInclude Include="Src\Application\Const\ScreenConst.h" />
     <ClInclude Include="Src\Application\Const\StageConst.h" />
     <ClInclude Include="Src\Application\Fonts\FontsManager.h" />
+    <ClInclude Include="Src\Application\Fonts\FontsManagerConst.h" />
     <ClInclude Include="Src\Application\main.h" />
     <ClInclude Include="Src\Application\Object\Character\CharaBase.h" />
     <ClInclude Include="Src\Application\Object\Character\CharacterInclude.h" />
@@ -293,6 +294,7 @@
     <ClInclude Include="Src\Application\Object\Hazard\Spear\Spear.h" />
     <ClInclude Include="Src\Application\Object\Sprite\HeightsNumber\HeightsNumber.h" />
     <ClInclude Include="Src\Application\Object\Sprite\KillCount\KillCount.h" />
+    <ClInclude Include="Src\Application\Object\Sprite\Scene\KeyGuide\KeyGuide.h" />
     <ClInclude Include="Src\Application\Object\Sprite\Scene\ResultWindow\ResultWindow.h" />
     <ClInclude Include="Src\Application\Object\Sprite\Scene\TitleObject\TitleObject.h" />
     <ClInclude Include="Src\Application\Object\Terrain\Pillar\Pillar.h" />
@@ -373,6 +375,7 @@
     <ClCompile Include="Src\Application\Object\Hazard\Spear\Spear.cpp" />
     <ClCompile Include="Src\Application\Object\Sprite\HeightsNumber\HeightsNumber.cpp" />
     <ClCompile Include="Src\Application\Object\Sprite\KillCount\KillCount.cpp" />
+    <ClCompile Include="Src\Application\Object\Sprite\Scene\KeyGuide\KeyGuide.cpp" />
     <ClCompile Include="Src\Application\Object\Sprite\Scene\ResultWindow\ResultWindow.cpp" />
     <ClCompile Include="Src\Application\Object\Sprite\Scene\TitleObject\TitleObject.cpp" />
     <ClCompile Include="Src\Application\Object\Terrain\Pillar\Pillar.cpp" />

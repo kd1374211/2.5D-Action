@@ -202,6 +202,13 @@ void Player::HitCheck()
 			//落下速度リセット
 			m_moveY = 0.0f;
 
+			//死亡時バウンド
+			if (m_isDead && m_deadBounceCnt < DEADBOUNCEMAX)
+			{
+				m_deadBounceCnt++;
+				m_moveY = JUMPPOWER * pow(DEADBOUNCEMULTI, m_deadBounceCnt);
+				m_isLanding = false;
+			}
 
 			if (m_nowAnim == PlayerAnimType::Fall)ChangeAnim(PlayerAnimType::Run);
 		}
@@ -290,6 +297,14 @@ void Player::HitCheck()
 					{
 						m_isLanding = true;
 						if (!m_isDead)SOUNDMGR.Play(SoundName::SE_Landing);
+					}
+
+					//死亡時バウンド
+					if (m_isDead && m_deadBounceCnt < DEADBOUNCEMAX)
+					{
+						m_deadBounceCnt++;
+						m_moveY = JUMPPOWER * pow(DEADBOUNCEMULTI, m_deadBounceCnt);
+						m_isLanding = false;
 					}
 				}
 			}
@@ -474,6 +489,7 @@ void Player::Respawn(Math::Vector3 a_pos)
 	m_attackWaitF = 0;
 
 	m_isDead = false;
+	m_deadBounceCnt = 0;
 	m_isGameEnd = false;
 	ChangeAnim(PlayerAnimType::Run);
 
@@ -507,8 +523,11 @@ void Player::UpdateScrollMulti()
 {
 	if (m_isDead)
 	{
-		m_stageScrollMulti += STAGESCROLLADD_DEAD;
-		if (m_stageScrollMulti >= STAGESCROLL_GAMEEND)m_isGameEnd = true;
+		if (!m_isGameEnd)
+		{
+			m_stageScrollMulti += STAGESCROLLADD_DEAD;
+			if (m_stageScrollMulti >= STAGESCROLL_GAMEEND)m_isGameEnd = true;
+		}
 	}
 	else
 	{

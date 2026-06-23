@@ -7,8 +7,8 @@
 #include "../../Object/Sprite/KillCount/KillCount.h"
 #include "../Transition/Transition.h"
 #include "../../Sound/SoundManager.h"
-#include "../../Score/ScoreManager.h"
 #include "../../Camera/CameraManager.h"
+#include "../../Object/Sprite/Scene/KeyGuide/KeyGuide.h"
 
 void GameScene::Event()
 {
@@ -54,6 +54,7 @@ void GameScene::Event()
 	//データ回収
 	CameraBaseData data = CAMERAMGR.GetCameraData();
 
+	m_camera->SetProjectionMatrix(data.m_viewAngle);
 	Math::Matrix trans = Math::Matrix::CreateTranslation(data.m_cameraPos);
 	Math::Matrix rotatX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(data.m_cameraDeg.x));
 	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(data.m_cameraDeg.y));
@@ -64,7 +65,7 @@ void GameScene::Event()
 void GameScene::Init()
 {
 	m_camera = std::make_shared<KdCamera>();
-	m_camera->SetProjectionMatrix(90);
+	m_camera->SetProjectionMatrix(80);
 	
 	//プレイヤー
 	CHARAMGR.SpawnPlayer(this);
@@ -83,7 +84,8 @@ void GameScene::Init()
 	//スコアリセット
 	SCOREMGR.Reset();
 
-	//カメラデータ
+	//操作ガイド
+	AddObject(std::make_shared<KeyGuide>());
 
 	//サウンド再生(仮)
 	SOUNDMGR.Play(SoundName::BGM_Ingame);

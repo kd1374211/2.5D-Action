@@ -22,31 +22,8 @@ public:
 	
 private:
 
-	enum ResultTexts
-	{
-		Result,
-		Heights,
-		HeightsScore,
-		Kills,
-		KillsScore,
-		Rank,
-		RankText,
-		ReturnTitle,
-		Max
-	};
-
-	struct TextData
-	{
-		ResultTexts m_index;
-		FontsManager::FontType m_font;
-		std::string m_text;
-		Math::Vector2 m_pos;
-		KdSpriteShader::TextDrawBase m_base;
-	};
-
 	void Init()override;
 	void LoadWindowData();
-	void LoadTextData();
 	void Release();
 
 	Math::Vector2 m_texSize = Math::Vector2::Zero;
@@ -73,6 +50,7 @@ private:
 	//リザルトカウント(ResultSceneからセットされる)
 	int m_countF = 0;
 
-	//ランダム描画用テキスト
+	//ランクテキスト
+	std::string m_rankText = "";
 	std::string m_randRankText = "";
 };

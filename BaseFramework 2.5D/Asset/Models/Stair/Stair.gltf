@@ -15,12 +15,23 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Cylinder",
-			"scale":[
-				1.25,
-				1,
-				1.25
-			]
+			"name":"Cylinder"
+		}
+	],
+	"materials":[
+		{
+			"doubleSided":true,
+			"name":"Material",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0.614542543888092,
+					0.6447519063949585,
+					0.6693572998046875,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.5
+			}
 		}
 	],
 	"meshes":[
@@ -33,7 +44,8 @@
 						"NORMAL":1,
 						"TEXCOORD_0":2
 					},
-					"indices":3
+					"indices":3,
+					"material":0
 				}
 			]
 		}
@@ -44,14 +56,14 @@
 			"componentType":5126,
 			"count":18,
 			"max":[
-				0.627605140209198,
+				0.7845064401626587,
 				0.4000000059604645,
-				4
+				5
 			],
 			"min":[
-				-0.627605140209198,
+				-0.7845064401626587,
 				-0.4000000059604645,
-				-4
+				-5
 			],
 			"type":"VEC3"
 		},

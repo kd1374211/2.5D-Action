@@ -80,7 +80,7 @@ TitleScene::TitleScene(bool a_isFadeIn)
 void TitleScene::Init()
 {
 	m_camera = std::make_shared<KdCamera>();
-	m_camera->SetProjectionMatrix(90);
+	m_camera->SetProjectionMatrix(80);
 
 	//タイトル画像関連
 	std::shared_ptr<TitleObject> titleObj = std::make_shared<TitleObject>(m_isFadeIn);

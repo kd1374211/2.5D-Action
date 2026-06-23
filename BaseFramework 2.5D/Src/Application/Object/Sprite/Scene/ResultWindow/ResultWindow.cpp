@@ -33,27 +33,28 @@ void ResultWindow::DrawSprite()
 	}
 
 	//テキスト
-	for (auto &text : m_texts)
+	for (auto &text : FONTMGR.GetTextData(TextScene::Result_ResultWindow))
 	{
 		std::string str = "";
 
 		//値を追加する必要があるもの
-		switch (text.m_index)
+		switch (text.m_Id)
 		{
-		case ResultTexts::HeightsScore:
+		case Result_HeightsScore:
 			if (m_countF >= ResultScene::HEIGHTDRAWF)
 			{
 				std::string score = std::to_string(SCOREMGR.GetCurrentHeight());
 				int digit = score.size();
 				for (int i = 0; i < SCOREMGR.DIGITS_HEIGHTS - digit; i++)str += "0";
-				str += score;
+				str += score + "m";
 			}
 			else if (m_countF >= ResultScene::RANDDRAWSTARTF)
 			{
 				for (int i = 0; i < SCOREMGR.DIGITS_HEIGHTS; i++)str += std::to_string(rand() % 10);
+				str += "m";
 			}
 			break;
-		case ResultTexts::KillsScore:
+		case Result_KillsScore:
 			if (m_countF >= ResultScene::KILLSDRAWF)
 			{
 				std::string score = std::to_string(SCOREMGR.GetCurrentKillCount());
@@ -66,8 +67,8 @@ void ResultWindow::DrawSprite()
 				for (int i = 0; i < SCOREMGR.DIGITS_KILLS; i++)str += std::to_string(rand() % 10);
 			}
 			break;
-		case ResultTexts::RankText:
-			if (m_countF >= ResultScene::RANKTEXTDRAWF)str = text.m_text;
+		case Result_RankText:
+			if (m_countF >= ResultScene::RANKTEXTDRAWF)str = m_rankText;
 			else if (m_countF >= ResultScene::RANDDRAWSTARTF)
 			{
 				//リロール
@@ -75,15 +76,15 @@ void ResultWindow::DrawSprite()
 				str = m_randRankText;
 			}
 			break;
-		case ResultTexts::ReturnTitle:
-			if (m_countF >= ResultScene::RESULTENDF)str = text.m_text;
+		case Result_ReturnTitle:
+			if (m_countF >= ResultScene::RESULTENDF)str = text.m_str;
 			break;
 		default:
-			str = text.m_text;
+			str = text.m_str;
 			break;
 		}
 
-		KdShaderManager::Instance().m_spriteShader.DrawFont(text.m_font, m_pos + text.m_pos, text.m_base, &kBlackColor, str.c_str());
+		KdShaderManager::Instance().m_spriteShader.DrawFont(text.m_type, m_pos + text.m_pos, text.m_base, &kBlackColor, str.c_str());
 	}
 }
 
@@ -92,10 +93,9 @@ void ResultWindow::Init()
 	m_pos = Math::Vector3::Zero;
 	m_tex = std::make_shared<KdTexture>();
 	LoadWindowData();
-	LoadTextData();
-
+	
 	//リザルトテキスト（本物）生成
-	m_texts[ResultTexts::RankText].m_text = SCOREMGR.GetRankText();
+	m_rankText = SCOREMGR.GetRankText();
 	//リザルトテキスト（ランダム）生成
 	m_randRankText = SCOREMGR.RandRankText();
 }
@@ -143,40 +143,6 @@ void ResultWindow::LoadWindowData()
 				line.push_back(num);
 			}
 			m_texMap.push_back(line);
-		}
-
-		fclose(fp);
-	}
-}
-
-void ResultWindow::LoadTextData()
-{
-	FILE* fp = nullptr;
-
-	if (fopen_s(&fp, "Asset/Data/Scene/ResultWindowTextData.csv", "r") == 0)
-	{
-		const int STRLENG = 250;
-		char dummy[STRLENG] = {};
-		char text[STRLENG] = {};
-		
-		for (int i = 0; i < ResultTexts::Max; i++)
-		{
-			if (fgets(dummy, STRLENG, fp) != nullptr)
-			{
-				TextData data;
-
-				fscanf_s(fp, "%d,%d,%[^,],%d,%f,%f,",
-					&data.m_index,
-					&data.m_font,
-					text, STRLENG,
-					&data.m_base,
-					&data.m_pos.x,
-					&data.m_pos.y);
-
-				data.m_text = text;
-
-				m_texts.push_back(data);
-			}
 		}
 
 		fclose(fp);

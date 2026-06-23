@@ -126,7 +126,6 @@ private:
 	const float AIRJUMPLIMIT = -0.04f;
 
 	//被弾フラグ
-	//static const int HITIMMUNEF = 5;
 	static const int HITIMMUNEF = 150;
 
 	bool m_isInvinsible = false;
@@ -151,4 +150,11 @@ private:
 
 	//着地フラグ
 	bool m_isLanding = true;
+
+	//死亡時バウンド
+	static const int DEADBOUNCEMAX = 2;
+	const float DEADBOUNCEMULTI = 0.65f;
+
+	int m_deadBounceCnt = 0;
+
 };

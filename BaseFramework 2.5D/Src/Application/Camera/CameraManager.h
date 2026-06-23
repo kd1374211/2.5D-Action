@@ -3,6 +3,7 @@
 //カメラデータ
 struct CameraBaseData
 {
+	int m_viewAngle;
 	Math::Vector3 m_cameraPos;
 	Math::Vector3 m_cameraDeg;
 };

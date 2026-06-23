@@ -35,4 +35,5 @@ private:
 
 	std::shared_ptr<KdTexture> m_iconTex = nullptr;
 	std::shared_ptr<KdTexture> m_numberTex = nullptr;
+	std::shared_ptr<KdTexture> m_meterTex = nullptr;
 };

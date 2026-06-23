@@ -61,6 +61,9 @@ void HeightsNumber::PreDraw()
 
 void HeightsNumber::DrawSprite()
 {
+	//一応リセット
+	KdShaderManager::Instance().m_spriteShader.SetMatrix(Math::Matrix::Identity);
+
 	Math::Rectangle rec;
 
 	//アイコン
@@ -93,9 +96,12 @@ void HeightsNumber::DrawSprite()
 			rec = Math::Rectangle(0, (long)(BASENUMSIZE * number), (long)BASENUMSIZE, (long)BASENUMSIZE);
 		}
 
-		KdShaderManager::Instance().m_spriteShader.SetMatrix(Math::Matrix::Identity);
-		KdShaderManager::Instance().m_spriteShader.DrawTex(m_numberTex, 192 - i * NUMSIZE, 320, NUMSIZE, NUMSIZE, &rec);
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_numberTex, 192.0f - i * NUMSIZE, 320.0f, NUMSIZE, NUMSIZE, &rec);
 	}
+
+	//m
+	rec = Math::Rectangle(0, 0, (long)BASENUMSIZE, (long)BASENUMSIZE);
+	KdShaderManager::Instance().m_spriteShader.DrawTex(m_meterTex, 192.0f, 320.0f, NUMSIZE, NUMSIZE, &rec);
 }
 
 void HeightsNumber::Init()
@@ -105,6 +111,9 @@ void HeightsNumber::Init()
 
 	m_iconTex = std::make_shared<KdTexture>();
 	m_iconTex->Load("Asset/Textures/Scene/Game/HeightIcon.png");
+
+	m_meterTex = std::make_shared<KdTexture>();
+	m_meterTex->Load("Asset/Textures/Scene/Game/Meter.png");
 }
 
 void HeightsNumber::Release()

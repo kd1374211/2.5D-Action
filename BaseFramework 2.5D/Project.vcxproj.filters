@@ -172,6 +172,9 @@
     <Filter Include="Src\Application\Object\Character\Enemy\FlyEye">
       <UniqueIdentifier>{89a27ba2-f944-445a-835e-e52617615eb8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Object\Sprite\Scene\KeyGuide">
+      <UniqueIdentifier>{3d52be32-3187-4533-954e-41917659a686}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -441,6 +444,12 @@
     <ClInclude Include="Src\Application\Object\Character\Enemy\FlyEye\FlyEye.h">
       <Filter>Src\Application\Object\Character\Enemy\FlyEye</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Object\Sprite\Scene\KeyGuide\KeyGuide.h">
+      <Filter>Src\Application\Object\Sprite\Scene\KeyGuide</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Fonts\FontsManagerConst.h">
+      <Filter>Src\Application\Fonts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -664,6 +673,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Character\Enemy\FlyEye\FlyEye.cpp">
       <Filter>Src\Application\Object\Character\Enemy\FlyEye</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Sprite\Scene\KeyGuide\KeyGuide.cpp">
+      <Filter>Src\Application\Object\Sprite\Scene\KeyGuide</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
