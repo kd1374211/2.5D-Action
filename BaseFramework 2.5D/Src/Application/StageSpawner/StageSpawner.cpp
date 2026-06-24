@@ -40,6 +40,8 @@ void StageSpawner::ResetStage()
 	m_noSpawnFlg = false;
 	m_noSpawnStairCnt = 0;
 	m_level = 0;
+	m_heartSpawnStack = 0;
+	m_heartSpawnCnt = 0;
 }
 
 void StageSpawner::Update()
@@ -87,12 +89,14 @@ void StageSpawner::Update()
 				m_level++;
 			}
 		}
-		if (m_level > 0)
+
+		if (m_heartSpawnCnt < HEARTSPAWNNUM)
 		{
-			//レベルダウン
-			if (SCOREMGR.GetCurrentHeight() < LEVELHEIGHTS[m_level])
+			//ハートスタック
+			if (SCOREMGR.GetCurrentHeight() > HEARTSPAWN[m_heartSpawnCnt])
 			{
-				m_level--;
+				m_heartSpawnCnt++;
+				m_heartSpawnStack++;
 			}
 		}
 
@@ -157,6 +161,15 @@ void StageSpawner::Update()
 				//0ならギミックの出現チェック
 				else
 				{
+					//テスト（ハート）
+					if (GetAsyncKeyState('7') & 0x8000)
+					{
+						float angleDeg = LOWEST->GetAngleDeg();
+						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 1.0f) + LINEPLAYAREA_MIN + 0.5f;
+						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+						SCENEMGR.AddObject(std::make_shared<Heart>(pos, angleDeg, linePos));
+					}
+
 					GimmicksData data = {};
 
 					//ギミッククール減少
@@ -182,7 +195,7 @@ void StageSpawner::Update()
 							{
 								float scale =( i - (int)Gimmicks::Wood_05 + 1) * 0.5f;
 								float angleDeg = LOWEST->GetAngleDeg();
-								float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 3.2f) + LINEPLAYAREA_MIN + 1.6f;
+								float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 0.8f * (i - (int)Gimmicks::Wood_05 + 1)) + LINEPLAYAREA_MIN + 0.4f * (i - (int)Gimmicks::Wood_05 + 1);
 								Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 								SCENEMGR.AddObject(std::make_shared<RollingWood>(pos, angleDeg, linePos, scale));
 								break;
@@ -196,7 +209,7 @@ void StageSpawner::Update()
 					if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel)
 					{
 						float angleDeg = LOWEST->GetAngleDeg();
-						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 3.2f) + LINEPLAYAREA_MIN + 1.6f;
+						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 1.2f) + LINEPLAYAREA_MIN + 0.6f;
 						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 						CHARAMGR.SpawnEnemy(EnemyName_FlyEye, pos, angleDeg, linePos);
 
@@ -225,7 +238,7 @@ void StageSpawner::Update()
 						if (rand() % data.m_chance[m_level] == 0 && !isEnemySpawn && m_level >= data.m_minLevel)
 						{
 							float angleDeg = LOWEST->GetAngleDeg();
-							float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 3.2f) + LINEPLAYAREA_MIN + 1.6f;
+							float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 1.2f) + LINEPLAYAREA_MIN + 0.6f;
 							Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 							CHARAMGR.SpawnEnemy(EnemyName_Goblin, pos, angleDeg, linePos);
 						}
@@ -260,6 +273,15 @@ void StageSpawner::Update()
 								if (rand() % data.m_chance[m_level] == 0 && canSpear && m_level >= data.m_minLevel)
 								{
 									m_isSideSpearNext = true;
+								}
+								//ハート
+								else if (m_heartSpawnStack > 0 && rand() % HEARTSPAWNCHANCE == 0)
+								{
+									float angleDeg = LOWEST->GetAngleDeg();
+									float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 1.0f) + LINEPLAYAREA_MIN + 0.5f;
+									Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+									SCENEMGR.AddObject(std::make_shared<Heart>(pos, angleDeg, linePos));
+									m_heartSpawnStack--;
 								}
 							}
 						}

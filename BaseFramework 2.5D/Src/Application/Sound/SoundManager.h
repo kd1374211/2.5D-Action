@@ -20,6 +20,7 @@ enum class SoundName
 	SE_GameStart,
 	SE_ResultRoll,
 	SE_RollEnd,
+	SE_Heal,
 	Max,
 };
 

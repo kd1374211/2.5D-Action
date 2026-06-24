@@ -292,6 +292,7 @@
     <ClInclude Include="Src\Application\Object\Hazard\RollingWood\RollingWood.h" />
     <ClInclude Include="Src\Application\Object\Hazard\SideSpear\SideSpear.h" />
     <ClInclude Include="Src\Application\Object\Hazard\Spear\Spear.h" />
+    <ClInclude Include="Src\Application\Object\Items\Heart\Heart.h" />
     <ClInclude Include="Src\Application\Object\Sprite\HeightsNumber\HeightsNumber.h" />
     <ClInclude Include="Src\Application\Object\Sprite\KillCount\KillCount.h" />
     <ClInclude Include="Src\Application\Object\Sprite\Scene\KeyGuide\KeyGuide.h" />
@@ -374,6 +375,7 @@
     <ClCompile Include="Src\Application\Object\Hazard\RollingWood\RollingWood.cpp" />
     <ClCompile Include="Src\Application\Object\Hazard\SideSpear\SideSpear.cpp" />
     <ClCompile Include="Src\Application\Object\Hazard\Spear\Spear.cpp" />
+    <ClCompile Include="Src\Application\Object\Items\Heart\Heart.cpp" />
     <ClCompile Include="Src\Application\Object\Sprite\HeightsNumber\HeightsNumber.cpp" />
     <ClCompile Include="Src\Application\Object\Sprite\KillCount\KillCount.cpp" />
     <ClCompile Include="Src\Application\Object\Sprite\Scene\KeyGuide\KeyGuide.cpp" />

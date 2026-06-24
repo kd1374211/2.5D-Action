@@ -30,7 +30,7 @@ private:
 	int m_drawNum = 0;
 
 	//フェードイン
-	const float ALPHAADD = 0.1f;
+	const float ALPHAADD = 0.05f;
 	float m_alpha = 0.0f;
 
 	std::shared_ptr<KdTexture> m_iconTex = nullptr;

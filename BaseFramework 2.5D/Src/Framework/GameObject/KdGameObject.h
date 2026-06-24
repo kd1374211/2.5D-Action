@@ -50,6 +50,7 @@ public:
 	const Math::Matrix& GetMatrix() const { return m_mWorld; }
 
 	virtual bool IsExpired() const { return m_isExpired; }
+	void SetIsExpired(bool a_flg) { m_isExpired = a_flg; }
 	
 	virtual bool IsVisible()	const { return false; }
 	virtual bool IsRideable()	const { return false; }

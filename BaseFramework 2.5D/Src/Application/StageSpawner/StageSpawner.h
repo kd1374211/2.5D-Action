@@ -85,6 +85,14 @@ private:
 	const float LEVELHEIGHTS[MAXLEVEL] = { 0,50.0f,100.0f,150.0f,200.0f,250.0f,300.0f,350.0f,400.0f,450.0f };
 	int m_level = 0;
 
+	//回復ハート
+	static const int HEARTSPAWNNUM = 7;
+	const float HEARTSPAWN[HEARTSPAWNNUM] = { 25.0f,75.0f,150.0f,225.0f,300.0f,375.0f,475.0f };
+
+	static const int HEARTSPAWNCHANCE = 10;
+	int m_heartSpawnStack = 0;
+	int m_heartSpawnCnt = 0;
+
 public:
 
 	static StageSpawner& Instance()

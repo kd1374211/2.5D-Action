@@ -99,7 +99,7 @@ private:
 	static const int ATTACKSPAWNF = 4;
 
 	//体力
-	static const int STARTHEALTH = 5;
+	static const int STARTHEALTH = 3;
 	const float HEALTHANIMSPEED = 0.5f;
 	static const int HEALTHANIMEND = 5;
 
@@ -109,7 +109,7 @@ private:
 	bool m_isGameEnd = false;
 
 	//フェードイン
-	const float ALPHAADD = 0.1f;
+	const float ALPHAADD = 0.05f;
 	float m_heartTexAlpha = 0.0f;
 
 	struct HealthTexData

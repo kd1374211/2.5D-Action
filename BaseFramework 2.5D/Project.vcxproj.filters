@@ -175,6 +175,12 @@
     <Filter Include="Src\Application\Object\Sprite\Scene\KeyGuide">
       <UniqueIdentifier>{3d52be32-3187-4533-954e-41917659a686}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Object\Items">
+      <UniqueIdentifier>{bafe59f6-6ce1-4753-9fae-3618a6715e08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Items\Heart">
+      <UniqueIdentifier>{35feb533-da99-47dd-83a7-1eeab6728b95}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -453,6 +459,9 @@
     <ClInclude Include="Src\Application\StageSpawner\GimmicksConst.h">
       <Filter>Src\Application\StageSpawner</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Object\Items\Heart\Heart.h">
+      <Filter>Src\Application\Object\Items\Heart</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -679,6 +688,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Sprite\Scene\KeyGuide\KeyGuide.cpp">
       <Filter>Src\Application\Object\Sprite\Scene\KeyGuide</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Items\Heart\Heart.cpp">
+      <Filter>Src\Application\Object\Items\Heart</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

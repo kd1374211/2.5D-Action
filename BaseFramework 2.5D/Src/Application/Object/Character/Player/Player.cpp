@@ -376,6 +376,31 @@ void Player::HitCheck()
 		{
 			OnHit();
 		}
+
+		//4
+		//取得判定（回復）
+
+		//上のスフィアを使いまわす（タイプだけ変更）
+		sphere.m_type = KdCollider::Type::TypeHeal;
+
+		//全オブジェクトとの当たり判定
+		for (auto& obj : SceneManager::Instance().GetObjList())
+		{
+			//↓スフィア当たり判定
+			if (obj->Intersects(sphere, nullptr))
+			{
+				obj->SetIsExpired(true);
+				m_health++;
+
+				//ずらす
+				for (auto &obj : m_healthTexData)
+				{
+					obj.m_number++;
+				}
+				m_healthTexData.push_back(HealthTexData(0, false, 0.0f, false));
+				SOUNDMGR.Play(SoundName::SE_Heal);
+			}
+		}
 	}
 
 	if (m_pos.y < VOIDPOSY)
@@ -404,11 +429,14 @@ void Player::PreDraw()
 	PolygonData* data = &m_polygons->find(m_nowAnim)->second;
 	data->m_polygon->SetUVRect((int)m_animCnt);
 
-	//アルファ更新
-	if (m_heartTexAlpha < 1.0f)
+	if (m_isHeartTex)
 	{
-		m_heartTexAlpha += ALPHAADD;
-		if (m_heartTexAlpha >= 1.0f)m_heartTexAlpha = 1.0f;
+		//アルファ更新
+		if (m_heartTexAlpha < 1.0f)
+		{
+			m_heartTexAlpha += ALPHAADD;
+			if (m_heartTexAlpha >= 1.0f)m_heartTexAlpha = 1.0f;
+		}
 	}
 }
 
@@ -432,13 +460,14 @@ void Player::DrawSprite()
 	Math::Color color = Math::Color(1.0f, 1.0f, 1.0f, m_heartTexAlpha);
 
 	int heartNum = m_healthTexData.size();
-	float left = -630.0f;
+	const float left = -630.0f;
+	const float top = 310.0f;
 	for (auto &itr : m_healthTexData)
 	{
 		if (itr.m_isExpired)continue;
 
 		Math::Rectangle rec = Math::Rectangle((long)((int)itr.m_animCnt * HEARTTEXBASESIZE.x), 0, (long)HEARTTEXBASESIZE.x, (long)HEARTTEXBASESIZE.y);
-		Math::Vector2 pos = Math::Vector2(left + HEARTTEXDRAWSIZE.x * ((float)itr.m_number + 0.5f), 310.0f);
+		Math::Vector2 pos = Math::Vector2(left + HEARTTEXDRAWSIZE.x * ((float)(itr.m_number % 5) + 0.5f), top - HEARTTEXDRAWSIZE.y * (itr.m_number / 5));
 		KdShaderManager::Instance().m_spriteShader.DrawTex(m_heartTex, pos.x, pos.y, HEARTTEXDRAWSIZE.x, HEARTTEXDRAWSIZE.y, &rec, &color);
 	}
 }
@@ -537,6 +566,7 @@ void Player::Respawn(Math::Vector3 a_pos)
 	m_isGameEnd = false;
 	ChangeAnim(PlayerAnimType::Run);
 
+	m_heartTexAlpha = 0.0f;
 	m_healthTexData.clear();
 	m_health = STARTHEALTH;
 	for (int i = 0; i < STARTHEALTH; i++)
@@ -678,7 +708,10 @@ void Player::OnDamage()
 	AttackStun();
 
 	//体力画像
-	if (!m_healthTexData.empty())m_healthTexData.back().m_isAnimStart = true;
+	for (auto &itr : m_healthTexData)
+	{
+		if (itr.m_number == m_health)itr.m_isAnimStart = true;
+	}
 }
 
 void Player::AttackStun()

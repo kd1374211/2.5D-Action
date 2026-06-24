@@ -16,7 +16,7 @@ private:
 	void Release();
 
 	//フェードイン
-	const float ALPHAADD = 0.1f;
+	const float ALPHAADD = 0.05f;
 	float m_alpha = 0.0f;
 
 };
