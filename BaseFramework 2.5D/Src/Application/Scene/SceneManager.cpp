@@ -60,6 +60,7 @@ void SceneManager::PostUpdate()
 	m_lastDeg = m_currentDeg;
 
 	//KdDebugGUI::Instance().AddLog("Object Count : %d\n", (int)m_currentScene->GetObjList().size());
+	//KdDebugGUI::Instance().AddLog("ScrollSpeed : %.1f\n", m_scrollSpeedMulti);
 }
 
 void SceneManager::PreDraw()

@@ -18,7 +18,49 @@ void GameScene::Event()
 	//ステージ更新
 	STAGESPAWNER.Update();
 
-	if (!m_wpPlayer.expired())
+	//ゲーム開始前
+	if (!SCENEMGR.GetGameStartFlg())
+	{
+		//加速
+		if (!m_isScrollMaxed)
+		{
+			m_scrollSpeed += SCROLLSPEEDUP;
+			if (m_scrollSpeed >= SCROLLSPEEDMAX)
+			{
+				m_scrollSpeed = SCROLLSPEEDMAX;
+				m_isScrollMaxed = true;
+
+				//現在の高さ
+				AddObject(std::make_shared<HeightsNumber>());
+
+				//キルカウント
+				AddObject(std::make_shared<KillCount>());
+
+				//操作ガイド
+				AddObject(std::make_shared<KeyGuide>());
+
+				//ハート
+				CHARAMGR.GetPlayer()->SetIsHeartTex(true);
+			}
+		}
+		else
+		{
+			m_scrollSpeed += SCROLLSPEEDDOWN;
+			if (m_scrollSpeed <= 1.0f)
+			{
+				//サウンド再生
+				SOUNDMGR.Play(SoundName::BGM_Ingame);
+
+				//フラグセット
+				SCENEMGR.SetGameStartFlg(true);
+				SCOREMGR.SetCountStart(true);
+			}
+		}
+
+		//セット
+		SCENEMGR.SetScrollSpeedMulti(m_scrollSpeed);
+	}
+	else if (!m_wpPlayer.expired())
 	{
 		std::shared_ptr<Player> player = m_wpPlayer.lock();
 
@@ -46,6 +88,9 @@ void GameScene::Event()
 
 					//サウンドの停止
 					SOUNDMGR.Stop(SoundName::BGM_Ingame);
+
+					//ゲーム開始フラグ停止
+					SCENEMGR.SetGameStartFlg(false);
 				}
 			}
 		}
@@ -69,24 +114,14 @@ void GameScene::Init()
 	
 	//プレイヤー
 	CHARAMGR.SpawnPlayer(this);
-	CHARAMGR.GetPlayer()->SetIsHeartTex(true);
 	m_wpPlayer = CHARAMGR.GetPlayer();
 
 	//ステージ
 	STAGESPAWNER.StartGame(this);
 
-	//現在の高さ
-	AddObject(std::make_shared<HeightsNumber>());
-
-	//キルカウント
-	AddObject(std::make_shared<KillCount>());
+	//スクロール速度取得
+	m_scrollSpeed = SCENEMGR.GetScrollSpeedMulti();
 
 	//スコアリセット
 	SCOREMGR.Reset();
-
-	//操作ガイド
-	AddObject(std::make_shared<KeyGuide>());
-
-	//サウンド再生(仮)
-	SOUNDMGR.Play(SoundName::BGM_Ingame);
 }

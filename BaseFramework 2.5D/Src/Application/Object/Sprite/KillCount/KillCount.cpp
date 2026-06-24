@@ -2,6 +2,13 @@
 
 void KillCount::PreDraw()
 {
+	//アルファ更新
+	if (m_alpha < 1.0f)
+	{
+		m_alpha += ALPHAADD;
+		if (m_alpha >= 1.0f)m_alpha = 1.0f;
+	}
+
 	if (!m_isNumScroll)
 	{
 		//目標の高さを取得
@@ -40,10 +47,11 @@ void KillCount::PreDraw()
 void KillCount::DrawSprite()
 {
 	Math::Rectangle rec;
+	Math::Color color = Math::Color(1.0f, 1.0f, 1.0f, m_alpha);
 
 	//アイコン
 	rec = Math::Rectangle(0, 0, (long)BASEICONSIZE, (long)BASEICONSIZE);
-	KdShaderManager::Instance().m_spriteShader.DrawTex(m_iconTex, 350.0f, 320.0f, ICONSIZE, ICONSIZE, &rec);
+	KdShaderManager::Instance().m_spriteShader.DrawTex(m_iconTex, 350.0f, 320.0f, ICONSIZE, ICONSIZE, &rec, &color);
 
 	//数字
 	//次の高さで変わる数字を取得
@@ -72,7 +80,7 @@ void KillCount::DrawSprite()
 		}
 
 		KdShaderManager::Instance().m_spriteShader.SetMatrix(Math::Matrix::Identity);
-		KdShaderManager::Instance().m_spriteShader.DrawTex(m_numTex, 635 - i * NUMSIZE, 320, NUMSIZE, NUMSIZE, &rec);
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_numTex, 635 - i * NUMSIZE, 320, NUMSIZE, NUMSIZE, &rec, &color);
 	}
 }
 

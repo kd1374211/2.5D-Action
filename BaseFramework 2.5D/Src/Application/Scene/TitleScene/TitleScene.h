@@ -31,8 +31,12 @@ private :
 	bool m_isFadeIn = false;
 
 	//音量フェード
-	const float BGMFADESPEED = 0.025f;
+	const float BGMFADESPEED = 0.05f;
 
 	//BGM音量
 	float m_titleVolumeMulti = 1.0f;
+
+	//スタート後のスクロール加速
+	float m_scrollSpeed = 1.0f;
+	const float SCROLLADD_AFTERSTART = 0.025f;
 };

@@ -22,4 +22,12 @@ private:
 	
 	bool m_isTransition = false;
 
+	//開始前加速
+	const float SCROLLSPEEDMAX = 4.0f;
+	const float SCROLLSPEEDUP = 0.05f;
+	const float SCROLLSPEEDDOWN = -0.2f;
+
+	bool m_isScrollMaxed = false;
+	float m_scrollSpeed = 1.0f;
+
 };

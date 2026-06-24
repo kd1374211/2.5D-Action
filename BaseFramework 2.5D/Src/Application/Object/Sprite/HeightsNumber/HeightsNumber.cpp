@@ -5,6 +5,9 @@
 
 void HeightsNumber::Update()
 {
+	//開始前ならリターン
+	if (!SCOREMGR.GetCountStartFlg())return;
+
 	//プレイヤーが死んでいたらスキップ
 	if (CHARAMGR.GetPlayer()->GetIsDead())return;
 
@@ -14,6 +17,9 @@ void HeightsNumber::Update()
 
 void HeightsNumber::PostUpdate()
 {
+	//開始前ならリターン
+	if (!SCOREMGR.GetCountStartFlg())return;
+
 	//プレイヤーが死んでいたらスキップ
 	if (CHARAMGR.GetPlayer()->GetIsDead())return;
 
@@ -23,6 +29,13 @@ void HeightsNumber::PostUpdate()
 
 void HeightsNumber::PreDraw()
 {
+	//アルファ更新
+	if (m_alpha < 1.0f)
+	{
+		m_alpha += ALPHAADD;
+		if (m_alpha >= 1.0f)m_alpha = 1.0f;
+	}
+
 	//数字のスクロール計算
 	if (!m_isNumScroll)
 	{
@@ -65,10 +78,11 @@ void HeightsNumber::DrawSprite()
 	KdShaderManager::Instance().m_spriteShader.SetMatrix(Math::Matrix::Identity);
 
 	Math::Rectangle rec;
+	Math::Color color = Math::Color(1.0f, 1.0f, 1.0f, m_alpha);
 
 	//アイコン
 	rec = Math::Rectangle(0, 0, (long)BASEICONSIZE, (long)BASEICONSIZE);
-	KdShaderManager::Instance().m_spriteShader.DrawTex(m_iconTex, -180.0f, 320.0f, ICONSIZE, ICONSIZE, &rec);
+	KdShaderManager::Instance().m_spriteShader.DrawTex(m_iconTex, -180.0f, 320.0f, ICONSIZE, ICONSIZE, &rec, &color);
 
 	//数字
 	//次の高さで変わる数字を取得
@@ -96,12 +110,12 @@ void HeightsNumber::DrawSprite()
 			rec = Math::Rectangle(0, (long)(BASENUMSIZE * number), (long)BASENUMSIZE, (long)BASENUMSIZE);
 		}
 
-		KdShaderManager::Instance().m_spriteShader.DrawTex(m_numberTex, 192.0f - i * NUMSIZE, 320.0f, NUMSIZE, NUMSIZE, &rec);
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_numberTex, 192.0f - i * NUMSIZE, 320.0f, NUMSIZE, NUMSIZE, &rec, &color);
 	}
 
 	//m
 	rec = Math::Rectangle(0, 0, (long)BASENUMSIZE, (long)BASENUMSIZE);
-	KdShaderManager::Instance().m_spriteShader.DrawTex(m_meterTex, 192.0f, 320.0f, NUMSIZE, NUMSIZE, &rec);
+	KdShaderManager::Instance().m_spriteShader.DrawTex(m_meterTex, 192.0f, 320.0f, NUMSIZE, NUMSIZE, &rec, &color);
 }
 
 void HeightsNumber::Init()

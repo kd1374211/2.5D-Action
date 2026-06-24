@@ -57,6 +57,10 @@ public :
 	//このフレームでのスクロール量（次のフレームに呼ぶ）
 	float GetFrameScroll()const { return m_diffDeg; }
 
+	//ゲーム開始フラグ
+	void SetGameStartFlg(bool a_flg) { m_isGameStart = a_flg; }
+	bool GetGameStartFlg()const { return m_isGameStart; }
+
 private :
 
 	// マネージャーの初期化
@@ -87,7 +91,7 @@ private :
 	float m_currentDeg = 0.0f;
 	float m_diffDeg = 0.0f;
 
-	//テスト
+	//デバッグ（スクロール停止）
 	bool test = true;
 
 	//シーン持越しオブジェクト
@@ -95,6 +99,9 @@ private :
 
 	//ゲーム最初のタイトルシーンかどうか
 	bool m_isFirstTitle = true;
+
+	//ゲーム開始状態かフラグ
+	bool m_isGameStart = false;
 
 private:
 

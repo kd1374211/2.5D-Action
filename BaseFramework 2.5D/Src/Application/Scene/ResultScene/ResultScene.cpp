@@ -54,9 +54,9 @@ void ResultScene::Event()
 			//リザルトスキップ
 			if (GetAsyncKeyState(VK_SPACE) & 0x8000 && !m_isSpaceKey)
 			{
-				m_countF = RANKTEXTDRAWF;
+				m_countF = RESULTENDF;
 				SOUNDMGR.Stop(SoundName::SE_ResultRoll);
-				SOUNDMGR.Play(SoundName::SE_RollEnd);
+				if (!m_isRankEndSE)SOUNDMGR.Play(SoundName::SE_RollEnd);
 			}
 
 			//カウントセット
@@ -78,6 +78,7 @@ void ResultScene::Event()
 				{
 					m_wpResultWindow.lock()->ResultEnd();
 					m_isResultEnd = true;
+					SOUNDMGR.Play(SoundName::SE_GameStart);
 				}
 			}
 

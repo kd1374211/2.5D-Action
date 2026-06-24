@@ -7,6 +7,7 @@ void ScoreManager::Reset()
 {
 	m_currentHeight = 0.0f;
 	m_currentKill = 0;
+	SetCountStart(false);
 }
 
 void ScoreManager::AddKillCount()

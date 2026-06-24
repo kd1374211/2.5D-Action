@@ -24,3 +24,10 @@ struct GimmicksData
 	int m_minLevel;
 	int m_chance[MAXLEVEL];
 };
+
+struct NoStairsData
+{
+	int m_chance;
+	int m_cool;
+	int m_tripleChance;
+};

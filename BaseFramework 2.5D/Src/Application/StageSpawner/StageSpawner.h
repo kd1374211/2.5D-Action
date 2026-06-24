@@ -72,8 +72,10 @@ private:
 	bool m_isSideSpearNext = false;
 
 	//非出現フラグ
-	bool noSpawnFlg = false;
-	int noSpawnStairCnt = 0;
+	NoStairsData m_noStairsData[MAXLEVEL];
+	bool m_noSpawnFlg = false;
+	int m_noSpawnStairCnt = 0;
+	int m_noSpawnStairCool = 0;
 
 	//ギミック連続出現対策
 	static const int BOULDERCOOL = 4;

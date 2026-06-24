@@ -30,6 +30,14 @@ void Player::Update()
 			m_healthTexData.push_back(HealthTexData(i, false, 0.0f, false));
 		}
 	}
+	if (GetAsyncKeyState('4') & 0x8000)OnHit();
+
+	//使わないように
+	if (GetAsyncKeyState('0') & 0x8000)
+	{
+		m_isInvinsible = false;
+		OnHit();
+	}
 
 	//重力更新
 	if (m_moveY > FALLSPEEDMAX)
@@ -395,6 +403,13 @@ void Player::PreDraw()
 {
 	PolygonData* data = &m_polygons->find(m_nowAnim)->second;
 	data->m_polygon->SetUVRect((int)m_animCnt);
+
+	//アルファ更新
+	if (m_heartTexAlpha < 1.0f)
+	{
+		m_heartTexAlpha += ALPHAADD;
+		if (m_heartTexAlpha >= 1.0f)m_heartTexAlpha = 1.0f;
+	}
 }
 
 void Player::DrawLit()
@@ -414,6 +429,8 @@ void Player::DrawSprite()
 {
 	if (!m_isHeartTex)return;
 
+	Math::Color color = Math::Color(1.0f, 1.0f, 1.0f, m_heartTexAlpha);
+
 	int heartNum = m_healthTexData.size();
 	float left = -630.0f;
 	for (auto &itr : m_healthTexData)
@@ -422,7 +439,7 @@ void Player::DrawSprite()
 
 		Math::Rectangle rec = Math::Rectangle((long)((int)itr.m_animCnt * HEARTTEXBASESIZE.x), 0, (long)HEARTTEXBASESIZE.x, (long)HEARTTEXBASESIZE.y);
 		Math::Vector2 pos = Math::Vector2(left + HEARTTEXDRAWSIZE.x * ((float)itr.m_number + 0.5f), 310.0f);
-		KdShaderManager::Instance().m_spriteShader.DrawTex(m_heartTex, pos.x, pos.y, HEARTTEXDRAWSIZE.x, HEARTTEXDRAWSIZE.y, &rec);
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_heartTex, pos.x, pos.y, HEARTTEXDRAWSIZE.x, HEARTTEXDRAWSIZE.y, &rec, &color);
 	}
 }
 
@@ -445,6 +462,8 @@ void Player::OnHit()
 		m_stageScrollMulti = STAGESCROLL_ONDEAD;
 
 		ChangeAnim(PlayerAnimType::Dead);
+		m_isHitBlink = false;
+
 		//死亡
 		m_isDead = true;
 	}
@@ -488,6 +507,8 @@ void Player::FallVoid()
 		m_stageScrollMulti = STAGESCROLL_ONDEAD;
 
 		ChangeAnim(PlayerAnimType::Dead);
+		m_isHitBlink = false;
+
 		//死亡
 		m_isDead = true;
 	}
@@ -550,7 +571,11 @@ void Player::UpdateScrollMulti()
 		if (!m_isGameEnd)
 		{
 			m_stageScrollMulti += STAGESCROLLADD_DEAD;
-			if (m_stageScrollMulti >= STAGESCROLL_GAMEEND)m_isGameEnd = true;
+			if (m_stageScrollMulti >= STAGESCROLL_GAMEEND)
+			{
+				m_stageScrollMulti = STAGESCROLL_GAMEEND;
+				m_isGameEnd = true;
+			}
 		}
 	}
 	else
@@ -559,7 +584,8 @@ void Player::UpdateScrollMulti()
 		if (m_stageScrollMulti > STAGESCROLLMAX)m_stageScrollMulti = STAGESCROLLMAX;
 	}
 	
-	SCENEMGR.SetScrollSpeedMulti(m_stageScrollMulti);
+	//ゲーム開始後なら設定
+	if (SCENEMGR.GetGameStartFlg())SCENEMGR.SetScrollSpeedMulti(m_stageScrollMulti);
 }
 
 bool Player::ChangeAnimCheck(PlayerAnimType a_anim)

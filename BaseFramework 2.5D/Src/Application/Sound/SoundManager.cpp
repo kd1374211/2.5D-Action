@@ -18,7 +18,7 @@ void SoundManager::Update()
 		}
 	}
 
-	if (GetAsyncKeyState('4') & 0x8000)
+	if (GetAsyncKeyState('5') & 0x8000)
 	{
 		if (!m_is4Key)
 		{

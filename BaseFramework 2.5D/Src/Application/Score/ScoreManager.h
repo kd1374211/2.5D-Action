@@ -21,10 +21,12 @@ public:
 	//セッター（アッダー）
 	void AddKillCount();
 	void AddHeight(float a_height);
+	void SetCountStart(bool a_flg) { m_isCountStart = a_flg; }
 
 	//ゲッターs
 	int GetCurrentHeight()const { return (int)m_currentHeight; }
 	int GetCurrentKillCount()const { return m_currentKill; }
+	bool GetCountStartFlg()const { return m_isCountStart; }
 	
 	//スコアの比較
 	CompareResult CompareNum(int a_baseNum, int a_targetNum);
@@ -71,6 +73,9 @@ private:
 	//ランク関連
 	std::vector<RankData> m_rankTextData_First;
 	std::vector<std::string> m_rankTextData_Second;
+
+	//カウント開始フラグ
+	bool m_isCountStart = false;
 
 public:
 

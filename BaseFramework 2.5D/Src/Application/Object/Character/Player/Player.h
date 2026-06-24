@@ -108,6 +108,10 @@ private:
 	//ゲーム終了フラグ
 	bool m_isGameEnd = false;
 
+	//フェードイン
+	const float ALPHAADD = 0.1f;
+	float m_heartTexAlpha = 0.0f;
+
 	struct HealthTexData
 	{
 		int m_number;

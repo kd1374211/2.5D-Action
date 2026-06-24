@@ -37,8 +37,8 @@ void StageSpawner::ResetStage()
 	m_stairVisibleLog_past.clear();
 	m_countBackScroll = 0;
 	m_isSideSpearNext = false;
-	noSpawnFlg = false;
-	noSpawnStairCnt = 0;
+	m_noSpawnFlg = false;
+	m_noSpawnStairCnt = 0;
 	m_level = 0;
 }
 
@@ -99,19 +99,28 @@ void StageSpawner::Update()
 		//未来のスポーン情報
 		while (m_stairVisibleLog_future.size() < MAXFUTUREROLL)
 		{
-			//テスト
-			if (rand() % 5 == 0 && !noSpawnFlg)
+			//数更新
+			if (m_noSpawnStairCool > 0)m_noSpawnStairCool--;
+			else
 			{
-				noSpawnFlg = true;
-				noSpawnStairCnt = rand() % 2 + 2;
+				//出現ガチャ
+				if (rand() % m_noStairsData[m_level].m_chance == 0 && !m_noSpawnFlg)
+				{
+					m_noSpawnFlg = true;
+					m_noSpawnStairCnt = rand() % 100 < m_noStairsData[m_level].m_tripleChance ? 3 : 2;
+				}
 			}
 
-			m_stairVisibleLog_future.push_back(noSpawnFlg && noSpawnStairCnt > 0 ? true : false);
+			m_stairVisibleLog_future.push_back(m_noSpawnFlg);
 
-			if (noSpawnFlg)
+			if (m_noSpawnFlg)
 			{
-				noSpawnStairCnt--;
-				if (noSpawnStairCnt == -7)noSpawnFlg = false;
+				m_noSpawnStairCnt--;
+				if (m_noSpawnStairCnt <= 0)
+				{
+					m_noSpawnFlg = false;
+					m_noSpawnStairCool = m_noStairsData[m_level].m_cool;
+				}
 			}
 		}
 
@@ -334,6 +343,24 @@ void StageSpawner::LoadData()
 	{
 		const int STRLENG = 100;
 		char dummy[STRLENG] = {};
+		int level = 0;
+
+		//階段未出現ロールチャンス
+		for (int i = 0; i < MAXLEVEL; i++)
+		{
+			if (fgets(dummy, STRLENG, fp) != nullptr)
+			{
+				fscanf_s(fp, "%d,%d,%d,%d,",
+					&level,
+					&m_noStairsData[i].m_chance,
+					&m_noStairsData[i].m_cool,
+					&m_noStairsData[i].m_tripleChance);
+			}
+		}
+		
+		//読んどく
+		fgets(dummy, STRLENG, fp);
+
 		int index = 0;
 		GimmicksData data = {};
 

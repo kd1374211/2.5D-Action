@@ -33,6 +33,10 @@ private:
 	float m_numScroll = 0.0f;
 	int m_drawNum = 0;
 
+	//フェードイン
+	const float ALPHAADD = 0.1f;
+	float m_alpha = 0.0f;
+
 	std::shared_ptr<KdTexture> m_iconTex = nullptr;
 	std::shared_ptr<KdTexture> m_numberTex = nullptr;
 	std::shared_ptr<KdTexture> m_meterTex = nullptr;

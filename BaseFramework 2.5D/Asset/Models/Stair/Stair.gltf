@@ -23,12 +23,9 @@
 			"doubleSided":true,
 			"name":"Material",
 			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.614542543888092,
-					0.6447519063949585,
-					0.6693572998046875,
-					1
-				],
+				"baseColorTexture":{
+					"index":0
+				},
 				"metallicFactor":0,
 				"roughnessFactor":0.5
 			}
@@ -48,6 +45,19 @@
 					"material":0
 				}
 			]
+		}
+	],
+	"textures":[
+		{
+			"sampler":0,
+			"source":0
+		}
+	],
+	"images":[
+		{
+			"mimeType":"image/png",
+			"name":"Plaster_01-128x128",
+			"uri":"Plaster_01-128x128.png"
 		}
 	],
 	"accessors":[
@@ -110,6 +120,12 @@
 			"byteLength":48,
 			"byteOffset":576,
 			"target":34963
+		}
+	],
+	"samplers":[
+		{
+			"magFilter":9729,
+			"minFilter":9987
 		}
 	],
 	"buffers":[
