@@ -309,6 +309,7 @@
     <ClInclude Include="Src\Application\Scene\Transition\Transition.h" />
     <ClInclude Include="Src\Application\Score\ScoreManager.h" />
     <ClInclude Include="Src\Application\Sound\SoundManager.h" />
+    <ClInclude Include="Src\Application\StageSpawner\GimmicksConst.h" />
     <ClInclude Include="Src\Application\StageSpawner\StageObjectInclude.h" />
     <ClInclude Include="Src\Application\StageSpawner\StageSpawner.h" />
     <ClInclude Include="Src\Framework\Direct3D\KdMaterial.h" />

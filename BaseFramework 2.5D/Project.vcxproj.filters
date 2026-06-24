@@ -450,6 +450,9 @@
     <ClInclude Include="Src\Application\Fonts\FontsManagerConst.h">
       <Filter>Src\Application\Fonts</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\StageSpawner\GimmicksConst.h">
+      <Filter>Src\Application\StageSpawner</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">

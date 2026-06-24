@@ -4,6 +4,7 @@
 #include "../Const/StageConst.h"
 #include "StageObjectInclude.h"
 #include "../Object/Character/CharaManager.h"
+#include "../Score/ScoreManager.h"
 
 //階段再出現用
 #define LOWEST m_stairs.front()
@@ -92,9 +93,12 @@ void StageSpawner::Update()
 			if (noSpawnFlg)
 			{
 				noSpawnStairCnt--;
-				if (noSpawnStairCnt == -4)noSpawnFlg = false;
+				if (noSpawnStairCnt == -7)noSpawnFlg = false;
 			}
 		}
+
+		//ギミック生成(未完成)
+		//RandGimmicks();
 
 		//仮置き（階段があるかどうか）
 		bool isStair = false;
@@ -129,24 +133,40 @@ void StageSpawner::Update()
 				//0ならギミックの出現チェック
 				else
 				{
-					if (rand() % 70 == 0)
+					int level = SCOREMGR.GetLevel();
+					GimmicksData data = {};
+
+					//岩
+					data = m_gimmicksData.find(Gimmicks::Boulder)->second;
+					if (rand() % data.m_chance == 0 && level >= data.m_minLevel)
 					{
 						float angleDeg = LOWEST->GetAngleDeg();
 						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 3.2f) + LINEPLAYAREA_MIN + 1.6f;
 						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 						SCENEMGR.AddObject(std::make_shared<Boulder>(pos, angleDeg, linePos));
 					}
-					else if (rand() % 40 == 0)
+					else
 					{
-						float scale = (rand() % 4 + 1) * 0.5f;
-						float angleDeg = LOWEST->GetAngleDeg();
-						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 3.2f) + LINEPLAYAREA_MIN + 1.6f;
-						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
-						SCENEMGR.AddObject(std::make_shared<RollingWood>(pos, angleDeg, linePos, scale));
+						for (int i = (int)Gimmicks::Wood_05; i < (int)Gimmicks::Wood_20; i++)
+						{
+							//木
+							data = m_gimmicksData.find((Gimmicks)i)->second;
+							if (rand() % data.m_chance == 0 && level >= data.m_minLevel)
+							{
+								float scale =( i - (int)Gimmicks::Wood_05 + 1) * 0.5f;
+								float angleDeg = LOWEST->GetAngleDeg();
+								float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 3.2f) + LINEPLAYAREA_MIN + 1.6f;
+								Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+								SCENEMGR.AddObject(std::make_shared<RollingWood>(pos, angleDeg, linePos, scale));
+								break;
+							}
+						}
 					}
+						
 
 					//目
-					if (rand() % 15 == 0)
+					data = m_gimmicksData.find(Gimmicks::FlyEye)->second;
+					if (rand() % data.m_chance == 0 && level >= data.m_minLevel)
 					{
 						float angleDeg = LOWEST->GetAngleDeg();
 						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 3.2f) + LINEPLAYAREA_MIN + 1.6f;
@@ -173,35 +193,48 @@ void StageSpawner::Update()
 					//階段があるかを見る
 					else if (!isStair)
 					{
-						if (rand() % 12 == 0 && !isEnemySpawn)
+						//ゴブリン
+						data = m_gimmicksData.find(Gimmicks::Goblin)->second;
+						if (rand() % data.m_chance == 0 && !isEnemySpawn && level >= data.m_minLevel)
 						{
 							float angleDeg = LOWEST->GetAngleDeg();
 							float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 3.2f) + LINEPLAYAREA_MIN + 1.6f;
 							Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 							CHARAMGR.SpawnEnemy(EnemyName_Goblin, pos, angleDeg, linePos);
 						}
-						else if (rand() % 10 == 0 && canSpear)
+						else
 						{
-							float angleDeg = LOWEST->GetAngleDeg();
-							float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 2.6f) + LINEPLAYAREA_MIN + 0.6f;
-
-							for (int i = 0; i < 5; i++)
+							//槍
+							data = m_gimmicksData.find(Gimmicks::Spear)->second;
+							if (rand() % data.m_chance == 0 && canSpear && level >= data.m_minLevel)
 							{
-								Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
-								SCENEMGR.AddObject(std::make_shared<Spear>(pos, angleDeg, linePos));
-								linePos += 0.5f;
-								spearWait++;
-							}
+								float angleDeg = LOWEST->GetAngleDeg();
+								float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 2.6f) + LINEPLAYAREA_MIN + 0.6f;
 
-							//横槍
-							if (rand() % 3 == 0)
-							{
-								m_isSideSpearNext = true;
+								for (int i = 0; i < 5; i++)
+								{
+									Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+									SCENEMGR.AddObject(std::make_shared<Spear>(pos, angleDeg, linePos));
+									linePos += 0.5f;
+									spearWait++;
+								}
+
+								//横槍
+								data = m_gimmicksData.find(Gimmicks::SpearAfterSide)->second;
+								if (rand() % data.m_chance == 0 && level >= data.m_minLevel)
+								{
+									m_isSideSpearNext = true;
+								}
 							}
-						}
-						else if (rand() % 20 == 0 && canSpear)
-						{
-							m_isSideSpearNext = true;
+							else
+							{
+								//横槍
+								data = m_gimmicksData.find(Gimmicks::SideSpear)->second;
+								if (rand() % data.m_chance == 0 && canSpear && level >= data.m_minLevel)
+								{
+									m_isSideSpearNext = true;
+								}
+							}
 						}
 					}
 				}
@@ -259,6 +292,9 @@ void StageSpawner::AddFutureStairVisibleLog(bool a_isVisible)
 
 void StageSpawner::Init()
 {
+	//データ
+	LoadData();
+
 	//階段召喚
 	for (int i = 0; i < STAIRNUM; i++)
 	{
@@ -272,6 +308,110 @@ void StageSpawner::Init()
 	m_pillar = std::make_shared<Pillar>(Math::Vector3::Zero);
 }
 
+void StageSpawner::LoadData()
+{
+	FILE* fp = nullptr;
+
+	if (fopen_s(&fp, "Asset/Data/Stage/GimmicksData.csv", "r") == 0)
+	{
+		const int STRLENG = 100;
+		char dummy[STRLENG] = {};
+		int index = 0;
+		GimmicksData data = {};
+
+		for (int i = 0; i < (int)Gimmicks::Max; i++)
+		{
+			if (fgets(dummy, STRLENG, fp) != nullptr)//1行読み
+			{
+				fscanf_s(fp, "%d,%d,%f,%f,%d,",
+					&index,
+					&data.m_chance,
+					&data.m_linePosMin,
+					&data.m_linePosMax,
+					&data.m_minLevel);
+
+				m_gimmicksData.emplace((Gimmicks)index, data);
+			}
+		}
+
+		fclose(fp);
+	}
+}
+
 void StageSpawner::Release()
 {
+}
+
+void StageSpawner::RandGimmicks()
+{
+	int check = GIMMICKSTORE - m_spawnData.back().m_countStair;
+	if (check <= 0)return;
+
+	//ギミックロール
+	for (int i = check; i <= GIMMICKSTORE; i++)
+	{
+		int level = SCOREMGR.GetLevel();
+		GimmicksData data = {};
+		SpawnData spawn = {};
+
+		//岩
+		data = m_gimmicksData.find(Gimmicks::Boulder)->second;
+		if (level >= data.m_minLevel && rand() % data.m_chance == 0)
+		{
+			spawn.m_countStair = check;
+			spawn.m_index = Gimmicks::Boulder;
+			spawn.m_linePos = ((float)rand() / RAND_MAX) * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
+			m_spawnData.push_back(spawn);
+		}
+		else
+		{
+			for (int k = (int)Gimmicks::Wood_05; k < (int)Gimmicks::Wood_20; k++)
+			{
+				//木
+				data = m_gimmicksData.find((Gimmicks)k)->second;
+				if (level >= data.m_minLevel && rand() % data.m_chance == 0)
+				{
+					spawn.m_countStair = check;
+					spawn.m_index = (Gimmicks)k;
+					spawn.m_linePos = ((float)rand() / RAND_MAX) * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
+					m_spawnData.push_back(spawn);
+					break;
+				}
+			}
+		}
+
+
+		//横槍
+		data = m_gimmicksData.find(Gimmicks::SideSpear)->second;
+		if (level >= data.m_minLevel && rand() % data.m_chance == 0 && (m_stairVisibleLog_future.front() + check + 1))
+		{
+			spawn.m_countStair = check;
+			spawn.m_index = Gimmicks::SideSpear;
+			spawn.m_linePos = ((float)rand() / RAND_MAX) * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
+			m_spawnData.push_back(spawn);
+		}
+		else
+		{
+			//縦槍
+			data = m_gimmicksData.find(Gimmicks::Spear)->second;
+			if (level >= data.m_minLevel && rand() % data.m_chance == 0 && (m_stairVisibleLog_future.front() + check))
+			{
+				spawn.m_countStair = check;
+				spawn.m_index = Gimmicks::Spear;
+				spawn.m_linePos = ((float)rand() / RAND_MAX) * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
+				m_spawnData.push_back(spawn);
+
+				//横槍も見る
+				data = m_gimmicksData.find(Gimmicks::SpearAfterSide)->second;
+				if (level >= data.m_minLevel && rand() % data.m_chance && (m_stairVisibleLog_future.front() + check + 2))
+				{
+					spawn.m_countStair = check + 1;
+					spawn.m_index = Gimmicks::Spear;
+					spawn.m_linePos = ((float)rand() / RAND_MAX) * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
+					m_spawnData.push_back(spawn);
+				}
+			}
+		}
+		
+	}
 }

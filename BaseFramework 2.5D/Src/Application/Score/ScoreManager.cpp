@@ -7,6 +7,7 @@ void ScoreManager::Reset()
 {
 	m_currentHeight = 0.0f;
 	m_currentKill = 0;
+	m_level = 0;
 }
 
 void ScoreManager::AddKillCount()
@@ -20,6 +21,24 @@ void ScoreManager::AddHeight(float a_height)
 	m_currentHeight += a_height;
 	if (m_currentHeight < 0.0f)m_currentHeight = 0.0f;
 	else if (m_currentHeight > HEIGHTS_MAX)m_currentHeight = HEIGHTS_MAX;
+
+	//レベル更新
+	if (m_level < MAXLEVEL - 1)
+	{
+		if (m_currentHeight > LEVELHEIGHTS[m_level + 1])
+		{
+			m_level++;
+		}
+	}
+
+	if (m_level > 0)
+	{
+		//レベルダウン
+		if (m_currentHeight < LEVELHEIGHTS[m_level])
+		{
+			m_level--;
+		}
+	}
 }
 
 CompareResult ScoreManager::CompareNum(int a_baseNum, int a_targetNum)

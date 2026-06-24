@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "GimmicksConst.h"
 
 class Stair;
 class Wall;
@@ -28,7 +29,10 @@ private:
 	~StageSpawner() { Release(); }
 
 	void Init();
+	void LoadData();
 	void Release();
+
+	void RandGimmicks();
 
 	//同時に存在する階段数
 	static const int STAIRNUM = 80;
@@ -48,11 +52,16 @@ private:
 	
 	//最大貯蔵数
 	static const int MAXDATASTORE = 80;
-	static const int MAXFUTUREROLL = 20;
+	static const int MAXFUTUREROLL = 40;
 
 	//仮
 	std::list <bool> m_stairVisibleLog_past;
 	std::list<bool> m_stairVisibleLog_future;
+
+	//敵スポーンデータ
+	static const int GIMMICKSTORE = 20;
+	std::map<Gimmicks, GimmicksData> m_gimmicksData;
+	std::list<SpawnData> m_spawnData;
 
 	//壁
 	std::shared_ptr<Wall> m_wall;

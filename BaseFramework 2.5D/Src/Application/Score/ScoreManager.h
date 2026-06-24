@@ -25,6 +25,7 @@ public:
 	//ゲッターs
 	int GetCurrentHeight()const { return (int)m_currentHeight; }
 	int GetCurrentKillCount()const { return m_currentKill; }
+	int GetLevel()const { return m_level + 1; }
 
 	//スコアの比較
 	CompareResult CompareNum(int a_baseNum, int a_targetNum);
@@ -71,6 +72,11 @@ private:
 	//ランク関連
 	std::vector<RankData> m_rankTextData_First;
 	std::vector<std::string> m_rankTextData_Second;
+
+	//ステージレベル
+	static const int MAXLEVEL = 5;
+	const float LEVELHEIGHTS[MAXLEVEL] = { 0,50.0f,150.0f,300.0f,500.0f };
+	int m_level = 0;
 
 public:
 
