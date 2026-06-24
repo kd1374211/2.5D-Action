@@ -21,7 +21,15 @@ void Player::PreUpdate()
 
 void Player::Update()
 {
-	if (GetAsyncKeyState('3') & 0x8000)OnHit();
+	if (GetAsyncKeyState('3') & 0x8000)
+	{
+		m_healthTexData.clear();
+		m_health = STARTHEALTH;
+		for (int i = 0; i < STARTHEALTH; i++)
+		{
+			m_healthTexData.push_back(HealthTexData(i, false, 0.0f, false));
+		}
+	}
 
 	//重力更新
 	if (m_moveY > FALLSPEEDMAX)
@@ -419,7 +427,7 @@ void Player::DrawSprite()
 }
 
 void Player::OnHit()
-{
+{ 
 	//無敵ならスキップ
 	if (m_isInvinsible)return;
 	//ジャンプ不可に

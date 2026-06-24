@@ -15,7 +15,7 @@ public:
 private:
 
 	//召喚時にずらすY
-	const Math::Vector3 SPAWNPOS = Math::Vector3(0, 1.8f, 0);
+	const Math::Vector3 SPAWNPOS = Math::Vector3(0, 1.44f, 0);
 
 	//地形とのスピード差
 	const float SPEEDMULTIADD = 0.5f;

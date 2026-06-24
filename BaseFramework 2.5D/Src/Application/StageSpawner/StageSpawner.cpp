@@ -158,7 +158,7 @@ void StageSpawner::Update()
 					if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel && m_boulderCool <= 0)
 					{
 						float angleDeg = LOWEST->GetAngleDeg();
-						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 3.2f) + LINEPLAYAREA_MIN + 1.6f;
+						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 2.6f) + LINEPLAYAREA_MIN + 1.3f;
 						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 						SCENEMGR.AddObject(std::make_shared<Boulder>(pos, angleDeg, linePos));
 						m_boulderCool = BOULDERCOOL;

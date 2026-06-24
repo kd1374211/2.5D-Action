@@ -76,7 +76,7 @@ private:
 	int noSpawnStairCnt = 0;
 
 	//ギミック連続出現対策
-	static const int BOULDERCOOL = 5;
+	static const int BOULDERCOOL = 4;
 	int m_boulderCool = 0;
 
 	//ステージレベル
