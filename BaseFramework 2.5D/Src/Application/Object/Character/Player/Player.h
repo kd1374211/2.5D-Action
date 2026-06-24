@@ -131,6 +131,12 @@ private:
 	bool m_isInvinsible = false;
 	int m_immuneF = 0;
 
+	//被弾時点滅
+	static const int HITBLINK = 10;
+
+	bool m_isHitBlink = false;
+	int m_countF_blink = 0;
+
 	//奈落位置
 	const float VOIDPOSY = -2.0f;
 

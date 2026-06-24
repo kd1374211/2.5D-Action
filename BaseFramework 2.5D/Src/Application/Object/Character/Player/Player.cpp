@@ -122,7 +122,21 @@ void Player::Update()
 	if (m_isInvinsible)
 	{
 		m_immuneF--;
-		if (m_immuneF <= 0)m_isInvinsible = false;
+		if (m_immuneF <= 0)
+		{
+			m_isInvinsible = false;
+			m_isHitBlink = false;
+		}
+		else if (!m_isDead)
+		{
+			m_countF_blink--;
+			//点滅
+			if (m_countF_blink <= 0)
+			{
+				m_isHitBlink = !m_isHitBlink;
+				m_countF_blink = HITBLINK;
+			}
+		}
 	}
 
 	//スクロール量更新
@@ -377,6 +391,7 @@ void Player::PreDraw()
 
 void Player::DrawLit()
 {
+	if (m_isHitBlink)return;
 	PolygonData* data = &m_polygons->find(m_nowAnim)->second;
 	KdShaderManager::Instance().m_StandardShader.DrawPolygon(*data->m_polygon, m_mWorld);
 }
@@ -500,8 +515,9 @@ void Player::Respawn(Math::Vector3 a_pos)
 		m_healthTexData.push_back(HealthTexData(i, false, 0.0f, false));
 	}
 
-	m_isInvinsible = true;
-	m_immuneF = HITIMMUNEF;
+	m_isInvinsible = false;
+	m_immuneF = 0;
+	m_isHitBlink = false;
 
 	m_stageScrollMulti = STAGESCROLLMAX;
 }
@@ -616,6 +632,13 @@ void Player::OnDamage()
 	//被弾後無敵
 	m_isInvinsible = true;
 	m_immuneF = HITIMMUNEF;
+
+	//死んでいなければ
+	if (!m_isDead)
+	{
+		m_isHitBlink = true;
+		m_countF_blink = HITBLINK;
+	}
 
 	//攻撃停止、攻撃不可
 	AttackStun();
