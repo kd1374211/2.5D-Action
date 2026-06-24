@@ -32,8 +32,6 @@ private:
 	void LoadData();
 	void Release();
 
-	void RandGimmicks();
-
 	//同時に存在する階段数
 	static const int STAIRNUM = 80;
 	static const int PILLARWALLNUM = 3;
@@ -59,10 +57,8 @@ private:
 	std::list<bool> m_stairVisibleLog_future;
 
 	//敵スポーンデータ
-	static const int GIMMICKSTORE = 20;
 	std::map<Gimmicks, GimmicksData> m_gimmicksData;
-	std::list<SpawnData> m_spawnData;
-
+	
 	//壁
 	std::shared_ptr<Wall> m_wall;
 	
@@ -78,6 +74,14 @@ private:
 	//非出現フラグ
 	bool noSpawnFlg = false;
 	int noSpawnStairCnt = 0;
+
+	//ギミック連続出現対策
+	static const int BOULDERCOOL = 5;
+	int m_boulderCool = 0;
+
+	//ステージレベル
+	const float LEVELHEIGHTS[MAXLEVEL] = { 0,50.0f,100.0f,150.0f,200.0f,250.0f,300.0f,350.0f,400.0f,450.0f };
+	int m_level = 0;
 
 public:
 

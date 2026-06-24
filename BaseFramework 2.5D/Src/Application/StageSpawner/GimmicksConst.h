@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+static const int MAXLEVEL = 10;
+
 enum class Gimmicks
 {
 	Boulder,
@@ -20,12 +22,5 @@ struct GimmicksData
 	float m_linePosMin;
 	float m_linePosMax;
 	int m_minLevel;
-	int m_chance;
-};
-
-struct SpawnData
-{
-	Gimmicks m_index;
-	int m_countStair;
-	float m_linePos;
+	int m_chance[MAXLEVEL];
 };

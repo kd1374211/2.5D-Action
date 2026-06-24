@@ -53,6 +53,10 @@ private:
 	std::map<SoundName, SoundData> m_soundData;
 	std::map<SoundName, std::weak_ptr<KdSoundInstance>> m_storedSoundInstances;
 
+	//デバッグ用
+	bool m_isMute = false;
+	bool m_is4Key = false;
+
 public:
 
 	static SoundManager& GetInstance()
