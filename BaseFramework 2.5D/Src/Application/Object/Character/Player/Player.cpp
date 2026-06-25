@@ -486,41 +486,21 @@ void Player::OnHit()
 
 void Player::FallVoid()
 {
-	//ジャンプ不可に
-	m_isJump = true;
-	m_isLanding = false;
-	m_isVoidJump = true;
-	//上方向に飛ばす
-	m_moveY = HITJUMP_VOID;
-
 	//死ならスキップ
 	if (m_isDead)return;
 
-	//生きていたらスクロールを戻す
-	m_stageScrollMulti = STAGESCROLL_VOID;
+	//死
+	m_health = 0;
 
-	//無敵ならこの先スキップ
-	if (m_isInvinsible)return;
-
-	//HP減少
-	m_health--;
-	if (m_health <= 0)
+	//体力画像
+	for (auto& itr : m_healthTexData)
 	{
-		//スクロールを戻す
-		m_stageScrollMulti = STAGESCROLL_ONDEAD;
-
-		ChangeAnim(PlayerAnimType::Dead);
-		m_isHitBlink = false;
-
-		//死亡
-		m_isDead = true;
-	}
-	else
-	{
-		ChangeAnim(PlayerAnimType::Hit);
+		itr.m_isAnimStart = true;
 	}
 
-	OnDamage();
+	m_isDead = true;
+	m_isVoidFall = true;
+	SOUNDMGR.Play(SoundName::SE_Falling);
 }
 
 void Player::Respawn(Math::Vector3 a_pos)
@@ -536,6 +516,7 @@ void Player::Respawn(Math::Vector3 a_pos)
 	m_attackWaitF = 0;
 
 	m_isDead = false;
+	m_isVoidFall = false;
 	m_deadBounceCnt = 0;
 	m_isGameEnd = false;
 	ChangeAnim(PlayerAnimType::Run);
@@ -571,11 +552,23 @@ void Player::UpdateScrollMulti()
 	{
 		if (!m_isGameEnd)
 		{
-			m_stageScrollMulti += STAGESCROLLADD_DEAD;
-			if (m_stageScrollMulti >= STAGESCROLL_GAMEEND)
+			if (m_isVoidFall)
 			{
-				m_stageScrollMulti = STAGESCROLL_GAMEEND;
-				m_isGameEnd = true;
+				m_stageScrollMulti += STAGESCROLLADD_VOID;
+				if (m_stageScrollMulti <= STAGESCROLL_GAMEEND)
+				{
+					m_stageScrollMulti = STAGESCROLL_GAMEEND;
+					m_isGameEnd = true;
+				}
+			}
+			else
+			{
+				m_stageScrollMulti += STAGESCROLLADD_DEAD;
+				if (m_stageScrollMulti >= STAGESCROLL_GAMEEND)
+				{
+					m_stageScrollMulti = STAGESCROLL_GAMEEND;
+					m_isGameEnd = true;
+				}
 			}
 		}
 	}

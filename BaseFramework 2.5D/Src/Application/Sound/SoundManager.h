@@ -17,10 +17,11 @@ enum class SoundName
 	SE_Attack,
 	SE_Hit,
 	SE_LowHP,
+	SE_Heal,
+	SE_Falling,
 	SE_GameStart,
 	SE_ResultRoll,
 	SE_RollEnd,
-	SE_Heal,
 	Max,
 };
 

@@ -83,8 +83,7 @@ private:
 	const float JUMPPOWER = 0.15f;
 	const float HITJUMP = 0.08f;
 	const float HITJUMP_DEAD = 0.16f;
-	const float HITJUMP_VOID = 0.25f;
-
+	
 	//基礎
 	float m_moveY = 0.0f;
 	bool m_isJump = false;
@@ -143,14 +142,16 @@ private:
 
 	//奈落位置
 	const float VOIDPOSY = -2.0f;
+	//奈落落下フラグ
+	bool m_isVoidFall = false;
 
 	//ステージスクロール量
 	const float STAGESCROLL_ONHIT = -1.2f;
 	const float STAGESCROLL_ONDEAD = -2.5f;
-	const float STAGESCROLL_VOID = -2.0f;
 	const float STAGESCROLLADD = 0.05f;
 	const float STAGESCROLLMAX = 1.0f;
 	const float STAGESCROLLADD_DEAD = 0.025f;
+	const float STAGESCROLLADD_VOID = -0.008f;
 	const float STAGESCROLL_GAMEEND = 0.0f;
 
 	float m_stageScrollMulti = STAGESCROLLMAX;
