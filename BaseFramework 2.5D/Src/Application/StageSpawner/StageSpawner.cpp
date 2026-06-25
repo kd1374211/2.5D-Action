@@ -42,6 +42,8 @@ void StageSpawner::ResetStage()
 	m_level = 0;
 	m_heartSpawnStack = 0;
 	m_heartSpawnCnt = 0;
+	m_woodRushCnt = 0;
+	m_woodCool = 0;
 }
 
 void StageSpawner::Update()
@@ -163,6 +165,15 @@ void StageSpawner::Update()
 				{
 					GimmicksData data = {};
 
+					//ハート
+					if (GetAsyncKeyState('1') & 0x8000)
+					{
+						float angleDeg = LOWEST->GetAngleDeg();
+						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 1.0f) + LINEPLAYAREA_MIN + 0.5f;
+						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+						SCENEMGR.AddObject(std::make_shared<Heart>(pos, angleDeg, linePos));
+					}
+
 					//ギミッククール減少
 					if (m_boulderCool > 0)m_boulderCool--;
 
@@ -178,20 +189,36 @@ void StageSpawner::Update()
 					}
 					else
 					{
-						for (int i = (int)Gimmicks::Wood_05; i < (int)Gimmicks::Wood_20; i++)
+						//このフレームで木が出現したか
+						bool isWoodSpawned = false;
+
+						//連続出現防止処理
+						if (m_woodCool <= 0)
 						{
-							//木
-							data = m_gimmicksData.find((Gimmicks)i)->second;
-							if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel)
+							for (int i = (int)Gimmicks::Wood_05; i < (int)Gimmicks::Wood_20; i++)
 							{
-								float scale =( i - (int)Gimmicks::Wood_05 + 1) * 0.5f;
-								float angleDeg = LOWEST->GetAngleDeg();
-								float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 0.8f * (i - (int)Gimmicks::Wood_05 + 1)) + LINEPLAYAREA_MIN + 0.4f * (i - (int)Gimmicks::Wood_05 + 1);
-								Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
-								SCENEMGR.AddObject(std::make_shared<RollingWood>(pos, angleDeg, linePos, scale));
-								break;
+								//木
+								data = m_gimmicksData.find((Gimmicks)i)->second;
+								if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel)
+								{
+									float scale = (i - (int)Gimmicks::Wood_05 + 1) * 0.5f;
+									float angleDeg = LOWEST->GetAngleDeg();
+									float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 0.8f * (i - (int)Gimmicks::Wood_05 + 1)) + LINEPLAYAREA_MIN + 0.4f * (i - (int)Gimmicks::Wood_05 + 1);
+									Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+									SCENEMGR.AddObject(std::make_shared<RollingWood>(pos, angleDeg, linePos, scale));
+									isWoodSpawned = true;
+									break;
+								}
 							}
 						}
+						else m_woodCool--;
+
+						if (isWoodSpawned)
+						{
+							m_woodRushCnt++;
+							if (m_woodRushCnt >= WOODRUSHLIMIT)m_woodCool = WOODCOOL;
+						}
+						else m_woodRushCnt = 0;
 					}
 						
 
@@ -381,10 +408,8 @@ void StageSpawner::LoadData()
 		{
 			if (fgets(dummy, STRLENG, fp) != nullptr)//1行読み
 			{
-				fscanf_s(fp, "%d,%f,%f,%d,",
+				fscanf_s(fp, "%d,%d,",
 					&index,
-					&data.m_linePosMin,
-					&data.m_linePosMax,
 					&data.m_minLevel);
 
 				for (int j = 0; j < MAXLEVEL; j++)

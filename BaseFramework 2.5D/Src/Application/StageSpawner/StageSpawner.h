@@ -79,7 +79,11 @@ private:
 
 	//ギミック連続出現対策
 	static const int BOULDERCOOL = 4;
+	static const int WOODCOOL = 2;
+	static const int WOODRUSHLIMIT = 2;
 	int m_boulderCool = 0;
+	int m_woodRushCnt = 0;
+	int m_woodCool = 0;
 
 	//ステージレベル
 	const float LEVELHEIGHTS[MAXLEVEL] = { 0,50.0f,100.0f,150.0f,200.0f,250.0f,300.0f,350.0f,400.0f,450.0f };

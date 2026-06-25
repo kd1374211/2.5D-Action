@@ -2,6 +2,7 @@
 #include "../../../Scene/SceneManager.h"
 #include "../../Effect/Slash/Slash.h"
 #include "../../../Sound/SoundManager.h"
+#include "../../Effect/Heal/Heal.h"
 
 Player::Player()
 {
@@ -372,6 +373,7 @@ void Player::HitCheck()
 				}
 				m_healthTexData.push_back(HealthTexData(0, false, 0.0f, false));
 				SOUNDMGR.Play(SoundName::SE_Heal);
+				SCENEMGR.AddObject(std::make_shared<Heal>());
 			}
 		}
 	}

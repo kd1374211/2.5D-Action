@@ -181,6 +181,9 @@
     <Filter Include="Src\Application\Object\Items\Heart">
       <UniqueIdentifier>{35feb533-da99-47dd-83a7-1eeab6728b95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Object\Effect\Heal">
+      <UniqueIdentifier>{6bd4ae1e-acbb-4597-bd73-61dc64a608bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -462,6 +465,9 @@
     <ClInclude Include="Src\Application\Object\Items\Heart\Heart.h">
       <Filter>Src\Application\Object\Items\Heart</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Object\Effect\Heal\Heal.h">
+      <Filter>Src\Application\Object\Effect\Heal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -691,6 +697,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Items\Heart\Heart.cpp">
       <Filter>Src\Application\Object\Items\Heart</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Effect\Heal\Heal.cpp">
+      <Filter>Src\Application\Object\Effect\Heal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
