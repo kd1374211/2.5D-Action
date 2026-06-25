@@ -30,8 +30,6 @@ void Goblin::Update()
 
 void Goblin::Init()
 {
-	m_pDebugWire = std::make_unique<KdDebugWireFrame>();
-
 	m_sphereHitOfs = SPHEREHITOFS;
 	m_pCollider = std::make_unique<KdCollider>();
 	m_pCollider->RegisterCollisionShape("Goblin", SPHEREHITOFS, 0.6f, KdCollider::TypeDamage);

@@ -16,7 +16,7 @@ public:
 	void Respawn(bool a_isStair);
 
 	//セッター
-	void SetStairFlg(bool a_flg) { test = a_flg; }
+	void SetStairFlg(bool a_flg) { m_isStairInactive = a_flg; }
 	void SetIsDisappear(bool a_flg) { m_isDisappear = a_flg; }
 
 	//ゲッター
@@ -31,12 +31,12 @@ private:
 
 	std::shared_ptr<KdModelData> m_model;
 
-	float m_angleDeg;
+	float m_angleDeg = 0.0f;
 
 	//リスポーン処理関連
 	bool m_isDisappear = false;
 	RespawnDir m_respawnDir = RespawnDir::Up;
 
 	//テスト
-	bool test = false;
+	bool m_isStairInactive = false;
 };

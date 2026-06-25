@@ -20,7 +20,7 @@ void Stair::Update()
 	else if (m_angleDeg < 0.0f)m_angleDeg += 360.0f;
 
 	//角度に合わせて位置変更
-	if (!test)
+	if (!m_isStairInactive)
 	{
 		m_pos = { sinf(DirectX::XMConvertToRadians(m_angleDeg)) * 4.0f,m_pos.y += TERRAINBASEMOVEY * speedMulti,cosf(DirectX::XMConvertToRadians(m_angleDeg)) * 4.0f };
 	}
@@ -44,7 +44,7 @@ void Stair::PostUpdate()
 	else if (m_angleDeg < 0.0f)m_angleDeg += 360.0f;
 
 	//角度に合わせて位置変更
-	if (!test)
+	if (!m_isStairInactive)
 	{
 		m_pos = { sinf(DirectX::XMConvertToRadians(m_angleDeg)) * 5.0f,m_pos.y - TERRAINBASEMOVEY * backDeg,cosf(DirectX::XMConvertToRadians(m_angleDeg)) * 5.0f };
 	}
@@ -72,7 +72,7 @@ void Stair::PostUpdate()
 
 void Stair::DrawLit()
 {
-	if (test)return;
+	if (m_isStairInactive)return;
 
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
@@ -80,8 +80,8 @@ void Stair::DrawLit()
 void Stair::Respawn()
 {
 	//階段のログを格納
-	if (m_respawnDir == RespawnDir::Down)STAGESPAWNER.AddFutureStairVisibleLog(test);
-	else STAGESPAWNER.AddPastStairVisibleLog(test);
+	if (m_respawnDir == RespawnDir::Down)STAGESPAWNER.AddFutureStairVisibleLog(m_isStairInactive);
+	else STAGESPAWNER.AddPastStairVisibleLog(m_isStairInactive);
 
 	m_pos.y += STAIRRESPAWNY * (int)m_respawnDir;
 	m_isDisappear = false;
@@ -90,8 +90,8 @@ void Stair::Respawn()
 void Stair::Respawn(bool a_isStair)
 {
 	//階段のログを格納
-	if (m_respawnDir == RespawnDir::Down)STAGESPAWNER.AddFutureStairVisibleLog(test);
-	else STAGESPAWNER.AddPastStairVisibleLog(test);
+	if (m_respawnDir == RespawnDir::Down)STAGESPAWNER.AddFutureStairVisibleLog(m_isStairInactive);
+	else STAGESPAWNER.AddPastStairVisibleLog(m_isStairInactive);
 
 	m_pos.y += STAIRRESPAWNY * (int)m_respawnDir;
 	m_isDisappear = false;

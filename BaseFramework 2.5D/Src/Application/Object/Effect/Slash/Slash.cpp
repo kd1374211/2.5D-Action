@@ -23,8 +23,6 @@ void Slash::Update()
 	}
 
 	if (m_animCnt >= HITEND)m_pCollider->SetEnableAll(false);
-	//デバッグ
-	//else m_pDebugWire->AddDebugSphere(m_pos, m_scale * 0.4f, kRedColor);
 
 	//マトリックス
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
@@ -47,9 +45,6 @@ void Slash::Init()
 	//当たり判定
 	m_pCollider = std::make_unique<KdCollider>();
 	m_pCollider->RegisterCollisionShape("PlayerAttack", Math::Vector3::Zero, 0.4f, KdCollider::TypeDamage_Enemy);
-
-	//デバッグ
-	m_pDebugWire = std::make_unique<KdDebugWireFrame>();
 }
 
 void Slash::Release()

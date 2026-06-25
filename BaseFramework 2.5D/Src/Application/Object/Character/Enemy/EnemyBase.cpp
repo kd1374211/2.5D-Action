@@ -10,9 +10,9 @@ void EnemyBase::HitCheck()
 	//当たり判定を実装するときは当たる側と当たられる側が存在する
 	//当たる側の処理
 
-		//↓ここからレイ判定
+	//↓ここからレイ判定
 
-		//レイ判定用の変数を作成
+	//レイ判定用の変数を作成
 	const float enableStepHigh = 0.4f;
 	KdCollider::RayInfo ray;
 	//レイの発射位置を設定
@@ -23,9 +23,6 @@ void EnemyBase::HitCheck()
 	ray.m_range = enableStepHigh;
 	//当たり判定をしたいタイプを設定
 	ray.m_type = KdCollider::TypeGround;
-
-	//デバッグ用
-	//m_pDebugWire->AddDebugLine(ray.m_pos, ray.m_dir, ray.m_range);
 
 	//レイに当たったオブジェクト情報を格納するリスト
 	std::list<KdCollider::CollisionResult> retRayList;
@@ -73,12 +70,10 @@ void EnemyBase::HitCheck()
 
 	//スフィアの半径
 	sphere.m_sphere.Radius = m_linePos * 0.125f;
+	if (sphere.m_sphere.Radius <= 0.5f)sphere.m_sphere.Radius = 0.5f;
 
 	//当たり判定をしたいタイプ
 	sphere.m_type = KdCollider::Type::TypeDamage_Enemy;
-
-	//デバッグ用
-	//m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius, kRedColor);
 
 	//スフィアに当たったオブジェクト情報を格納するリスト
 	std::list<KdCollider::CollisionResult> retSphereList;

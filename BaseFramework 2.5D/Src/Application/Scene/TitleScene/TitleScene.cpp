@@ -61,9 +61,6 @@ void TitleScene::Event()
 
 	m_isSpaceKey = (GetAsyncKeyState(VK_SPACE) & 0x8000);
 
-	//キャラ更新
-	CHARAMGR.Update();
-
 	//地形更新
 	STAGESPAWNER.Update();
 

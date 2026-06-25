@@ -36,9 +36,6 @@ private:
 	std::vector<std::vector<int>> m_texMap;
 	std::shared_ptr<KdTexture> m_tex = nullptr;
 
-	//テキスト情報
-	std::vector<TextData> m_texts;
-
 	//リザルト終了
 	bool m_isResultEnd = false;
 

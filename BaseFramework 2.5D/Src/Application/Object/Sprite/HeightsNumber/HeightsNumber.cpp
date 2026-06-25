@@ -11,6 +11,7 @@ void HeightsNumber::Update()
 	//プレイヤーが死んでいたらスキップ
 	if (CHARAMGR.GetPlayer()->GetIsDead())return;
 
+	//高さ更新
 	float scroll = SCENEMGR.GetScrollSpeedMulti();
 	SCOREMGR.AddHeight(scroll * 0.05f);
 }

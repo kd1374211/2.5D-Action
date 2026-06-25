@@ -21,24 +21,6 @@ void Player::PreUpdate()
 
 void Player::Update()
 {
-	if (GetAsyncKeyState('3') & 0x8000)
-	{
-		m_healthTexData.clear();
-		m_health = STARTHEALTH;
-		for (int i = 0; i < STARTHEALTH; i++)
-		{
-			m_healthTexData.push_back(HealthTexData(i, false, 0.0f, false));
-		}
-	}
-	if (GetAsyncKeyState('4') & 0x8000)OnHit();
-
-	//使わないように
-	if (GetAsyncKeyState('0') & 0x8000)
-	{
-		m_isInvinsible = false;
-		OnHit();
-	}
-
 	//重力更新
 	if (m_moveY > FALLSPEEDMAX)
 	{
@@ -53,12 +35,12 @@ void Player::Update()
 	if (!m_isDead)
 	{
 		//奥行き移動
-		if (GetAsyncKeyState('W') & 0x8000)
+		if (GetAsyncKeyState(VK_UP) & 0x8000)
 		{
 			m_pos.z += LINEMOVE;
 			if (m_pos.z > LINEPOSMAX)m_pos.z = LINEPOSMAX;
 		}
-		if (GetAsyncKeyState('S') & 0x8000)
+		if (GetAsyncKeyState(VK_DOWN) & 0x8000)
 		{
 			m_pos.z -= LINEMOVE;
 			if (m_pos.z < LINEPOSMIN)m_pos.z = LINEPOSMIN;
@@ -89,7 +71,7 @@ void Player::Update()
 		if (m_attackWaitF > 0)m_attackWaitF--;
 
 		//攻撃
-		if (GetAsyncKeyState('N') & 0x8000)
+		if (GetAsyncKeyState('Z') & 0x8000)
 		{
 			if (!m_isAttackKey && !m_isAttack && m_attackWaitF <= 0)
 			{
@@ -185,9 +167,6 @@ void Player::HitCheck()
 		//当たり判定をしたいタイプを設定
 		ray.m_type = KdCollider::TypeGround;
 
-		//デバッグ用
-		//m_pDebugWire->AddDebugLine(ray.m_pos, ray.m_dir, ray.m_range);
-
 		//レイに当たったオブジェクト情報を格納するリスト
 		std::list<KdCollider::CollisionResult> retRayList;
 
@@ -261,9 +240,6 @@ void Player::HitCheck()
 
 			//当たり判定をしたいタイプ
 			sphere.m_type = KdCollider::TypeGround;
-
-			//デバッグ用
-			//m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius);
 
 			//スフィアに当たったオブジェクト情報を格納するリスト
 			std::list<KdCollider::CollisionResult> retSphereList;
@@ -359,9 +335,6 @@ void Player::HitCheck()
 		//当たり判定をしたいタイプ
 		sphere.m_type = KdCollider::Type::TypeDamage;
 
-		//デバッグ用
-		//m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius, kRedColor);
-
 		//スフィアに当たったオブジェクト情報を格納するリスト
 		std::list<KdCollider::CollisionResult> retSphereList;
 
@@ -420,8 +393,6 @@ void Player::PostUpdate()
 	//マトリックス
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	m_mWorld = trans;
-
-	KdDebugGUI::Instance().AddLog("Landing : %d\n", m_isLanding);
 }
 
 void Player::PreDraw()
@@ -476,6 +447,7 @@ void Player::OnHit()
 { 
 	//無敵ならスキップ
 	if (m_isInvinsible)return;
+
 	//ジャンプ不可に
 	m_isJump = true;
 	m_isLanding = false;
@@ -586,9 +558,6 @@ void Player::Init()
 	//ハート画像
 	m_heartTex = std::make_shared<KdTexture>();
 	m_heartTex->Load("Asset/Textures/Chara/Player/Heart.png");
-
-	//デバッグ
-	m_pDebugWire = std::make_unique<KdDebugWireFrame>();
 }
 
 void Player::Release()

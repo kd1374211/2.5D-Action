@@ -12,9 +12,6 @@
 
 void GameScene::Event()
 {
-	//キャラ更新
-	CHARAMGR.Update();
-
 	//ステージ更新
 	STAGESPAWNER.Update();
 

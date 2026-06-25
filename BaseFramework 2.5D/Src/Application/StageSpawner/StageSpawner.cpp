@@ -161,15 +161,6 @@ void StageSpawner::Update()
 				//0ならギミックの出現チェック
 				else
 				{
-					//テスト（ハート）
-					if (GetAsyncKeyState('7') & 0x8000)
-					{
-						float angleDeg = LOWEST->GetAngleDeg();
-						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 1.0f) + LINEPLAYAREA_MIN + 0.5f;
-						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
-						SCENEMGR.AddObject(std::make_shared<Heart>(pos, angleDeg, linePos));
-					}
-
 					GimmicksData data = {};
 
 					//ギミッククール減少

@@ -13,10 +13,6 @@ void CharaManager::SpawnPlayer()
 	SCENEMGR.AddObject(m_player);
 }
 
-void CharaManager::Update()
-{
-}
-
 void CharaManager::ResetPlayer(Math::Vector3 a_respawnPos)
 {
 	m_player->Respawn(a_respawnPos);

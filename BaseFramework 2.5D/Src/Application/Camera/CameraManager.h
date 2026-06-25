@@ -12,14 +12,9 @@ class CameraManager
 {
 public:
 
-	void Update();
-
 	//カメラ基礎データ
 	CameraBaseData& GetCameraData(){ return m_cameraData; }
 	
-	//セーブ
-	void Save();
-
 private:
 
 	CameraManager() { Init(); }
