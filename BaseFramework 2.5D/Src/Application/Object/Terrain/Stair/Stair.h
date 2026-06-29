@@ -4,7 +4,7 @@ class Stair :public KdGameObject
 {
 public:
 
-	Stair(Math::Vector3 a_startPos, float a_startDeg);
+	Stair(Math::Vector3 a_startPos, float a_startDeg, int a_stairID);
 	~Stair()override { Release(); }
 
 	void Update()override;
@@ -16,13 +16,15 @@ public:
 	void Respawn(bool a_isStair);
 
 	//セッター
-	void SetStairFlg(bool a_flg) { m_isStairInactive = a_flg; }
+	void SetStairFlg(bool a_flg) { m_isStairActive = a_flg; }
 	void SetIsDisappear(bool a_flg) { m_isDisappear = a_flg; }
-
+	
 	//ゲッター
+	bool GetStairFlg()const { return m_isStairActive; }
 	bool GetIsDisappear()const { return m_isDisappear; }
 	float GetAngleDeg()const { return m_angleDeg; }
 	RespawnDir GetRespawnDir()const { return m_respawnDir; }
+	int GetStairID()const { return m_stairID; }
 	
 private:
 
@@ -38,5 +40,8 @@ private:
 	RespawnDir m_respawnDir = RespawnDir::Up;
 
 	//テスト
-	bool m_isStairInactive = false;
+	bool m_isStairActive = true;
+
+	//識別番号
+	int m_stairID = 0;
 };

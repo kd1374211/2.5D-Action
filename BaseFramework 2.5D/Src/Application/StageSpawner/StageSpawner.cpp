@@ -5,6 +5,7 @@
 #include "StageObjectInclude.h"
 #include "../Object/Character/CharaManager.h"
 #include "../Score/ScoreManager.h"
+#include "../Object/Character/Enemy/EnemyBase.h"
 
 //階段再出現用
 #define LOWEST m_stairs.front()
@@ -31,17 +32,17 @@ void StageSpawner::ResetStage()
 	//フラグ初期化s
 	for (auto &itr : m_stairs)
 	{
-		itr->SetStairFlg(false);
+		itr->SetStairFlg(true);
 	}
 	m_stairVisibleLog_future.clear();
 	m_stairVisibleLog_past.clear();
 	m_countBackScroll = 0;
 	m_isSideSpearNext = false;
-	m_noSpawnFlg = false;
+	m_stairSpawnFlg = true;
 	m_noSpawnStairCnt = 0;
 	m_level = 0;
-	m_heartSpawnStack = 0;
 	m_heartSpawnCnt = 0;
+	m_heartSpawnChance = HEARTSPAWNCHANCESTART;
 	m_woodRushCnt = 0;
 	m_woodCool = 0;
 }
@@ -59,7 +60,7 @@ void StageSpawner::Update()
 			while (LOWEST->GetIsDisappear())
 			{
 				//ワープ
-				LOWEST->Respawn(false);
+				LOWEST->Respawn(true);
 
 				//今ワープした物を階段リストのBackに移動
 				m_stairs.push_back(LOWEST);
@@ -72,7 +73,7 @@ void StageSpawner::Update()
 			while (HIGHEST->GetIsDisappear())
 			{
 				//ワープ
-				HIGHEST->Respawn(false);
+				HIGHEST->Respawn(true);
 
 				//今ワープした物を階段リストのFrontに移動
 				m_stairs.push_front(HIGHEST);
@@ -92,16 +93,6 @@ void StageSpawner::Update()
 			}
 		}
 
-		if (m_heartSpawnCnt < HEARTSPAWNNUM)
-		{
-			//ハートスタック
-			if (SCOREMGR.GetCurrentHeight() > HEARTSPAWN[m_heartSpawnCnt])
-			{
-				m_heartSpawnCnt++;
-				m_heartSpawnStack++;
-			}
-		}
-
 		//未来のスポーン情報
 		while (m_stairVisibleLog_future.size() < MAXFUTUREROLL)
 		{
@@ -110,28 +101,28 @@ void StageSpawner::Update()
 			else
 			{
 				//出現ガチャ
-				if (rand() % m_noStairsData[m_level].m_chance == 0 && !m_noSpawnFlg)
+				if (rand() % m_noStairsData[m_level].m_chance == 0 && m_stairSpawnFlg)
 				{
-					m_noSpawnFlg = true;
+					m_stairSpawnFlg = false;
 					m_noSpawnStairCnt = rand() % 100 < m_noStairsData[m_level].m_tripleChance ? 3 : 2;
 				}
 			}
 
-			m_stairVisibleLog_future.push_back(m_noSpawnFlg);
+			m_stairVisibleLog_future.push_back(m_stairSpawnFlg);
 
-			if (m_noSpawnFlg)
+			if (!m_stairSpawnFlg)
 			{
 				m_noSpawnStairCnt--;
 				if (m_noSpawnStairCnt <= 0)
 				{
-					m_noSpawnFlg = false;
+					m_stairSpawnFlg = true;
 					m_noSpawnStairCool = m_noStairsData[m_level].m_cool;
 				}
 			}
 		}
 
 		//仮置き（階段があるかどうか）
-		bool isStair = false;
+		bool isStair = true;
 
 		//ワープ後に取得する座標
 		float respawnPosY = 0.0f;
@@ -165,15 +156,6 @@ void StageSpawner::Update()
 				{
 					GimmicksData data = {};
 
-					//ハート
-					if (GetAsyncKeyState('1') & 0x8000)
-					{
-						float angleDeg = LOWEST->GetAngleDeg();
-						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 1.0f) + LINEPLAYAREA_MIN + 0.5f;
-						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
-						SCENEMGR.AddObject(std::make_shared<Heart>(pos, angleDeg, linePos));
-					}
-
 					//ギミッククール減少
 					if (m_boulderCool > 0)m_boulderCool--;
 
@@ -182,7 +164,7 @@ void StageSpawner::Update()
 					if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel && m_boulderCool <= 0)
 					{
 						float angleDeg = LOWEST->GetAngleDeg();
-						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 2.6f) + LINEPLAYAREA_MIN + 1.3f;
+						float linePos = rand() / (float)RAND_MAX * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
 						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 						SCENEMGR.AddObject(std::make_shared<Boulder>(pos, angleDeg, linePos));
 						m_boulderCool = BOULDERCOOL;
@@ -202,8 +184,8 @@ void StageSpawner::Update()
 								if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel)
 								{
 									float scale = (i - (int)Gimmicks::Wood_05 + 1) * 0.5f;
-									float angleDeg = LOWEST->GetAngleDeg();
-									float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 0.8f * (i - (int)Gimmicks::Wood_05 + 1)) + LINEPLAYAREA_MIN + 0.4f * (i - (int)Gimmicks::Wood_05 + 1);
+									float angleDeg = LOWEST->GetAngleDeg();						
+									float linePos = rand() / (float)RAND_MAX * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
 									Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 									SCENEMGR.AddObject(std::make_shared<RollingWood>(pos, angleDeg, linePos, scale));
 									isWoodSpawned = true;
@@ -227,9 +209,12 @@ void StageSpawner::Update()
 					if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel)
 					{
 						float angleDeg = LOWEST->GetAngleDeg();
-						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 1.2f) + LINEPLAYAREA_MIN + 0.6f;
+						float linePos = rand() / (float)RAND_MAX * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
 						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
-						CHARAMGR.SpawnEnemy(EnemyName_FlyEye, pos, angleDeg, linePos);
+						std::shared_ptr<EnemyBase>enemy = CHARAMGR.SpawnEnemy(EnemyName_FlyEye, pos, angleDeg, linePos);
+
+						//ID結びつけ
+						m_enemyStairMap.emplace(enemy->GetEnemyID(), LOWEST->GetStairID());
 
 						isEnemySpawn = true;
 					}
@@ -240,7 +225,7 @@ void StageSpawner::Update()
 
 					if (m_isSideSpearNext)
 					{
-						if (!m_stairVisibleLog_future.front())
+						if (m_stairVisibleLog_future.front())
 						{
 							float angleDeg = LOWEST->GetAngleDeg();
 							SCENEMGR.AddObject(std::make_shared<SideSpear>(respawnPosY, angleDeg));
@@ -249,16 +234,19 @@ void StageSpawner::Update()
 						spearWait++;
 					}
 					//階段があるかを見る
-					else if (!isStair)
+					else if (isStair)
 					{
 						//ゴブリン
 						data = m_gimmicksData.find(Gimmicks::Goblin)->second;
 						if (rand() % data.m_chance[m_level] == 0 && !isEnemySpawn && m_level >= data.m_minLevel)
 						{
 							float angleDeg = LOWEST->GetAngleDeg();
-							float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 1.2f) + LINEPLAYAREA_MIN + 0.6f;
+							float linePos = rand() / (float)RAND_MAX * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
 							Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
-							CHARAMGR.SpawnEnemy(EnemyName_Goblin, pos, angleDeg, linePos);
+							std::shared_ptr<EnemyBase>enemy = CHARAMGR.SpawnEnemy(EnemyName_Goblin, pos, angleDeg, linePos);
+
+							//ID結びつけ
+							m_enemyStairMap.emplace(enemy->GetEnemyID(), LOWEST->GetStairID());
 						}
 						else
 						{
@@ -267,7 +255,7 @@ void StageSpawner::Update()
 							if (rand() % data.m_chance[m_level] == 0 && canSpear && m_level >= data.m_minLevel)
 							{
 								float angleDeg = LOWEST->GetAngleDeg();
-								float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 2.6f) + LINEPLAYAREA_MIN + 0.6f;
+								float linePos = rand() / (float)RAND_MAX * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
 
 								for (int i = 0; i < 5; i++)
 								{
@@ -291,15 +279,6 @@ void StageSpawner::Update()
 								if (rand() % data.m_chance[m_level] == 0 && canSpear && m_level >= data.m_minLevel)
 								{
 									m_isSideSpearNext = true;
-								}
-								//ハート
-								else if (m_heartSpawnStack > 0 && rand() % HEARTSPAWNCHANCE == 0)
-								{
-									float angleDeg = LOWEST->GetAngleDeg();
-									float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 1.0f) + LINEPLAYAREA_MIN + 0.5f;
-									Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
-									SCENEMGR.AddObject(std::make_shared<Heart>(pos, angleDeg, linePos));
-									m_heartSpawnStack--;
 								}
 							}
 						}
@@ -344,6 +323,9 @@ void StageSpawner::Update()
 
 		break;
 	}
+
+	KdDebugGUI::Instance().AddLog("EnemyMap : %d\n", m_enemyStairMap.size());
+	KdDebugGUI::Instance().AddLog("HeartChance : %d\n", m_heartSpawnChance);
 }
 
 void StageSpawner::AddPastStairVisibleLog(bool a_isVisible)
@@ -357,6 +339,90 @@ void StageSpawner::AddFutureStairVisibleLog(bool a_isVisible)
 	m_stairVisibleLog_future.push_front(a_isVisible);
 }
 
+void StageSpawner::OnEnemyDead(int a_enemyID)
+{
+	//最初にロール
+	if (rand() % m_heartSpawnChance == 0)
+	{
+		//対応検索
+		auto itr = m_enemyStairMap.find(a_enemyID);
+		if (itr != m_enemyStairMap.end())
+		{
+			//初期化
+			std::shared_ptr<EnemyBase> enemy = nullptr;
+			std::shared_ptr<Stair> stair = nullptr;
+
+			//敵サーチ
+			for (auto& objEnemy : CHARAMGR.GetEnemyList())
+			{
+				if (objEnemy.expired())continue;
+
+				if (objEnemy.lock()->GetEnemyID() == a_enemyID)
+				{
+					//敵取得
+					enemy = objEnemy.lock();
+					break;
+				}
+			}
+
+			//見つかったら
+			if (enemy != nullptr)
+			{
+				//N個先の階段を取得
+				int number = HEARTFLYMIN;
+
+				while (1)
+				{
+					int target = itr->second + number;
+
+					//ループ
+					if (target >= STAIRNUM)target -= STAIRNUM;
+
+					//階段があるかを取得
+					std::weak_ptr<Stair> targetStair = m_stairsIDmap.find(target)->second;
+					if (targetStair.expired())continue;
+
+					//階段取得
+					stair = targetStair.lock();
+
+					if (stair->GetStairFlg())
+					{
+						//LinePosランダム
+						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 1.2f) + LINEPLAYAREA_MIN + 0.6f;
+
+						//敵の位置からハートを召喚
+						SCENEMGR.AddObject(std::make_shared<Heart>(enemy->GetPos(), enemy->GetAngleDeg(), enemy->GetLinePos(), linePos, number));
+
+						//ハートの召喚数追加
+						m_heartSpawnCnt++;
+						//それ倍の確率を追加
+						m_heartSpawnChance += HEARTSPAWNCHANCEADD * m_heartSpawnCnt;
+
+						return;
+					}
+
+					number++;
+					if (number >= HEARTFLYMAX)return;
+				}
+			}
+		}
+	}
+	else
+	{
+		//次が出やすく
+		m_heartSpawnChance--;
+	}
+}
+
+void StageSpawner::DeleteEnemyMap(int a_enemyID)
+{
+	auto itr = m_enemyStairMap.find(a_enemyID);
+	if (itr != m_enemyStairMap.end())
+	{
+		m_enemyStairMap.erase(itr);
+	}
+}
+
 void StageSpawner::Init()
 {
 	//データ
@@ -367,7 +433,11 @@ void StageSpawner::Init()
 	{
 		float angleDeg = STAIRDEGBASE - (float)i * STAIRDEGDIFF;
 		Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * STAIRSPAWNRANGE,STAIRSPAWNBASE_Y + (float)i * STAIRSPAWNDIFF_Y,cosf(DirectX::XMConvertToRadians(angleDeg)) * STAIRSPAWNRANGE };
-		m_stairs.push_back(std::make_shared<Stair>(pos, angleDeg));
+		std::shared_ptr<Stair> stair = std::make_shared<Stair>(pos, angleDeg, i);
+		m_stairs.push_back(stair);
+
+		//対応マップ生成
+		m_stairsIDmap.emplace(stair->GetStairID(), stair);
 	}
 
 	//壁柱召喚
@@ -408,8 +478,10 @@ void StageSpawner::LoadData()
 		{
 			if (fgets(dummy, STRLENG, fp) != nullptr)//1行読み
 			{
-				fscanf_s(fp, "%d,%d,",
+				fscanf_s(fp, "%d,%f,%f,%d,",
 					&index,
+					&data.m_linePosMin,
+					&data.m_linePosMax,
 					&data.m_minLevel);
 
 				for (int j = 0; j < MAXLEVEL; j++)

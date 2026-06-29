@@ -71,8 +71,19 @@ void KdDebugGUI::GuiProcess()
 	//ImGui::End();
 
 	// ログウィンドウ
-	//m_uqLog->Draw("Log Window");
-	//KdDebugGUI::Instance().ClearLog();
+	static bool isLogOpen = false;
+	static bool isQKey = false;
+	if (GetAsyncKeyState('Q') & 0x8000 && !isQKey)
+	{
+		isLogOpen = !isLogOpen;
+	}
+	isQKey = GetAsyncKeyState('Q') & 0x8000;
+
+	if (isLogOpen)
+	{
+		m_uqLog->Draw("Log Window");
+	}
+	KdDebugGUI::Instance().ClearLog();
 
 	//=====================================================
 	// ログ出力 ・・・ AddLog("～") で追加

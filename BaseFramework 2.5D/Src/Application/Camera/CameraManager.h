@@ -12,6 +12,9 @@ class CameraManager
 {
 public:
 
+	//プレイヤーをさえぎっているオブジェクトの透明化
+	void PreDraw();
+
 	//カメラ基礎データ
 	CameraBaseData& GetCameraData(){ return m_cameraData; }
 	

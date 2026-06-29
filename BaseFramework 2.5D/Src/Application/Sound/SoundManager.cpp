@@ -17,6 +17,23 @@ void SoundManager::Update()
 			}
 		}
 	}
+
+	//ミュート
+	if (GetAsyncKeyState('2') & 0x8000)
+	{
+		if (!is2Key)
+		{
+			isMute = !isMute;
+
+			for (int i = 0; i < (int)SoundName::Max; i++)
+			{
+				VolumeChange((SoundName)i, 1.0f);
+			}
+		}
+
+		is2Key = true;
+	}
+	else is2Key = false;
 }
 
 void SoundManager::Play(SoundName a_name)
@@ -26,6 +43,9 @@ void SoundManager::Play(SoundName a_name)
 	{
 		std::shared_ptr<KdSoundInstance> soundInstance = KdAudioManager::Instance().Play(data.m_path, data.m_isLoop);
 		soundInstance->SetVolume(data.m_baseVolume);
+
+		//デバッグ
+		if (isMute)soundInstance->SetVolume(0.0f);
 
 		//インスタンスを保存しておく
 		m_storedSoundInstances.emplace(a_name, soundInstance);
@@ -55,6 +75,9 @@ void SoundManager::VolumeChange(SoundName a_name, float a_volumeMulti)
 		//音量計算
 		float baseVolume = m_soundData.find(a_name)->second.m_baseVolume;
 		it->second.lock()->SetVolume(baseVolume * a_volumeMulti);
+
+		//デバッグ
+		if (isMute)it->second.lock()->SetVolume(0.0f);
 	}
 }
 

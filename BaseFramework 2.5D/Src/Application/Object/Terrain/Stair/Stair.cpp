@@ -2,11 +2,12 @@
 #include "../../../Scene/SceneManager.h"
 #include "../../../StageSpawner/StageSpawner.h"
 
-Stair::Stair(Math::Vector3 a_startPos,float a_startDeg)
+Stair::Stair(Math::Vector3 a_startPos,float a_startDeg, int a_stairID)
 {
 	Init();
 	m_pos = a_startPos;
 	m_angleDeg = a_startDeg;
+	m_stairID = a_stairID;
 	m_mWorld = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_angleDeg));
 }
 
@@ -20,7 +21,7 @@ void Stair::Update()
 	else if (m_angleDeg < 0.0f)m_angleDeg += 360.0f;
 
 	//角度に合わせて位置変更
-	if (!m_isStairInactive)
+	if (m_isStairActive)
 	{
 		m_pos = { sinf(DirectX::XMConvertToRadians(m_angleDeg)) * 4.0f,m_pos.y += TERRAINBASEMOVEY * speedMulti,cosf(DirectX::XMConvertToRadians(m_angleDeg)) * 4.0f };
 	}
@@ -44,7 +45,7 @@ void Stair::PostUpdate()
 	else if (m_angleDeg < 0.0f)m_angleDeg += 360.0f;
 
 	//角度に合わせて位置変更
-	if (!m_isStairInactive)
+	if (m_isStairActive)
 	{
 		m_pos = { sinf(DirectX::XMConvertToRadians(m_angleDeg)) * 5.0f,m_pos.y - TERRAINBASEMOVEY * backDeg,cosf(DirectX::XMConvertToRadians(m_angleDeg)) * 5.0f };
 	}
@@ -72,7 +73,7 @@ void Stair::PostUpdate()
 
 void Stair::DrawLit()
 {
-	if (m_isStairInactive)return;
+	if (!m_isStairActive)return;
 
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
@@ -80,8 +81,8 @@ void Stair::DrawLit()
 void Stair::Respawn()
 {
 	//階段のログを格納
-	if (m_respawnDir == RespawnDir::Down)STAGESPAWNER.AddFutureStairVisibleLog(m_isStairInactive);
-	else STAGESPAWNER.AddPastStairVisibleLog(m_isStairInactive);
+	if (m_respawnDir == RespawnDir::Down)STAGESPAWNER.AddFutureStairVisibleLog(m_isStairActive);
+	else STAGESPAWNER.AddPastStairVisibleLog(m_isStairActive);
 
 	m_pos.y += STAIRRESPAWNY * (int)m_respawnDir;
 	m_isDisappear = false;
@@ -90,8 +91,8 @@ void Stair::Respawn()
 void Stair::Respawn(bool a_isStair)
 {
 	//階段のログを格納
-	if (m_respawnDir == RespawnDir::Down)STAGESPAWNER.AddFutureStairVisibleLog(m_isStairInactive);
-	else STAGESPAWNER.AddPastStairVisibleLog(m_isStairInactive);
+	if (m_respawnDir == RespawnDir::Down)STAGESPAWNER.AddFutureStairVisibleLog(m_isStairActive);
+	else STAGESPAWNER.AddPastStairVisibleLog(m_isStairActive);
 
 	m_pos.y += STAIRRESPAWNY * (int)m_respawnDir;
 	m_isDisappear = false;

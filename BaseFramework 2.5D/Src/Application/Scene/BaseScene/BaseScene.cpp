@@ -1,4 +1,5 @@
 ﻿#include "BaseScene.h"
+#include "../../Object/Character/CharaManager.h"
 
 void BaseScene::PreUpdate()
 {
@@ -25,6 +26,9 @@ void BaseScene::PreUpdate()
 	{
 		obj->PreUpdate();
 	}
+
+	//敵wp消滅確認
+	CHARAMGR.CheckEnemyExpired();
 }
 
 void BaseScene::Update()

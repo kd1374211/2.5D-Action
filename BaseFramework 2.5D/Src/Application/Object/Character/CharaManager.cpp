@@ -3,6 +3,26 @@
 #include "../../Scene/BaseScene/BaseScene.h"
 #include "CharacterInclude.h"
 
+void CharaManager::CheckEnemyExpired()
+{
+	auto it = m_wpEnemys.begin();
+
+	while (it != m_wpEnemys.end())
+	{
+		if (it->expired())
+		{
+			it = m_wpEnemys.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
+
+	//デバッグ
+	KdDebugGUI::Instance().AddLog("Enemys : %d\n", m_wpEnemys.size());
+}
+
 void CharaManager::SpawnPlayer(BaseScene* a_scene)
 {
 	a_scene->AddObject(m_player);
@@ -23,21 +43,29 @@ void CharaManager::ResetPlayer()
 	m_player->Respawn();
 }
 
-void CharaManager::SpawnEnemy(EnemyName a_name, Math::Vector3 a_pos, float a_deg, float a_linePos)
+std::shared_ptr<EnemyBase> CharaManager::SpawnEnemy(EnemyName a_name, Math::Vector3 a_pos, float a_deg, float a_linePos)
 {
 	std::shared_ptr<EnemyBase>enemy = nullptr;
 	switch (a_name)
 	{
 	case EnemyName::EnemyName_Goblin:
 		enemy = std::make_shared<Goblin>(a_pos, a_deg, a_linePos);
+		enemy->SetEnemyID(m_enemyID);
 		break;
 	case EnemyName::EnemyName_FlyEye:
 		enemy = std::make_shared<FlyEye>(a_pos, a_deg, a_linePos);
+		enemy->SetEnemyID(m_enemyID);
 		break;
 	}
 
 	enemy->SetPolygonData(&m_enemyPolygonData[(int)a_name]);
 	SCENEMGR.AddObject(enemy);
+	m_wpEnemys.push_back(enemy);
+
+	m_enemyID++;
+	if (m_enemyID >= 10000)m_enemyID -= 10000;
+
+	return enemy;
 }
 
 void CharaManager::Init()

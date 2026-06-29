@@ -1,6 +1,7 @@
 ﻿#include "EnemyBase.h"
 #include "../../../Scene/SceneManager.h"
 #include "../../../Score/ScoreManager.h"
+#include "../../../StageSpawner/StageSpawner.h"
 
 void EnemyBase::HitCheck()
 {
@@ -171,4 +172,10 @@ void EnemyBase::OnHit()
 	m_isDissolve = true;
 	m_pCollider->SetEnableAll(false);
 	ChangeAnim(EnemyAnimType::Hit);
+	STAGESPAWNER.OnEnemyDead(m_enemyID);
+}
+
+void EnemyBase::Release()
+{
+	STAGESPAWNER.DeleteEnemyMap(m_enemyID);
 }

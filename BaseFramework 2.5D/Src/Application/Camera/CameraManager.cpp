@@ -6,6 +6,9 @@ void CameraManager::Init()
 	m_cameraData.m_viewAngle = 80;
 }
 
+void CameraManager::PreDraw()
+{}
+
 void CameraManager::LoadData()
 {
 	FILE* fp = nullptr;

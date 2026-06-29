@@ -5,6 +5,7 @@ class Stair;
 class Wall;
 class Pillar;
 class BaseScene;
+class EnemyBase;
 
 class StageSpawner
 {
@@ -23,6 +24,10 @@ public:
 	std::list<bool> GetStoreList_P() { return m_stairVisibleLog_past; }
 	std::list<bool> GetStoreList_F() { return m_stairVisibleLog_future; }
 
+	//敵死亡
+	void OnEnemyDead(int a_enemyID);
+	void DeleteEnemyMap(int a_enemyID);
+	
 private:
 
 	StageSpawner() { Init(); }
@@ -47,7 +52,8 @@ private:
 
 	//階段80個(後ろにあるほど上にある)
 	std::list<std::shared_ptr<Stair>> m_stairs;
-	
+	std::map<int, std::weak_ptr<Stair>> m_stairsIDmap;
+
 	//最大貯蔵数
 	static const int MAXDATASTORE = 80;
 	static const int MAXFUTUREROLL = 40;
@@ -56,7 +62,7 @@ private:
 	std::list <bool> m_stairVisibleLog_past;
 	std::list<bool> m_stairVisibleLog_future;
 
-	//敵スポーンデータ
+	//ギミックスポーンデータ
 	std::map<Gimmicks, GimmicksData> m_gimmicksData;
 	
 	//壁
@@ -73,7 +79,7 @@ private:
 
 	//非出現フラグ
 	NoStairsData m_noStairsData[MAXLEVEL];
-	bool m_noSpawnFlg = false;
+	bool m_stairSpawnFlg = true;
 	int m_noSpawnStairCnt = 0;
 	int m_noSpawnStairCool = 0;
 
@@ -90,12 +96,16 @@ private:
 	int m_level = 0;
 
 	//回復ハート
-	static const int HEARTSPAWNNUM = 7;
-	const float HEARTSPAWN[HEARTSPAWNNUM] = { 25.0f,75.0f,150.0f,225.0f,300.0f,375.0f,475.0f };
-
-	static const int HEARTSPAWNCHANCE = 10;
-	int m_heartSpawnStack = 0;
+	static const int HEARTFLYMIN = 6;
+	static const int HEARTFLYMAX = 12;
+	
+	static const int HEARTSPAWNCHANCESTART = 10;
+	static const int HEARTSPAWNCHANCEADD = 10;
 	int m_heartSpawnCnt = 0;
+	int m_heartSpawnChance = HEARTSPAWNCHANCESTART;
+
+	//敵と階段をIDで結びつけ
+	std::map<int, int> m_enemyStairMap;
 
 public:
 

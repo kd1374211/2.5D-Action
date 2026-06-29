@@ -87,7 +87,6 @@ private:
 	//基礎
 	float m_moveY = 0.0f;
 	bool m_isJump = false;
-	bool m_isVoidJump = false;
 	bool m_isAttack = false;
 	int m_attackF = 0;
 	int m_attackWaitF = 0;

@@ -20,6 +20,8 @@ enum class Gimmicks
 struct GimmicksData
 {
 	int m_minLevel;
+	float m_linePosMin;
+	float m_linePosMax;
 	int m_chance[MAXLEVEL];
 };
 

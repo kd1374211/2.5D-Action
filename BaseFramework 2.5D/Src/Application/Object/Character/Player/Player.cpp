@@ -27,9 +27,6 @@ void Player::Update()
 	{
 		m_moveY -= GRAVITY;
 		if (m_moveY <= FALLSPEEDMAX)m_moveY = FALLSPEEDMAX;
-
-		//奈落ジャンプ状態解除
-		if (m_isVoidJump && m_moveY <= 0.0f)m_isVoidJump = false;
 	}
 	
 	//死んでいたら操作不可
@@ -150,169 +147,165 @@ void Player::HitCheck()
 	//当たり判定を実装するときは当たる側と当たられる側が存在する
 	//当たる側の処理
 
-	//奈落による上飛び中は地面判定スキップ
 	SCENEMGR.SetScrollBack(0.0f);
-	if (!m_isVoidJump)
+	//↓ここからレイ判定
+
+	//レイ判定用の変数を作成
+	const float enableStepHigh = 0.2f;
+	KdCollider::RayInfo ray;
+	//レイの発射位置を設定
+	ray.m_pos = m_pos + Math::Vector3(0, enableStepHigh, 0);
+	//レイの発射方向を設定
+	ray.m_dir = { 0,-1.0f,0 };
+	//レイの長さを設定
+	ray.m_range = enableStepHigh - m_moveY;
+	//当たり判定をしたいタイプを設定
+	ray.m_type = KdCollider::TypeGround;
+
+	//レイに当たったオブジェクト情報を格納するリスト
+	std::list<KdCollider::CollisionResult> retRayList;
+
+	//全オブジェクトとの当たり判定
+	for (auto& obj : SceneManager::Instance().GetObjList())
 	{
-		//↓ここからレイ判定
+		//↓レイ当たり判定
+		obj->Intersects(ray, &retRayList);
+	}
 
-		//レイ判定用の変数を作成
-		const float enableStepHigh = 0.2f;
-		KdCollider::RayInfo ray;
-		//レイの発射位置を設定
-		ray.m_pos = m_pos + Math::Vector3(0, enableStepHigh, 0);
-		//レイの発射方向を設定
-		ray.m_dir = { 0,-1.0f,0 };
-		//レイの長さを設定
-		ray.m_range = enableStepHigh - m_moveY;
-		//当たり判定をしたいタイプを設定
-		ray.m_type = KdCollider::TypeGround;
-
-		//レイに当たったオブジェクト情報を格納するリスト
-		std::list<KdCollider::CollisionResult> retRayList;
-
-		//全オブジェクトとの当たり判定
-		for (auto& obj : SceneManager::Instance().GetObjList())
+	//レイに当たったリストから一番近いオブジェクトを探す
+	float maxOverLap = 0.0f;
+	Math::Vector3 hitPos;
+	bool isHit = false;
+	for (auto& ret : retRayList)
+	{
+		//レイを遮断してオーバーした長さが一番長いものを探す
+		if (maxOverLap < ret.m_overlapDistance)
 		{
-			//↓レイ当たり判定
-			obj->Intersects(ray, &retRayList);
+			//更新
+			maxOverLap = ret.m_overlapDistance;
+			hitPos = ret.m_hitPos;
+			isHit = true;
+		}
+	}
+
+	//座標更新
+	if (isHit)
+	{
+		m_pos = hitPos;
+		m_isJump = false;
+
+		//着地
+		if (!m_isLanding)
+		{
+			m_isLanding = true;
+
+			//ある程度以上の落下速度なら
+			if (m_moveY <= AIRJUMPLIMIT && !m_isDead)SOUNDMGR.Play(SoundName::SE_Landing);
 		}
 
-		//レイに当たったリストから一番近いオブジェクトを探す
-		float maxOverLap = 0.0f;
-		Math::Vector3 hitPos;
-		bool isHit = false;
-		for (auto& ret : retRayList)
+		//落下速度リセット
+		m_moveY = 0.0f;
+
+		//死亡時バウンド
+		if (m_isDead && m_deadBounceCnt < DEADBOUNCEMAX)
 		{
-			//レイを遮断してオーバーした長さが一番長いものを探す
+			m_deadBounceCnt++;
+			m_moveY = JUMPPOWER * pow(DEADBOUNCEMULTI, m_deadBounceCnt);
+			m_isLanding = false;
+		}
+
+		if (m_nowAnim == PlayerAnimType::Fall)ChangeAnim(PlayerAnimType::Run);
+	}
+
+	//↑で地面に立っている（isHitがtrue）ならスキップ
+	if (!isHit)
+	{
+		//2
+		//当たり判定（スフィア判定）
+
+		//変数作成
+		KdCollider::SphereInfo sphere;
+
+		//スフィアの中心座標
+		sphere.m_sphere.Center = m_pos + Math::Vector3(0, 0.4f, 0);
+
+		//スフィアの半径
+		sphere.m_sphere.Radius = m_pos.z * SPHEREGROUNDHITSIZEMULTI;
+		if (sphere.m_sphere.Radius < SPHEREGROUNDHITSIZEMIN)sphere.m_sphere.Radius = SPHEREGROUNDHITSIZEMIN;
+
+		//当たり判定をしたいタイプ
+		sphere.m_type = KdCollider::TypeGround;
+
+		//スフィアに当たったオブジェクト情報を格納するリスト
+		std::list<KdCollider::CollisionResult> retSphereList;
+
+		//全オブジェクトとの当たり判定
+		for (auto& obj : SCENEMGR.GetObjList())
+		{
+			//↓スフィア当たり判定
+			obj->Intersects(sphere, &retSphereList);
+		}
+
+		//スフィアに当たったリストから一番近いオブジェクトを探す
+
+		//↓レイの時にあるので使いまわし
+		maxOverLap = 0.0f;		//スフィアのときはめり込んだ長さ
+		isHit = false;
+
+		//当たった方向
+		float deg;
+		Math::Vector3 hitDir;
+
+		for (auto& ret : retSphereList)
+		{
+			//スフィアにめり込んだ長さが一番長いものを探す
 			if (maxOverLap < ret.m_overlapDistance)
 			{
+				hitPos = ret.m_hitPos;
+
+				//衝突方向を見る
+				hitDir = ret.m_hitDir;
+
+				//衝突位置の角度を求める
+				deg = DirectX::XMConvertToDegrees(atan2f(hitPos.z, hitPos.x));
+
 				//更新
 				maxOverLap = ret.m_overlapDistance;
-				hitPos = ret.m_hitPos;
 				isHit = true;
 			}
 		}
 
-		//座標更新
 		if (isHit)
 		{
-			m_pos = hitPos;
-			m_isJump = false;
+			//押した先の位置を見る
+			Math::Vector3 pushPos = m_pos + hitDir * maxOverLap;
 
-			//着地
-			if (!m_isLanding)
+			//移動先の角度を求める
+			deg = DirectX::XMConvertToDegrees(atan2f(pushPos.z, pushPos.x));
+
+			//スクロールを戻す
+			SCENEMGR.SetScrollBack(-90.0f - deg);
+
+			//プレイヤーのYを押す
+			m_pos.y = pushPos.y;
+
+			if (m_pos.y + enableStepHigh > hitPos.y)
 			{
-				m_isLanding = true;
+				m_moveY = 0.0f;
 
-				//ある程度以上の落下速度なら
-				if (m_moveY <= AIRJUMPLIMIT && !m_isDead)SOUNDMGR.Play(SoundName::SE_Landing);
-			}
-
-			//落下速度リセット
-			m_moveY = 0.0f;
-
-			//死亡時バウンド
-			if (m_isDead && m_deadBounceCnt < DEADBOUNCEMAX)
-			{
-				m_deadBounceCnt++;
-				m_moveY = JUMPPOWER * pow(DEADBOUNCEMULTI, m_deadBounceCnt);
-				m_isLanding = false;
-			}
-
-			if (m_nowAnim == PlayerAnimType::Fall)ChangeAnim(PlayerAnimType::Run);
-		}
-
-		//↑で地面に立っている（isHitがtrue）ならスキップ
-		if (!isHit)
-		{
-			//2
-			//当たり判定（スフィア判定）
-
-			//変数作成
-			KdCollider::SphereInfo sphere;
-
-			//スフィアの中心座標
-			sphere.m_sphere.Center = m_pos + Math::Vector3(0, 0.4f, 0);
-
-			//スフィアの半径
-			sphere.m_sphere.Radius = m_pos.z * SPHEREGROUNDHITSIZEMULTI;
-			if (sphere.m_sphere.Radius < SPHEREGROUNDHITSIZEMIN)sphere.m_sphere.Radius = SPHEREGROUNDHITSIZEMIN;
-
-			//当たり判定をしたいタイプ
-			sphere.m_type = KdCollider::TypeGround;
-
-			//スフィアに当たったオブジェクト情報を格納するリスト
-			std::list<KdCollider::CollisionResult> retSphereList;
-
-			//全オブジェクトとの当たり判定
-			for (auto& obj : SCENEMGR.GetObjList())
-			{
-				//↓スフィア当たり判定
-				obj->Intersects(sphere, &retSphereList);
-			}
-
-			//スフィアに当たったリストから一番近いオブジェクトを探す
-
-			//↓レイの時にあるので使いまわし
-			maxOverLap = 0.0f;		//スフィアのときはめり込んだ長さ
-			isHit = false;
-
-			//当たった方向
-			float deg;
-			Math::Vector3 hitDir;
-
-			for (auto& ret : retSphereList)
-			{
-				//スフィアにめり込んだ長さが一番長いものを探す
-				if (maxOverLap < ret.m_overlapDistance)
+				//ここも着地か？
+				if (!m_isLanding)
 				{
-					hitPos = ret.m_hitPos;
-
-					//衝突方向を見る
-					hitDir = ret.m_hitDir;
-
-					//衝突位置の角度を求める
-					deg = DirectX::XMConvertToDegrees(atan2f(hitPos.z, hitPos.x));
-
-					//更新
-					maxOverLap = ret.m_overlapDistance;
-					isHit = true;
+					m_isLanding = true;
+					if (!m_isDead)SOUNDMGR.Play(SoundName::SE_Landing);
 				}
-			}
 
-			if (isHit)
-			{
-				//押した先の位置を見る
-				Math::Vector3 pushPos = m_pos + hitDir * maxOverLap;
-
-				//移動先の角度を求める
-				deg = DirectX::XMConvertToDegrees(atan2f(pushPos.z, pushPos.x));
-
-				//スクロールを戻す
-				SCENEMGR.SetScrollBack(-90.0f - deg);
-
-				//プレイヤーのYを押す
-				m_pos.y = pushPos.y;
-
-				if (m_pos.y + enableStepHigh > hitPos.y)
+				//死亡時バウンド
+				if (m_isDead && m_deadBounceCnt < DEADBOUNCEMAX)
 				{
-					m_moveY = 0.0f;
-
-					//ここも着地か？
-					if(!m_isLanding)
-					{
-						m_isLanding = true;
-						if (!m_isDead)SOUNDMGR.Play(SoundName::SE_Landing);
-					}
-
-					//死亡時バウンド
-					if (m_isDead && m_deadBounceCnt < DEADBOUNCEMAX)
-					{
-						m_deadBounceCnt++;
-						m_moveY = JUMPPOWER * pow(DEADBOUNCEMULTI, m_deadBounceCnt);
-						m_isLanding = false;
-					}
+					m_deadBounceCnt++;
+					m_moveY = JUMPPOWER * pow(DEADBOUNCEMULTI, m_deadBounceCnt);
+					m_isLanding = false;
 				}
 			}
 		}
@@ -510,7 +503,6 @@ void Player::Respawn(Math::Vector3 a_pos)
 	m_moveY = 0.0f;
 	m_isJump = false;
 	m_isLanding = true;
-	m_isVoidJump = false;
 	m_isAttack = false;
 	m_attackF = 0;
 	m_attackWaitF = 0;
