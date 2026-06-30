@@ -18,9 +18,6 @@ void CharaManager::CheckEnemyExpired()
 			it++;
 		}
 	}
-
-	//デバッグ
-	KdDebugGUI::Instance().AddLog("Enemys : %d\n", m_wpEnemys.size());
 }
 
 void CharaManager::SpawnPlayer(BaseScene* a_scene)

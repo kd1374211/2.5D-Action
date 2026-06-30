@@ -21,7 +21,7 @@ public:
 private:
 
 	//プレイヤーを覆うオブジェクトの半透明化
-	const float HIDEALPHA = 0.7f;
+	const float HIDEALPHA = 0.6f;
 
 	CameraManager() { Init(); }
 	~CameraManager() { Release(); }

@@ -56,7 +56,7 @@ void Player::Update()
 				m_isLanding = false;
 			}
 		}
-
+		
 		//空中ジャンプ規制(ついでに落下モーション)
 		if (m_moveY < AIRJUMPLIMIT && !m_isJump)
 		{
@@ -326,9 +326,6 @@ void Player::HitCheck()
 		sphere.m_sphere.Radius = m_pos.z * SPHEREHITSIZEMULTI;
 		if (sphere.m_sphere.Radius < SPHEREHITSIZEMIN)sphere.m_sphere.Radius = SPHEREHITSIZEMIN;
 
-		//デバッグ
-		m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius, kWhiteColor);
-
 		//当たり判定をしたいタイプ
 		sphere.m_type = KdCollider::Type::TypeDamage;
 
@@ -533,8 +530,6 @@ void Player::Respawn(Math::Vector3 a_pos)
 
 void Player::Init()
 {
-	m_pDebugWire = std::make_unique<KdDebugWireFrame>();
-
 	//ハート画像
 	m_heartTex = std::make_shared<KdTexture>();
 	m_heartTex->Load("Asset/Textures/Chara/Player/Heart.png");

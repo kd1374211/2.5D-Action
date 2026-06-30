@@ -157,41 +157,50 @@ void StageSpawner::Update()
 				{
 					GimmicksData data = {};
 
+					//ギミックが出現可能かのチェック
+					bool boulderReady = m_boulderCool <= 0 ? true : false;
+					bool woodReady = m_woodCool <= 0 ? true : false;
+					bool spearReady = m_spearWait <= 0 ? true : false;
+
 					//ギミッククール減少
 					if (m_boulderCool > 0)m_boulderCool--;
+					if (m_woodCool > 0)m_woodCool--;
+					if (m_spearWait > 0)m_spearWait--;
 
 					//岩
 					data = m_gimmicksData.find(Gimmicks::Boulder)->second;
-					if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel && m_boulderCool <= 0)
+					if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel && boulderReady)
 					{
 						float angleDeg = LOWEST->GetAngleDeg();
 						float linePos = rand() / (float)RAND_MAX * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
 						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 						SCENEMGR.AddObject(std::make_shared<Boulder>(pos, angleDeg, linePos));
 						m_boulderCool = BOULDERCOOL;
+
+						//この次に木が出ないように
+						if (m_woodCool < WOODCOOL_AFTERBOULDER)m_woodCool = WOODCOOL_AFTERBOULDER;
 					}
-					else
+					else if (woodReady)
 					{
-						//連続出現防止処理
-						if (m_woodCool <= 0)
+						for (int i = (int)Gimmicks::Wood_05; i < (int)Gimmicks::Wood_20; i++)
 						{
-							for (int i = (int)Gimmicks::Wood_05; i < (int)Gimmicks::Wood_20; i++)
+							//木
+							data = m_gimmicksData.find((Gimmicks)i)->second;
+							if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel)
 							{
-								//木
-								data = m_gimmicksData.find((Gimmicks)i)->second;
-								if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel)
-								{
-									float scale = (i - (int)Gimmicks::Wood_05 + 1) * 0.5f;
-									float angleDeg = LOWEST->GetAngleDeg();						
-									float linePos = rand() / (float)RAND_MAX * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
-									Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
-									SCENEMGR.AddObject(std::make_shared<RollingWood>(pos, angleDeg, linePos, scale));
-									m_woodCool = WOODCOOL;
-									break;
-								}
+								float scale = (i - (int)Gimmicks::Wood_05 + 1) * 0.5f;
+								float angleDeg = LOWEST->GetAngleDeg();
+								float linePos = rand() / (float)RAND_MAX * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
+								Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+								SCENEMGR.AddObject(std::make_shared<RollingWood>(pos, angleDeg, linePos, scale));
+								m_woodCool = WOODCOOL;
+
+								//この次に岩が出ないように
+								if (m_boulderCool < BOULDERCOOL_AFTERWOOD)m_boulderCool = BOULDERCOOL_AFTERWOOD;
+
+								break;
 							}
 						}
-						else m_woodCool--;
 					}
 						
 
@@ -209,9 +218,6 @@ void StageSpawner::Update()
 
 						isEnemySpawn = true;
 					}
-
-					bool canSpear = m_spearWait <= 0 ? true : false;
-					if (m_spearWait > 0)m_spearWait--;
 
 					if (m_isSideSpearNext)
 					{
@@ -250,11 +256,22 @@ void StageSpawner::Update()
 							//ID結びつけ
 							m_enemyStairMap.emplace(enemy->GetEnemyID(), LOWEST->GetStairID());
 						}
-						else
+						else if (spearReady)
 						{
+							//この階段の前が奈落か
+							bool canSpawnSideSpear = false;
+							//検索ID(今生成される階段の1つ前)
+							int checkID = LOWEST->GetStairID() - 1;
+							//マイナス対策
+							if (checkID < 0)checkID += STAIRNUM;
+							//階段取得
+							std::shared_ptr<Stair> check = m_stairsIDmap.find(checkID)->second.lock();
+							//階段存在フラグがそのまま横槍フラグに
+							if (check != nullptr)canSpawnSideSpear = check->GetStairFlg();
+
 							//槍
 							data = m_gimmicksData.find(Gimmicks::Spear)->second;
-							if (rand() % data.m_chance[m_level] == 0 && canSpear && m_level >= data.m_minLevel)
+							if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel)
 							{
 								float angleDeg = LOWEST->GetAngleDeg();
 								float linePos = rand() / (float)RAND_MAX * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
@@ -269,7 +286,7 @@ void StageSpawner::Update()
 
 								//横槍
 								data = m_gimmicksData.find(Gimmicks::SpearAfterSide)->second;
-								if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel)
+								if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel && canSpawnSideSpear)
 								{
 									m_isSideSpearNext = true;
 								}
@@ -278,7 +295,7 @@ void StageSpawner::Update()
 							{
 								//横槍
 								data = m_gimmicksData.find(Gimmicks::SideSpear)->second;
-								if (rand() % data.m_chance[m_level] == 0 && canSpear && m_level >= data.m_minLevel)
+								if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel && canSpawnSideSpear)
 								{
 									m_isSideSpearNext = true;
 								}
@@ -325,10 +342,6 @@ void StageSpawner::Update()
 
 		break;
 	}
-
-	KdDebugGUI::Instance().AddLog("EnemyMap : %d\n", m_enemyStairMap.size());
-	KdDebugGUI::Instance().AddLog("HeartChance : %d\n", m_heartSpawnChance);
-	KdDebugGUI::Instance().AddLog("HeartCool : %d\n", m_heartSpawnCool);
 }
 
 void StageSpawner::AddPastStairVisibleLog(bool a_isVisible)

@@ -15,10 +15,7 @@ public:
 	void ResetStage();
 	void Update();
 
-	//デバッグ
-	int GetStairStore()const { return m_countBackScroll; }
-
-	//仮
+	//階段データ
 	void AddPastStairVisibleLog(bool a_isVisible);
 	void AddFutureStairVisibleLog(bool a_isVisible);
 	std::list<bool> GetStoreList_P() { return m_stairVisibleLog_past; }
@@ -86,7 +83,9 @@ private:
 
 	//ギミック連続出現対策
 	static const int BOULDERCOOL = 8;
+	static const int BOULDERCOOL_AFTERWOOD = 1;
 	static const int WOODCOOL = 2;
+	static const int WOODCOOL_AFTERBOULDER = 1;
 	static const int SPEARCOOL = 4;
 	int m_boulderCool = 0;
 	int m_woodCool = 0;

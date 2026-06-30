@@ -26,14 +26,10 @@ void FlyEye::Update()
 
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	m_mWorld = trans;
-
-	m_pDebugWire->AddDebugSphere(m_pos + m_sphereHitOfs, 0.6f, kRedColor);
 }
 
 void FlyEye::Init()
 {
-	m_pDebugWire = std::make_unique<KdDebugWireFrame>();
-
 	m_sphereHitOfs = SPHEREHITOFS;
 	m_pCollider = std::make_unique<KdCollider>();
 	m_pCollider->RegisterCollisionShape("Fly Eye", SPHEREHITOFS, 0.6f, KdCollider::TypeDamage);

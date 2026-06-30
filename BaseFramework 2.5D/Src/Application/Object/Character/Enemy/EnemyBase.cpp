@@ -73,9 +73,6 @@ void EnemyBase::HitCheck()
 	sphere.m_sphere.Radius = m_linePos * 0.125f;
 	if (sphere.m_sphere.Radius <= 0.6f)sphere.m_sphere.Radius = 0.6f;
 
-	//デバッグ
-	m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius, kWhiteColor);
-
 	//当たり判定をしたいタイプ
 	sphere.m_type = KdCollider::Type::TypeDamage_Enemy;
 
