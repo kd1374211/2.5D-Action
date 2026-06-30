@@ -11,6 +11,7 @@ public :
 
 	GameScene() { Init(); }
 	~GameScene() {}
+	void PreDraw()override;
 
 private:
 

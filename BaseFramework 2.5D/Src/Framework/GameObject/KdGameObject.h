@@ -42,6 +42,9 @@ public:
 	virtual void SetPos(const Math::Vector3& pos) { m_mWorld.Translation(pos); }
 	virtual Math::Vector3 GetPos() const { return m_pos; }
 
+	//透明度セット
+	void SetAlpha(float a_alpha) { m_alpha = a_alpha; }
+
 	// 拡大率を変更する関数
 	void SetScale(float scalar);
 	virtual void SetScale(const Math::Vector3& scale);
@@ -93,4 +96,7 @@ protected:
 
 	// デバッグ情報クラス
 	std::unique_ptr<KdDebugWireFrame> m_pDebugWire = nullptr;
+
+	//透明度
+	float m_alpha = 1.0f;
 };

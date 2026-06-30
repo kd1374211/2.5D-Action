@@ -38,12 +38,13 @@ void StageSpawner::ResetStage()
 	m_stairVisibleLog_past.clear();
 	m_countBackScroll = 0;
 	m_isSideSpearNext = false;
+	m_spearWait = 0;
 	m_stairSpawnFlg = true;
 	m_noSpawnStairCnt = 0;
 	m_level = 0;
 	m_heartSpawnCnt = 0;
 	m_heartSpawnChance = HEARTSPAWNCHANCESTART;
-	m_woodRushCnt = 0;
+	m_heartSpawnCool = 0;
 	m_woodCool = 0;
 }
 
@@ -171,9 +172,6 @@ void StageSpawner::Update()
 					}
 					else
 					{
-						//このフレームで木が出現したか
-						bool isWoodSpawned = false;
-
 						//連続出現防止処理
 						if (m_woodCool <= 0)
 						{
@@ -188,19 +186,12 @@ void StageSpawner::Update()
 									float linePos = rand() / (float)RAND_MAX * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
 									Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 									SCENEMGR.AddObject(std::make_shared<RollingWood>(pos, angleDeg, linePos, scale));
-									isWoodSpawned = true;
+									m_woodCool = WOODCOOL;
 									break;
 								}
 							}
 						}
 						else m_woodCool--;
-
-						if (isWoodSpawned)
-						{
-							m_woodRushCnt++;
-							if (m_woodRushCnt >= WOODRUSHLIMIT)m_woodCool = WOODCOOL;
-						}
-						else m_woodRushCnt = 0;
 					}
 						
 
@@ -219,19 +210,30 @@ void StageSpawner::Update()
 						isEnemySpawn = true;
 					}
 
-					static int spearWait = 0;
-					bool canSpear = spearWait <= 0 ? true : false;
-					if (spearWait > 0)spearWait--;
+					bool canSpear = m_spearWait <= 0 ? true : false;
+					if (m_spearWait > 0)m_spearWait--;
 
 					if (m_isSideSpearNext)
 					{
-						if (m_stairVisibleLog_future.front())
+						m_isSideSpearNext = false;
+						m_spearWait++;
+
+						auto data = m_stairVisibleLog_future.begin();
+						int count = 0;
+						const int countEnd = 2;
+
+						//これより後の２段が奈落でないなら
+						for (count = 0; count < countEnd; count++)
+						{
+							if (!(*data))break;
+							data++;
+						}
+
+						if (count == countEnd)
 						{
 							float angleDeg = LOWEST->GetAngleDeg();
 							SCENEMGR.AddObject(std::make_shared<SideSpear>(respawnPosY, angleDeg));
 						}
-						m_isSideSpearNext = false;
-						spearWait++;
 					}
 					//階段があるかを見る
 					else if (isStair)
@@ -262,8 +264,8 @@ void StageSpawner::Update()
 									Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 									SCENEMGR.AddObject(std::make_shared<Spear>(pos, angleDeg, linePos));
 									linePos += 0.5f;
-									spearWait++;
 								}
+								m_spearWait = SPEARCOOL;
 
 								//横槍
 								data = m_gimmicksData.find(Gimmicks::SpearAfterSide)->second;
@@ -326,6 +328,7 @@ void StageSpawner::Update()
 
 	KdDebugGUI::Instance().AddLog("EnemyMap : %d\n", m_enemyStairMap.size());
 	KdDebugGUI::Instance().AddLog("HeartChance : %d\n", m_heartSpawnChance);
+	KdDebugGUI::Instance().AddLog("HeartCool : %d\n", m_heartSpawnCool);
 }
 
 void StageSpawner::AddPastStairVisibleLog(bool a_isVisible)
@@ -341,8 +344,11 @@ void StageSpawner::AddFutureStairVisibleLog(bool a_isVisible)
 
 void StageSpawner::OnEnemyDead(int a_enemyID)
 {
+	//クール減少
+	if (m_heartSpawnCool > 0)m_heartSpawnCool--;
+
 	//最初にロール
-	if (rand() % m_heartSpawnChance == 0)
+	if (rand() % m_heartSpawnChance == 0 && m_heartSpawnCool <= 0)
 	{
 		//対応検索
 		auto itr = m_enemyStairMap.find(a_enemyID);
@@ -387,31 +393,33 @@ void StageSpawner::OnEnemyDead(int a_enemyID)
 
 					if (stair->GetStairFlg())
 					{
-						//LinePosランダム
-						float linePos = rand() / (float)RAND_MAX * (LINEPLAYAREA_MAX - LINEPLAYAREA_MIN - 1.2f) + LINEPLAYAREA_MIN + 0.6f;
+						//LinePosランダム(敵位置から+-3.0f)
+						float posMin = std::clamp(enemy->GetLinePos() - 3.0f, LINEPLAYAREA_MIN + 0.6f, LINEPLAYAREA_MAX - 0.6f);
+						float posMax = std::clamp(enemy->GetLinePos() + 3.0f, LINEPLAYAREA_MIN + 0.6f, LINEPLAYAREA_MAX - 0.6f);
+						float linePos = rand() / (float)RAND_MAX * (posMax - posMin) + posMin;
 
 						//敵の位置からハートを召喚
 						SCENEMGR.AddObject(std::make_shared<Heart>(enemy->GetPos(), enemy->GetAngleDeg(), enemy->GetLinePos(), linePos, number));
 
 						//ハートの召喚数追加
 						m_heartSpawnCnt++;
-						//それ倍の確率を追加
+						//その10倍の確率を追加
 						m_heartSpawnChance += HEARTSPAWNCHANCEADD * m_heartSpawnCnt;
+						//追加後の確率の4割をクールに設定
+						m_heartSpawnCool = m_heartSpawnChance * 0.4f;
 
-						return;
+						break;
 					}
 
 					number++;
-					if (number >= HEARTFLYMAX)return;
+					if (number >= HEARTFLYMAX)break;
 				}
 			}
 		}
 	}
-	else
-	{
-		//次が出やすく
-		m_heartSpawnChance--;
-	}
+	
+	//次が出やすく
+	m_heartSpawnChance--;
 }
 
 void StageSpawner::DeleteEnemyMap(int a_enemyID)

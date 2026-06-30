@@ -75,6 +75,7 @@ private:
 	//当たり判定（スフィア）
 	const float SPHEREGROUNDHITSIZEMIN = 0.2f;
 	const float SPHEREGROUNDHITSIZEMULTI = -0.05f;
+	const float SPHEREHITSIZEMIN = 0.16f;
 	const float SPHEREHITSIZEMULTI = -0.04f;
 
 	//落下

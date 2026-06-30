@@ -15,25 +15,24 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Cylinder"
+			"name":"Cylinder.001"
 		}
 	],
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"Material.001",
+			"name":"Material.002",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
 					"index":0
 				},
-				"metallicFactor":0,
-				"roughnessFactor":0.5
+				"metallicFactor":0
 			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"Cylinder.003",
+			"name":"Cylinder",
 			"primitives":[
 				{
 					"attributes":{
@@ -67,12 +66,12 @@
 			"count":82,
 			"max":[
 				2,
-				19.200000762939453,
+				20,
 				2
 			],
 			"min":[
 				-2,
-				-19.200000762939453,
+				-20,
 				-2
 			],
 			"type":"VEC3"

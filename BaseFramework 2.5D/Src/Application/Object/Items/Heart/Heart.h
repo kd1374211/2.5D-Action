@@ -39,8 +39,8 @@ private:
 	std::shared_ptr<KdSquarePolygon> m_polygon = nullptr;
 
 	//吹っ飛び
-	const int COUNTF_SINGLESTAIR = 6;
-	const float DEGMOVE = 1.5f;
+	const int COUNTF_SINGLESTAIR = 4;
+	const float DEGMOVE = 2.25f;
 	const float GRAVITY = 0.005f;
 	const float FALLSPEEDLIMIT = -0.2f;
 

@@ -13,12 +13,15 @@ class CameraManager
 public:
 
 	//プレイヤーをさえぎっているオブジェクトの透明化
-	void PreDraw();
+	void PreDraw(std::shared_ptr<KdCamera>& a_cameraData);
 
 	//カメラ基礎データ
 	CameraBaseData& GetCameraData(){ return m_cameraData; }
 	
 private:
+
+	//プレイヤーを覆うオブジェクトの半透明化
+	const float HIDEALPHA = 0.7f;
 
 	CameraManager() { Init(); }
 	~CameraManager() { Release(); }

@@ -76,6 +76,7 @@ private:
 
 	//横槍
 	bool m_isSideSpearNext = false;
+	int m_spearWait = 0;
 
 	//非出現フラグ
 	NoStairsData m_noStairsData[MAXLEVEL];
@@ -84,11 +85,10 @@ private:
 	int m_noSpawnStairCool = 0;
 
 	//ギミック連続出現対策
-	static const int BOULDERCOOL = 4;
+	static const int BOULDERCOOL = 8;
 	static const int WOODCOOL = 2;
-	static const int WOODRUSHLIMIT = 2;
+	static const int SPEARCOOL = 4;
 	int m_boulderCool = 0;
-	int m_woodRushCnt = 0;
 	int m_woodCool = 0;
 
 	//ステージレベル
@@ -96,13 +96,14 @@ private:
 	int m_level = 0;
 
 	//回復ハート
-	static const int HEARTFLYMIN = 6;
-	static const int HEARTFLYMAX = 12;
+	static const int HEARTFLYMIN = 9;
+	static const int HEARTFLYMAX = 15;
 	
 	static const int HEARTSPAWNCHANCESTART = 10;
 	static const int HEARTSPAWNCHANCEADD = 10;
 	int m_heartSpawnCnt = 0;
 	int m_heartSpawnChance = HEARTSPAWNCHANCESTART;
+	int m_heartSpawnCool = 0;
 
 	//敵と階段をIDで結びつけ
 	std::map<int, int> m_enemyStairMap;

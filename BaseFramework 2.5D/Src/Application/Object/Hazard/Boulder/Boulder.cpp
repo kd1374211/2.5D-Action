@@ -11,6 +11,9 @@ Boulder::Boulder(Math::Vector3 a_baseStartPos, float a_startDeg, float a_linePos
 
 void Boulder::Update()
 {
+	//アルファリセット
+	SetAlpha(1.0f);
+
 	//スクロール速度取得
 	float speedMulti = SCENEMGR.GetScrollSpeedMulti();
 
@@ -57,13 +60,15 @@ void Boulder::PostUpdate()
 
 void Boulder::DrawLit()
 {
-	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
+	Math::Color color = Math::Color(1.0f, 1.0f, 1.0f, m_alpha);
+	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld, color);
 }
 
 void Boulder::GenerateDepthMapFromLight()
 {
 	if (!m_isShadow)return;
-	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
+	Math::Color color = Math::Color(1.0f, 1.0f, 1.0f, m_alpha);
+	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld, color);
 }
 
 void Boulder::Init()
@@ -72,7 +77,7 @@ void Boulder::Init()
 	m_model->Load("Asset/Models/Boulder/Boulder.gltf");
 
 	m_pCollider = std::make_unique<KdCollider>();
-	m_pCollider->RegisterCollisionShape("Boulder", m_model, KdCollider::Type::TypeDamage);
+	m_pCollider->RegisterCollisionShape("Boulder", m_model, KdCollider::Type::TypeDamage + KdCollider::Type::TypeHide);
 }
 
 void Boulder::Release()

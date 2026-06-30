@@ -104,6 +104,23 @@ void GameScene::Event()
 	m_camera->SetCameraMatrix(mat);
 }
 
+void GameScene::PreDraw()
+{
+	//隠し処理
+	CAMERAMGR.PreDraw(m_camera);
+
+	// カメラ情報がある場合はシェーダーにセット
+	if (m_camera)
+	{
+		m_camera->SetToShader();
+	}
+
+	for (auto& obj : m_objList)
+	{
+		obj->PreDraw();
+	}
+}
+
 void GameScene::Init()
 {
 	m_camera = std::make_shared<KdCamera>();

@@ -97,8 +97,7 @@ void Player::Update()
 			{
 				float angle = -8.0f;
 				Math::Vector3 attackSpawnPos = { -sinf(DirectX::XMConvertToRadians(angle)) * GetLinePos(),m_pos.y + 0.4f,-cosf(DirectX::XMConvertToRadians(angle)) * GetLinePos() };
-				float scale = GetLinePos() * 0.25f;
-				SCENEMGR.AddObject(std::make_shared<Slash>(attackSpawnPos, scale, angle));
+				SCENEMGR.AddObject(std::make_shared<Slash>(attackSpawnPos, angle));
 
 				m_isAttack = false;
 			}
@@ -325,6 +324,10 @@ void Player::HitCheck()
 
 		//スフィアの半径
 		sphere.m_sphere.Radius = m_pos.z * SPHEREHITSIZEMULTI;
+		if (sphere.m_sphere.Radius < SPHEREHITSIZEMIN)sphere.m_sphere.Radius = SPHEREHITSIZEMIN;
+
+		//デバッグ
+		m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius, kWhiteColor);
 
 		//当たり判定をしたいタイプ
 		sphere.m_type = KdCollider::Type::TypeDamage;
@@ -530,6 +533,8 @@ void Player::Respawn(Math::Vector3 a_pos)
 
 void Player::Init()
 {
+	m_pDebugWire = std::make_unique<KdDebugWireFrame>();
+
 	//ハート画像
 	m_heartTex = std::make_shared<KdTexture>();
 	m_heartTex->Load("Asset/Textures/Chara/Player/Heart.png");

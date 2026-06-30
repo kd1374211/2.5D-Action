@@ -1,11 +1,10 @@
 ﻿#include "Slash.h"
 #include "../../Character/CharacterInclude.h"
 
-Slash::Slash(Math::Vector3 a_startPos, float a_scale, float a_angle)
+Slash::Slash(Math::Vector3 a_startPos, float a_angle)
 {
 	Init();
 	m_pos = a_startPos;
-	m_scale = a_scale;
 	m_angleDeg = a_angle;
 
 	m_polygon->SetScale(1.2f);

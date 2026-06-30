@@ -12,7 +12,7 @@ public :
 	void HitCheck();
 	void PostUpdate();
 	
-	void PreDraw();
+	virtual void PreDraw();
 	void Draw();
 	void DrawSprite();
 	void DrawDebug();
