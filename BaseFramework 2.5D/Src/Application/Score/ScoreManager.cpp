@@ -42,8 +42,8 @@ int ScoreManager::CalcDigit(int a_baseNumber, int retDigit)
 
 std::string ScoreManager::RandRankText()
 {
-	//ランダム
-	int first = rand() % RANKS;
+	//ランダム(伝説は出ない)
+	int first = rand() % (RANKS - 1);
 	int second = rand() % RankCompare::Number;
 
 	//ランクテキスト生成

@@ -40,7 +40,7 @@ public:
 
 private:
 
-	static const int RANKS = 5;
+	static const int RANKS = 6;
 	enum RankCompare
 	{
 		Height,
