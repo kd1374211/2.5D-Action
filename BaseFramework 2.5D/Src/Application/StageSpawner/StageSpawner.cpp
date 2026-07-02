@@ -262,6 +262,7 @@ void StageSpawner::Update()
 						}
 						else if (spearReady)
 						{
+							//横槍出現可能チェック
 							//この階段の前が奈落か
 							bool canSpawnSideSpear = false;
 							//検索ID(今生成される階段の1つ前)
@@ -273,14 +274,14 @@ void StageSpawner::Update()
 							//階段存在フラグがそのまま横槍フラグに
 							if (check != nullptr)canSpawnSideSpear = check->GetStairFlg();
 
-							//槍
-							data = m_gimmicksData.find(Gimmicks::Spear)->second;
+							//槍(3)
+							data = m_gimmicksData.find(Gimmicks::Spear_Three)->second;
 							if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel)
 							{
 								float angleDeg = LOWEST->GetAngleDeg();
 								float linePos = rand() / (float)RAND_MAX * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
 
-								for (int i = 0; i < 5; i++)
+								for (int i = 0; i < 3; i++)
 								{
 									Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
 									SCENEMGR.AddObject(std::make_shared<Spear>(pos, angleDeg, linePos));
@@ -297,11 +298,36 @@ void StageSpawner::Update()
 							}
 							else
 							{
-								//横槍
-								data = m_gimmicksData.find(Gimmicks::SideSpear)->second;
-								if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel && canSpawnSideSpear)
+								//槍(5)
+								data = m_gimmicksData.find(Gimmicks::Spear_Five)->second;
+								if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel)
 								{
-									m_isSideSpearNext = true;
+									float angleDeg = LOWEST->GetAngleDeg();
+									float linePos = rand() / (float)RAND_MAX * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
+
+									for (int i = 0; i < 5; i++)
+									{
+										Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+										SCENEMGR.AddObject(std::make_shared<Spear>(pos, angleDeg, linePos));
+										linePos += 0.5f;
+									}
+									m_spearWait = SPEARCOOL;
+
+									//横槍
+									data = m_gimmicksData.find(Gimmicks::SpearAfterSide)->second;
+									if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel && canSpawnSideSpear)
+									{
+										m_isSideSpearNext = true;
+									}
+								}
+								else
+								{
+									//横槍
+									data = m_gimmicksData.find(Gimmicks::SideSpear)->second;
+									if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel && canSpawnSideSpear)
+									{
+										m_isSideSpearNext = true;
+									}
 								}
 							}
 						}

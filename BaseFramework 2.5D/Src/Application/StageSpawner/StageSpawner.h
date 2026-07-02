@@ -91,7 +91,7 @@ private:
 	int m_woodCool = 0;
 
 	//ステージレベル
-	const float LEVELHEIGHTS[MAXLEVEL] = { 0,50.0f,100.0f,150.0f,200.0f,250.0f,300.0f,400.0f,500.0f,600.0f };
+	const float LEVELHEIGHTS[MAXLEVEL] = { 0,50.0f,100.0f,150.0f,200.0f,250.0f,300.0f,350.0f,400.0f,500.0f };
 	int m_level = 0;
 
 	//回復ハート
