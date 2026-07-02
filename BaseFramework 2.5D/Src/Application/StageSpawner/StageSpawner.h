@@ -83,9 +83,9 @@ private:
 
 	//ギミック連続出現対策
 	static const int BOULDERCOOL = 8;
-	static const int BOULDERCOOL_AFTERWOOD = 1;
-	static const int WOODCOOL = 2;
-	static const int WOODCOOL_AFTERBOULDER = 1;
+	static const int BOULDERCOOL_AFTERWOOD = 2;
+	static const int WOODCOOL = 3;
+	static const int WOODCOOL_AFTERBOULDER = 2;
 	static const int SPEARCOOL = 4;
 	int m_boulderCool = 0;
 	int m_woodCool = 0;
