@@ -429,7 +429,13 @@ void StageSpawner::OnEnemyDead(int a_enemyID)
 
 					//階段があるかを取得
 					std::weak_ptr<Stair> targetStair = m_stairsIDmap.find(target)->second;
-					if (targetStair.expired())continue;
+					if (targetStair.expired())
+					{
+						number++;
+						if (number >= HEARTFLYMAX)break;
+
+						continue;
+					}
 
 					//階段取得
 					stair = targetStair.lock();
@@ -437,8 +443,8 @@ void StageSpawner::OnEnemyDead(int a_enemyID)
 					if (stair->GetStairFlg())
 					{
 						//LinePosランダム(敵位置から+-3.0f)
-						float posMin = std::clamp(enemy->GetLinePos() - 3.0f, LINEPLAYAREA_MIN + 0.6f, LINEPLAYAREA_MAX - 0.6f);
-						float posMax = std::clamp(enemy->GetLinePos() + 3.0f, LINEPLAYAREA_MIN + 0.6f, LINEPLAYAREA_MAX - 0.6f);
+						float posMin = std::clamp(enemy->GetLinePos() - HEARTMOVEDISTMAX, LINEPLAYAREA_MIN + 0.6f, LINEPLAYAREA_MAX - 0.6f);
+						float posMax = std::clamp(enemy->GetLinePos() + HEARTMOVEDISTMAX, LINEPLAYAREA_MIN + 0.6f, LINEPLAYAREA_MAX - 0.6f);
 						float linePos = rand() / (float)RAND_MAX * (posMax - posMin) + posMin;
 
 						//敵の位置からハートを召喚
@@ -449,7 +455,7 @@ void StageSpawner::OnEnemyDead(int a_enemyID)
 						//その10倍の確率を追加
 						m_heartSpawnChance += HEARTSPAWNCHANCEADD * m_heartSpawnCnt;
 						//追加後の確率の4割をクールに設定
-						m_heartSpawnCool = m_heartSpawnChance * 0.4f;
+						m_heartSpawnCool = m_heartSpawnChance * HEARTSPAWNCOOLMULTI;
 
 						break;
 					}

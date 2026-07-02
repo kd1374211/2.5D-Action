@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "../../../../Fonts/FontsManager.h"
+#include "../../../../Score/ScoreManager.h"
 
 class ResultWindow :public KdGameObject
 {
@@ -48,6 +49,6 @@ private:
 	int m_countF = 0;
 
 	//ランクテキスト
-	std::string m_rankText = "";
+	RankTextData m_rankText = { kBlackColor, "" };
 	std::string m_randRankText = "";
 };

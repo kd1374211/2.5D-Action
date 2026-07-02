@@ -36,6 +36,7 @@ void ResultWindow::DrawSprite()
 	for (auto &text : FONTMGR.GetTextData(TextScene::Result_ResultWindow))
 	{
 		std::string str = "";
+		Math::Color color = kBlackColor;
 
 		//値を追加する必要があるもの
 		switch (text.m_Id)
@@ -68,7 +69,11 @@ void ResultWindow::DrawSprite()
 			}
 			break;
 		case Result_RankText:
-			if (m_countF >= ResultScene::RANKTEXTDRAWF)str = m_rankText;
+			if (m_countF >= ResultScene::RANKTEXTDRAWF)
+			{
+				str = m_rankText.m_text;
+				color = m_rankText.m_color;
+			}
 			else if (m_countF >= ResultScene::RANDDRAWSTARTF)
 			{
 				//リロール
@@ -84,7 +89,7 @@ void ResultWindow::DrawSprite()
 			break;
 		}
 
-		KdShaderManager::Instance().m_spriteShader.DrawFont(text.m_type, m_pos + text.m_pos, text.m_base, &kBlackColor, str.c_str());
+		KdShaderManager::Instance().m_spriteShader.DrawFont(text.m_type, m_pos + text.m_pos, text.m_base, &color, str.c_str());
 	}
 }
 

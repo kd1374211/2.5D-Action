@@ -52,7 +52,7 @@ std::string ScoreManager::RandRankText()
 	return rankText;
 }
 
-std::string ScoreManager::GetRankText()
+RankTextData ScoreManager::GetRankText()
 {
 	int heightRank = 0;
 	int killRank = 0;
@@ -96,7 +96,17 @@ std::string ScoreManager::GetRankText()
 	//ランクテキスト生成
 	std::string rankText = m_rankTextData_First[totalRank].m_rankName + m_rankTextData_Second[compare];
 
-	return rankText;
+	Math::Color rankColor;
+	if (totalRank == RANKS - 1)
+	{
+		rankColor = Math::Color(1.0f, 0.84f, 0.0f, 1.0f); // ゴールド
+	}
+	else
+	{
+		rankColor = kBlackColor;
+	}
+
+	return { rankColor, rankText };
 }
 
 void ScoreManager::Init()

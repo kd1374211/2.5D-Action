@@ -97,9 +97,12 @@ private:
 	//回復ハート
 	static const int HEARTFLYMIN = 9;
 	static const int HEARTFLYMAX = 15;
+
+	const float HEARTMOVEDISTMAX = 3.0f;
 	
 	static const int HEARTSPAWNCHANCESTART = 10;
 	static const int HEARTSPAWNCHANCEADD = 10;
+	const float HEARTSPAWNCOOLMULTI = 0.4f;
 	int m_heartSpawnCnt = 0;
 	int m_heartSpawnChance = HEARTSPAWNCHANCESTART;
 	int m_heartSpawnCool = 0;

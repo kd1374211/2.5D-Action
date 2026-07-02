@@ -158,6 +158,11 @@ private:
 
 	//キー
 	bool m_isAttackKey = false;
+	bool m_isJumpKey = false;
+
+	//先行入力
+	static const int JUMPINPUTF = 4;
+	int m_jumpInputF = 0;
 	
 	//着地フラグ
 	bool m_isLanding = true;

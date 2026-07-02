@@ -7,6 +7,12 @@ enum class CompareResult
 	Greater = 1
 };
 
+struct RankTextData
+{
+	Math::Color m_color;
+	std::string m_text;
+};
+
 class ScoreManager
 {
 public:
@@ -36,7 +42,7 @@ public:
 
 	//ランク名
 	std::string RandRankText();
-	std::string GetRankText();
+	RankTextData GetRankText();
 
 private:
 

@@ -28,6 +28,9 @@ void Player::Update()
 		m_moveY -= GRAVITY;
 		if (m_moveY <= FALLSPEEDMAX)m_moveY = FALLSPEEDMAX;
 	}
+
+	//先行入力期限
+	if (m_jumpInputF > 0)m_jumpInputF--;
 	
 	//死んでいたら操作不可
 	if (!m_isDead)
@@ -44,8 +47,17 @@ void Player::Update()
 			if (m_pos.z < LINEPOSMIN)m_pos.z = LINEPOSMIN;
 		}
 
-		//ジャンプ
+		//ジャンプ（先行入力）
 		if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+		{
+			if (!m_isJumpKey)m_jumpInputF = JUMPINPUTF;
+
+			m_isJumpKey = true;
+		}
+		else m_isJumpKey = false;
+
+		//ジャンプ（本体）
+		if (m_jumpInputF > 0)
 		{
 			if (!m_isJump)
 			{
@@ -526,6 +538,11 @@ void Player::Respawn(Math::Vector3 a_pos)
 	m_isHitBlink = false;
 
 	m_stageScrollMulti = STAGESCROLLMAX;
+
+	//キーリセット
+	m_isJumpKey = false;
+	m_jumpInputF = 0;
+	m_isAttackKey = false;
 }
 
 void Player::Init()
