@@ -107,7 +107,7 @@ void EnemyBase::PostUpdate()
 	//Y座標が一定未満なら消去
 	if (m_pos.y < -8.0f)m_isExpired = true;
 	//影
-	m_isShadow = m_pos.y < SHADOWDRAWSTART ? true : false;
+	m_isShadow = m_pos.y < SHADOWDRAWSTART + m_shadowY ? true : false;
 
 	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(210.0f));
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);

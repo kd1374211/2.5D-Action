@@ -1,6 +1,7 @@
 ﻿#include "Framework/KdFramework.h"
 
 #include "KdWindow.h"
+#include "../../Resource/resource.h"
 
 // ImGui
 LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -24,8 +25,8 @@ bool KdWindow::Create(int clientWidth, int clientHeight, std::string_view titleN
 	wc.cbClsExtra = 0;										// エキストラクラス情報 
 	wc.cbWndExtra = 0;										// エキストラウィンドウ情報
 	wc.hInstance = hInst;									// インスタンスハンドル
-	wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);			// ラージアイコン
-	wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);		// スモールアイコン 
+	wc.hIcon = (HICON)LoadImage(wc.hInstance, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON), 0);			// ラージアイコン
+	wc.hIconSm = (HICON)LoadImage(wc.hInstance, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON), 0);		// スモールアイコン 
 	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);			// マウスカーソル
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);	// 背景色 
 	wc.lpszMenuName = nullptr;								// メインメニュー名

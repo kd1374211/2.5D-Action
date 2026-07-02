@@ -208,15 +208,19 @@ void StageSpawner::Update()
 					data = m_gimmicksData.find(Gimmicks::FlyEye)->second;
 					if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel)
 					{
-						float angleDeg = LOWEST->GetAngleDeg();
-						float linePos = rand() / (float)RAND_MAX * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
-						Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
-						std::shared_ptr<EnemyBase>enemy = CHARAMGR.SpawnEnemy(EnemyName_FlyEye, pos, angleDeg, linePos);
+						//次に出現する階段が空でないなら
+						if (m_stairVisibleLog_future.front())
+						{
+							float angleDeg = LOWEST->GetAngleDeg();
+							float linePos = rand() / (float)RAND_MAX * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
+							Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
+							std::shared_ptr<EnemyBase>enemy = CHARAMGR.SpawnEnemy(EnemyName_FlyEye, pos, angleDeg, linePos);
 
-						//ID結びつけ
-						m_enemyStairMap.emplace(enemy->GetEnemyID(), LOWEST->GetStairID());
+							//ID結びつけ
+							m_enemyStairMap.emplace(enemy->GetEnemyID(), LOWEST->GetStairID());
 
-						isEnemySpawn = true;
+							isEnemySpawn = true;
+						}
 					}
 
 					if (m_isSideSpearNext)

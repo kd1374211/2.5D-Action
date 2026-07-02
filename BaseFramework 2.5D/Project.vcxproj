@@ -352,6 +352,7 @@
     <ClInclude Include="Src\Framework\Shader\SpriteShader\KdSpriteShader.h" />
     <ClInclude Include="src\Framework\Utility\KdUtility.h" />
     <ClInclude Include="src\Framework\Window\KdWindow.h" />
+    <ClInclude Include="Src\Resource\resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Library\imgui\imgui.cpp" />
@@ -519,6 +520,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Src\Resource\resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Asset\Textures\Icon\TowerIcon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

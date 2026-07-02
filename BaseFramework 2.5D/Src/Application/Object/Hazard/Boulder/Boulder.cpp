@@ -50,7 +50,7 @@ void Boulder::PostUpdate()
 	//消滅
 	if (m_pos.y < -8.0f)m_isExpired = true;
 	//影
-	m_isShadow = m_pos.y < SHADOWDRAWSTART ? true : false;
+	m_isShadow = m_pos.y < SHADOWDRAWSTART + SPAWNPOS.y ? true : false;
 
 	Math::Matrix rotatZ = Math::Matrix::CreateRotationZ(DirectX::XMConvertToRadians(m_angleDegZ));
 	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_angleDeg));

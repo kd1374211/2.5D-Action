@@ -184,6 +184,9 @@
     <Filter Include="Src\Application\Object\Effect\Heal">
       <UniqueIdentifier>{6bd4ae1e-acbb-4597-bd73-61dc64a608bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Resource">
+      <UniqueIdentifier>{4a86dea4-1c20-4852-a2f0-8ed4389cce06}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -467,6 +470,9 @@
     </ClInclude>
     <ClInclude Include="Src\Application\Object\Effect\Heal\Heal.h">
       <Filter>Src\Application\Object\Effect\Heal</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Resource\resource.h">
+      <Filter>Src\Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -753,5 +759,13 @@
     <FxCompile Include="Src\Framework\Shader\StandardShader\KdStandardShader_VS_UnLit.hlsl">
       <Filter>Src\Framework\Shader\StandardShader</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Src\Resource\resource.rc">
+      <Filter>Src\Resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Asset\Textures\Icon\TowerIcon.ico" />
   </ItemGroup>
 </Project>

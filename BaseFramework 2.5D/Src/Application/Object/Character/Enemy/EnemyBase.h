@@ -47,4 +47,6 @@ protected:
 	//敵ID
 	int m_enemyID = 0;
 
+	float m_shadowY = 0.0f;
+
 };

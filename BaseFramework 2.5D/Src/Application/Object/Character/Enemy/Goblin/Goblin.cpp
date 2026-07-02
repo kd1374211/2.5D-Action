@@ -33,6 +33,7 @@ void Goblin::Init()
 	m_sphereHitOfs = SPHEREHITOFS;
 	m_pCollider = std::make_unique<KdCollider>();
 	m_pCollider->RegisterCollisionShape("Goblin", SPHEREHITOFS, 0.6f, KdCollider::TypeDamage);
+	m_shadowY = SPAWNPOS.y;
 }
 
 void Goblin::Release()
