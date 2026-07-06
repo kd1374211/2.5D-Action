@@ -39,7 +39,7 @@ void Slash::Init()
 	//ポリゴン
 	m_polygon = std::make_shared<KdSquarePolygon>();
 	m_polygon->SetMaterial("Asset/Textures/Effect/Slash.png");
-	m_polygon->SetSplit(8, 1);
+	m_polygon->SetSplit(9, 1);
 	
 	//当たり判定
 	m_pCollider = std::make_unique<KdCollider>();

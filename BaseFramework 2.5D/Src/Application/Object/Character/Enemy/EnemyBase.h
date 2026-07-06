@@ -22,6 +22,7 @@ public:
 	float GetAngleDeg()const { return m_angleDeg; }
 	float GetLinePos()const { return m_linePos; }
 	int GetEnemyID()const { return m_enemyID; }
+	Math::Vector3 GetHitOfsPos()const { return m_sphereHitOfs; }
 
 protected:
 

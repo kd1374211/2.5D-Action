@@ -6,6 +6,7 @@
 #include "../Object/Character/CharaManager.h"
 #include "../Score/ScoreManager.h"
 #include "../Object/Character/Enemy/EnemyBase.h"
+#include "../Object/Effect/SlashHit/SlashHit.h"
 
 //階段再出現用
 #define LOWEST m_stairs.front()
@@ -390,32 +391,32 @@ void StageSpawner::OnEnemyDead(int a_enemyID)
 	//クール減少
 	if (m_heartSpawnCool > 0)m_heartSpawnCool--;
 
-	//最初にロール
-	if (rand() % m_heartSpawnChance == 0 && m_heartSpawnCool <= 0)
+	//初期化
+	std::shared_ptr<EnemyBase> enemy = nullptr;
+	std::shared_ptr<Stair> stair = nullptr;
+
+	//対応検索
+	auto itr = m_enemyStairMap.find(a_enemyID);
+	if (itr != m_enemyStairMap.end())
 	{
-		//対応検索
-		auto itr = m_enemyStairMap.find(a_enemyID);
-		if (itr != m_enemyStairMap.end())
+		//敵サーチ
+		for (auto& objEnemy : CHARAMGR.GetEnemyList())
 		{
-			//初期化
-			std::shared_ptr<EnemyBase> enemy = nullptr;
-			std::shared_ptr<Stair> stair = nullptr;
+			if (objEnemy.expired())continue;
 
-			//敵サーチ
-			for (auto& objEnemy : CHARAMGR.GetEnemyList())
+			if (objEnemy.lock()->GetEnemyID() == a_enemyID)
 			{
-				if (objEnemy.expired())continue;
-
-				if (objEnemy.lock()->GetEnemyID() == a_enemyID)
-				{
-					//敵取得
-					enemy = objEnemy.lock();
-					break;
-				}
+				//敵取得
+				enemy = objEnemy.lock();
+				break;
 			}
+		}
 
-			//見つかったら
-			if (enemy != nullptr)
+		//見つかったら
+		if (enemy != nullptr)
+		{
+			//ハート出現ロール
+			if (rand() % m_heartSpawnChance == 0 && m_heartSpawnCool <= 0)
 			{
 				//N個先の階段を取得
 				int number = HEARTFLYMIN;
@@ -464,11 +465,14 @@ void StageSpawner::OnEnemyDead(int a_enemyID)
 					if (number >= HEARTFLYMAX)break;
 				}
 			}
+
+			//当たりエフェクト生成
+			SCENEMGR.AddObject(std::make_shared<SlashHit>(enemy));
 		}
 	}
 	
 	//次が出やすく
-	m_heartSpawnChance--;
+	m_heartSpawnChance--;	
 }
 
 void StageSpawner::DeleteEnemyMap(int a_enemyID)

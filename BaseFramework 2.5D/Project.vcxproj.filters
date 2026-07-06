@@ -187,6 +187,9 @@
     <Filter Include="Src\Resource">
       <UniqueIdentifier>{4a86dea4-1c20-4852-a2f0-8ed4389cce06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Object\Effect\SlashHit">
+      <UniqueIdentifier>{0e638b6a-7a17-4e4b-a098-72a2b4554147}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -474,6 +477,9 @@
     <ClInclude Include="Src\Resource\resource.h">
       <Filter>Src\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Object\Effect\SlashHit\SlashHit.h">
+      <Filter>Src\Application\Object\Effect\SlashHit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -706,6 +712,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Effect\Heal\Heal.cpp">
       <Filter>Src\Application\Object\Effect\Heal</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Effect\SlashHit\SlashHit.cpp">
+      <Filter>Src\Application\Object\Effect\SlashHit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -18,44 +18,38 @@ void GameScene::Event()
 	//ゲーム開始前
 	if (!SCENEMGR.GetGameStartFlg())
 	{
-		//加速
-		if (!m_isScrollMaxed)
+		//待機
+		if (m_countF_start < STARTF)m_countF_start++;
+
+		//フェードイン
+		if (m_countF_start >= FADEINF && !m_isFadeIn)
 		{
-			m_scrollSpeed += SCROLLSPEEDUP;
-			if (m_scrollSpeed >= SCROLLSPEEDMAX)
-			{
-				m_scrollSpeed = SCROLLSPEEDMAX;
-				m_isScrollMaxed = true;
+			//現在の高さ
+			AddObject(std::make_shared<HeightsNumber>());
 
-				//現在の高さ
-				AddObject(std::make_shared<HeightsNumber>());
+			//キルカウント
+			AddObject(std::make_shared<KillCount>());
 
-				//キルカウント
-				AddObject(std::make_shared<KillCount>());
+			//操作ガイド
+			AddObject(std::make_shared<KeyGuide>());
 
-				//操作ガイド
-				AddObject(std::make_shared<KeyGuide>());
+			//ハート
+			CHARAMGR.GetPlayer()->SetIsHeartTex(true);
 
-				//ハート
-				CHARAMGR.GetPlayer()->SetIsHeartTex(true);
-			}
+			m_isFadeIn = true;
 		}
-		else
+		else if (m_countF_start >= STARTF)
 		{
-			m_scrollSpeed += SCROLLSPEEDDOWN;
-			if (m_scrollSpeed <= 1.0f)
-			{
-				//サウンド再生
-				SOUNDMGR.Play(SoundName::BGM_Ingame);
+			//サウンド再生
+			SOUNDMGR.Play(SoundName::BGM_Ingame);
 
-				//フラグセット
-				SCENEMGR.SetGameStartFlg(true);
-				SCOREMGR.SetCountStart(true);
-			}
+			//フラグセット
+			SCENEMGR.SetGameStartFlg(true);
+			SCOREMGR.SetCountStart(true);
 		}
 
 		//セット
-		SCENEMGR.SetScrollSpeedMulti(m_scrollSpeed);
+		SCENEMGR.SetScrollSpeedMulti(1.0f);
 	}
 	else if (!m_wpPlayer.expired())
 	{
@@ -132,9 +126,6 @@ void GameScene::Init()
 
 	//ステージ
 	STAGESPAWNER.StartGame(this);
-
-	//スクロール速度取得
-	m_scrollSpeed = SCENEMGR.GetScrollSpeedMulti();
 
 	//スコアリセット
 	SCOREMGR.Reset();

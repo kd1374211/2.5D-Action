@@ -14,7 +14,7 @@ protected:
 
 	float m_animCnt = 0.0f;
 	bool m_isDead = false;
-
+	
 	//影対策
 	bool m_isShadow = false;
 

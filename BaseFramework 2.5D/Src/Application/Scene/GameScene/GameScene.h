@@ -23,12 +23,12 @@ private:
 	
 	bool m_isTransition = false;
 
-	//開始前加速
-	const float SCROLLSPEEDMAX = 4.0f;
-	const float SCROLLSPEEDUP = 0.05f;
-	const float SCROLLSPEEDDOWN = -0.2f;
+	//ゲーム開始カウンター
+	static const int FADEINF = 10;
+	static const int STARTF = 30;
+	int m_countF_start = 0;
 
-	bool m_isScrollMaxed = false;
-	float m_scrollSpeed = 1.0f;
-
+	//フラグたち
+	bool m_isFadeIn = false;
+	bool m_isGameStart = false;
 };

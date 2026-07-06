@@ -52,7 +52,6 @@ void TitleScene::Event()
 					SOUNDMGR.Stop(SoundName::BGM_Title);
 				}
 
-				m_scrollSpeed += SCROLLADD_AFTERSTART;
 				m_titleVolumeMulti -= BGMFADESPEED;
 				if (m_titleVolumeMulti < 0.0f)m_titleVolumeMulti = 0.0f;
 			}
@@ -68,7 +67,7 @@ void TitleScene::Event()
 	SOUNDMGR.VolumeChange(SoundName::BGM_Title, m_titleVolumeMulti);
 
 	//スクロール速度設定
-	SCENEMGR.SetScrollSpeedMulti(m_scrollSpeed);
+	SCENEMGR.SetScrollSpeedMulti(1.0f);
 }
 
 TitleScene::TitleScene(bool a_isFadeIn)
