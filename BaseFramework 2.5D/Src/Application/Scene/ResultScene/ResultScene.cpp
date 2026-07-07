@@ -3,6 +3,7 @@
 #include "../../Object/Character/CharaManager.h"
 #include "../SceneManager.h"
 #include "../../Object/Sprite/Scene/ResultWindow/ResultWindow.h"
+#include "../../Object/Sprite/Scene/ResultStars/ResultStars.h"
 #include "../../Sound/SoundManager.h"
 #include "../../Camera/CameraManager.h"
 
@@ -18,6 +19,11 @@ void ResultScene::Init()
 	std::shared_ptr<ResultWindow> window = std::make_shared<ResultWindow>();
 	m_wpResultWindow = window;
 	AddObject(window);
+
+	//その星部分
+	std::shared_ptr<ResultStars>star = std::make_shared<ResultStars>();
+	star->SetOwner(window);
+	AddObject(star);
 }
 
 void ResultScene::Event()

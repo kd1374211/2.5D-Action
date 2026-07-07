@@ -40,6 +40,10 @@ public:
 	//桁分解
 	int CalcDigit(int a_baseNumber, int retDigit);
 
+	//ランク
+	int GetKillsRank();
+	int GetHeightRank();
+
 	//ランク名
 	std::string RandRankText();
 	RankTextData GetRankText();

@@ -14,6 +14,7 @@ public:
 
 	//CountF追加
 	void SetCountF(int a_frame) { m_countF = a_frame; }
+	int GetCountF()const { return m_countF; }
 
 	//リザルト終了
 	void ResultEnd() { m_isResultEnd = true; }

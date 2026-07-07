@@ -40,6 +40,38 @@ int ScoreManager::CalcDigit(int a_baseNumber, int retDigit)
 	return a_baseNumber;
 }
 
+int ScoreManager::GetKillsRank()
+{
+	int i;
+	//ランク計算
+	for (i = 0; i < RANKS; i++)
+	{
+		//超えなかったらリターン
+		if (m_currentKill < m_rankTextData_First[i].m_rankTarget_Kills)
+		{
+			return i - 1;
+		}
+	}
+
+	return i - 1;
+}
+
+int ScoreManager::GetHeightRank()
+{
+	int i;
+	//ランク計算
+	for (i = 0; i < RANKS; i++)
+	{
+		//超えなかったらリターン
+		if (m_currentHeight < m_rankTextData_First[i].m_rankTarget_Height)
+		{
+			return i - 1;
+		}
+	}
+
+	return i - 1;
+}
+
 std::string ScoreManager::RandRankText()
 {
 	//ランダム(伝説は出ない)

@@ -190,6 +190,9 @@
     <Filter Include="Src\Application\Object\Effect\SlashHit">
       <UniqueIdentifier>{0e638b6a-7a17-4e4b-a098-72a2b4554147}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Object\Sprite\Scene\ResultStars">
+      <UniqueIdentifier>{e9a4c0f5-9479-46a6-a540-3285a42ca1c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -480,6 +483,9 @@
     <ClInclude Include="Src\Application\Object\Effect\SlashHit\SlashHit.h">
       <Filter>Src\Application\Object\Effect\SlashHit</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Object\Sprite\Scene\ResultStars\ResultStars.h">
+      <Filter>Src\Application\Object\Sprite\Scene\ResultStars</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -715,6 +721,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Effect\SlashHit\SlashHit.cpp">
       <Filter>Src\Application\Object\Effect\SlashHit</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Sprite\Scene\ResultStars\ResultStars.cpp">
+      <Filter>Src\Application\Object\Sprite\Scene\ResultStars</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
