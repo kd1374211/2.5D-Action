@@ -2,6 +2,7 @@
 #include "../../../Scene/SceneManager.h"
 #include "../../../Score/ScoreManager.h"
 #include "../../../StageSpawner/StageSpawner.h"
+#include "../../../Sound/SoundManager.h"
 
 void EnemyBase::HitCheck()
 {
@@ -172,6 +173,7 @@ void EnemyBase::OnHit()
 	m_isDissolve = true;
 	m_pCollider->SetEnableAll(false);
 	ChangeAnim(EnemyAnimType::Hit);
+	SOUNDMGR.Play(SoundName::SE_AttackHit);
 	STAGESPAWNER.OnEnemyDead(m_enemyID);
 }
 

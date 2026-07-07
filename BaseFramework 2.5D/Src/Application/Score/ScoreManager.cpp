@@ -62,13 +62,13 @@ RankTextData ScoreManager::GetRankText()
 	for (int i = 0; i < RANKS; i++)
 	{
 		//超えている間は増やす(それに上書きする)
-		if (m_currentHeight > m_rankTextData_First[i].m_rankTarget_Height)
+		if (m_currentHeight >= m_rankTextData_First[i].m_rankTarget_Height)
 		{
 			heightRank = i;
 		}
 
 		//超えている間は増やす(それに上書きする)
-		if (m_currentKill > m_rankTextData_First[i].m_rankTarget_Kills)
+		if (m_currentKill >= m_rankTextData_First[i].m_rankTarget_Kills)
 		{
 			killRank = i;
 		}
@@ -80,18 +80,18 @@ RankTextData ScoreManager::GetRankText()
 	if (heightRank > killRank)
 	{
 		compare = RankCompare::Height;
-		totalRank = heightRank;
 	}
 	else if (heightRank < killRank)
 	{
 		compare = RankCompare::Kills;
-		totalRank = killRank;
 	}
 	else
 	{
 		compare = RankCompare::Balance;
-		totalRank = heightRank;
 	}
+
+	//最終ランク=ランク加算/2
+	totalRank = (heightRank + killRank) / 2;
 
 	//ランクテキスト生成
 	std::string rankText = m_rankTextData_First[totalRank].m_rankName + m_rankTextData_Second[compare];

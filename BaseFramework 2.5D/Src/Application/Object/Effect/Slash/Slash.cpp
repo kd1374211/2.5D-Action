@@ -1,10 +1,11 @@
 ﻿#include "Slash.h"
 #include "../../Character/CharacterInclude.h"
 
-Slash::Slash(Math::Vector3 a_startPos, float a_angle)
+Slash::Slash(Math::Vector3 a_startPos,float a_linePos, float a_angle)
 {
 	Init();
 	m_pos = a_startPos;
+	m_linePos = a_linePos;
 	m_angleDeg = a_angle;
 
 	m_polygon->SetScale(1.2f);
@@ -22,6 +23,12 @@ void Slash::Update()
 	}
 
 	if (m_animCnt >= HITEND)m_pCollider->SetEnableAll(false);
+
+	//角度移動
+	m_angleDeg += DEGMOVE;
+
+	//合わせて位置移動
+	m_pos = { -sinf(DirectX::XMConvertToRadians(m_angleDeg)) * m_linePos,m_pos.y,-cosf(DirectX::XMConvertToRadians(m_angleDeg)) * m_linePos };
 
 	//マトリックス
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
@@ -43,7 +50,7 @@ void Slash::Init()
 	
 	//当たり判定
 	m_pCollider = std::make_unique<KdCollider>();
-	m_pCollider->RegisterCollisionShape("PlayerAttack", Math::Vector3::Zero, 0.4f, KdCollider::TypeDamage_Enemy);
+	m_pCollider->RegisterCollisionShape("PlayerAttack", Math::Vector3::Zero, 0.5f, KdCollider::TypeDamage_Enemy);
 }
 
 void Slash::Release()

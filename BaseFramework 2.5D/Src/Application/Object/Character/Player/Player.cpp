@@ -107,9 +107,10 @@ void Player::Update()
 			//攻撃発生
 			if (m_attackF == ATTACKSPAWNF)
 			{
-				float angle = -8.0f;
-				Math::Vector3 attackSpawnPos = { -sinf(DirectX::XMConvertToRadians(angle)) * GetLinePos(),m_pos.y + 0.4f,-cosf(DirectX::XMConvertToRadians(angle)) * GetLinePos() };
-				SCENEMGR.AddObject(std::make_shared<Slash>(attackSpawnPos, angle));
+				float angle = -7.0f;
+				Math::Vector3 attackSpawnPos = { -sinf(DirectX::XMConvertToRadians(angle)) * GetLinePos(),m_pos.y + 0.5f,-cosf(DirectX::XMConvertToRadians(angle)) * GetLinePos() };
+				float linePos = GetLinePos();
+				SCENEMGR.AddObject(std::make_shared<Slash>(attackSpawnPos, linePos, angle));
 
 				m_isAttack = false;
 			}

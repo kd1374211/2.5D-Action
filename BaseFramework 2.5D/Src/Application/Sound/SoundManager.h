@@ -15,6 +15,7 @@ enum class SoundName
 	SE_Jump,
 	SE_Landing,
 	SE_Attack,
+	SE_AttackHit,
 	SE_Hit,
 	SE_LowHP,
 	SE_Heal,
