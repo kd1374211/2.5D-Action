@@ -32,6 +32,7 @@ private:
 	{
 		Height,
 		Kill,
+		Gold,
 		Empty
 	};
 

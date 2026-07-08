@@ -62,6 +62,9 @@ void ResultStars::DrawSprite()
 			else if (i < m_heightRank + m_killRank)type = StarColorType::Kill;
 			else type = StarColorType::Empty;
 
+			//パーフェクト
+			if (m_heightRank + m_killRank == 10)type = StarColorType::Gold;
+
 			Math::Rectangle rec = Math::Rectangle((long)(TEXBASESIZE.x * type), 0, (long)TEXBASESIZE.x, (long)TEXBASESIZE.y);
 			Math::Vector2 drawPos = ownerPos + STARDRAWSTARTPOS[(int)StarIndex::Total] + Math::Vector2(TEXBASESIZE.x * i, 0);
 			KdShaderManager::Instance().m_spriteShader.DrawTex(m_tex, drawPos.x, drawPos.y, TEXBASESIZE.x, TEXBASESIZE.y, &rec);
