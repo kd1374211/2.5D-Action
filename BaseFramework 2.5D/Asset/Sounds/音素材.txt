@@ -1,0 +1,25 @@
+・BGM
+
+Title
+https://dova-s.jp/bgm/detail/9200
+
+Ingame
+https://peritune.com/blog/2018/11/27/rapid4/
+
+Result
+https://dova-s.jp/bgm/detail/23286
+
+・SE
+https://soundeffect-lab.info/
+
+Attack 剣の素振り２
+AttackHit 剣で斬る２
+Falling ヒューンと落下
+Heal 回復魔法１
+Hit 中パンチ
+Jump 高速移動
+Landing ジャンプの着地
+LowHealth 警告音２
+Roll ドラムロール
+RollEnd ジャン！
+Start 剣で打ち合う２
