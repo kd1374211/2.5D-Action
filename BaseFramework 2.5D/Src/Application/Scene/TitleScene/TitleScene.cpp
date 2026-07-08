@@ -80,7 +80,6 @@ TitleScene::TitleScene(bool a_isFadeIn)
 void TitleScene::Init()
 {
 	m_camera = std::make_shared<KdCamera>();
-	m_camera->SetProjectionMatrix(80);
 
 	//タイトル画像関連
 	std::shared_ptr<TitleObject> titleObj = std::make_shared<TitleObject>(m_isFadeIn);
@@ -102,6 +101,7 @@ void TitleScene::Init()
 	//カメラ
 	CameraBaseData data = CAMERAMGR.GetCameraData();
 
+	m_camera->SetProjectionMatrix(data.m_viewAngle);
 	Math::Matrix trans = Math::Matrix::CreateTranslation(data.m_cameraPos);
 	Math::Matrix rotatX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(data.m_cameraDeg.x));
 	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(data.m_cameraDeg.y));

@@ -3,6 +3,7 @@
 #include "../../../Score/ScoreManager.h"
 #include "../../../StageSpawner/StageSpawner.h"
 #include "../../../Sound/SoundManager.h"
+#include "../../../Camera/CameraManager.h"
 
 void EnemyBase::HitCheck()
 {
@@ -175,6 +176,8 @@ void EnemyBase::OnHit()
 	ChangeAnim(EnemyAnimType::Hit);
 	SOUNDMGR.Play(SoundName::SE_AttackHit);
 	STAGESPAWNER.OnEnemyDead(m_enemyID);
+	//スクリーンシェイク
+	CAMERAMGR.SetCameraShakeFlg(true);
 }
 
 void EnemyBase::Release()

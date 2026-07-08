@@ -10,7 +10,7 @@
 void ResultScene::Init()
 {
 	m_camera = std::make_shared<KdCamera>();
-	m_camera->SetProjectionMatrix(80);
+	m_camera->SetProjectionMatrix(CAMERAMGR.GetCameraData().m_viewAngle);
 
 	//地形生成
 	STAGESPAWNER.StartGame(this);

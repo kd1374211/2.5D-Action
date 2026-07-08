@@ -10,6 +10,23 @@ void CameraManager::Init()
 	m_cameraData.m_viewAngle = 80;
 }
 
+void CameraManager::SetCameraShakeFlg(bool a_flg)
+{
+	m_isCameraShake = a_flg;
+	m_countF_shake = 0;
+}
+
+void CameraManager::UpdateScreenShake()
+{
+	m_localCameraPos = Math::Vector3::Zero;
+	if (!m_isCameraShake)return;
+
+	if (m_countF_shake < CAMERASHAKEF)m_localCameraPos = CAMERASHAKEPOS[m_countF_shake];
+
+	m_countF_shake++;
+	if (m_countF_shake >= CAMERASHAKEF)m_isCameraShake = false;
+}
+
 void CameraManager::PreDraw(std::shared_ptr<KdCamera>& a_cameraData)
 {
 	// 手順①

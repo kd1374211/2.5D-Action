@@ -15,6 +15,9 @@ void GameScene::Event()
 	//ステージ更新
 	STAGESPAWNER.Update();
 
+	//カメラシェイク
+	CAMERAMGR.UpdateScreenShake();
+
 	//ゲーム開始前
 	if (!SCENEMGR.GetGameStartFlg())
 	{
@@ -82,6 +85,9 @@ void GameScene::Event()
 
 					//ゲーム開始フラグ停止
 					SCENEMGR.SetGameStartFlg(false);
+
+					//スクリーンシェイク停止
+					CAMERAMGR.SetCameraShakeFlg(false);
 				}
 			}
 		}
@@ -89,9 +95,10 @@ void GameScene::Event()
 
 	//データ回収
 	CameraBaseData data = CAMERAMGR.GetCameraData();
+	Math::Vector3 localPos = CAMERAMGR.GetLocalCameraPos();
 
 	m_camera->SetProjectionMatrix(data.m_viewAngle);
-	Math::Matrix trans = Math::Matrix::CreateTranslation(data.m_cameraPos);
+	Math::Matrix trans = Math::Matrix::CreateTranslation(data.m_cameraPos + localPos);
 	Math::Matrix rotatX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(data.m_cameraDeg.x));
 	Math::Matrix rotatY = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(data.m_cameraDeg.y));
 	Math::Matrix mat = rotatY * rotatX * trans;
