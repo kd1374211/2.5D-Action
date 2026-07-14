@@ -47,12 +47,13 @@ void KillCount::PreDraw()
 void KillCount::DrawSprite()
 {
 	Math::Rectangle rec;
+	//色
 	Math::Color color = Math::Color(1.0f, 1.0f, 1.0f, m_alpha);
-
+	
 	//アイコン
 	rec = Math::Rectangle(0, 0, (long)BASEICONSIZE, (long)BASEICONSIZE);
 	KdShaderManager::Instance().m_spriteShader.DrawTex(m_iconTex, 350.0f, 320.0f, ICONSIZE, ICONSIZE, &rec, &color);
-
+	
 	//数字
 	//次の高さで変わる数字を取得
 	for (int i = SCOREMGR.DIGITS_KILLS; i > 0; i--)
