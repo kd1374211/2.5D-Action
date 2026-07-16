@@ -9,6 +9,7 @@ public:
 	~FlyEye()override { Release(); }
 
 	void Update()override;
+	void HitCheck()override;
 	
 private:
 
@@ -18,7 +19,26 @@ private:
 	//球判定Pos
 	const Math::Vector3 SPHEREHITOFS = Math::Vector3::Zero;
 
+	//岩避け判定の角度差
+	const float DEGDIFF_ROLLOBJHIT = -10.0f;
+
+	//降りチェック
+	const float POSDIFFY_FALLCHECK = -1.5f;
+
+	//岩避けモード
+	bool m_isEvadeMode = false;
+	bool m_isRiseEnd = false;
+	bool m_isFallStart = false;
+
+	static const int RISEF = 30;
+	static const int WAITF = 10;
+	static const int FALLF = 30;
+	const float FLYPOWER = 0.05f;
+
+	int m_countF_evade = 0;
+
 	void Init()override;
 	void Release();
+	void OnHit()override;
 
 };

@@ -1,5 +1,22 @@
 ﻿#include "KillCount.h"
 
+void KillCount::PostUpdate()
+{
+	//星の数更新
+	if (m_currentStar < SCOREMGR.GetKillsRank())
+	{
+		m_currentStar++;
+		m_starSize.push_back(0.0f);
+	}
+
+	//星のサイズ更新
+	for (auto& star : m_starSize)
+	{
+		if (star < STARSIZEMAX)star += STARSIZEADD;
+		if (star >= STARSIZEMAX)star = STARSIZEMAX;
+	}
+}
+
 void KillCount::PreDraw()
 {
 	//アルファ更新
@@ -81,7 +98,22 @@ void KillCount::DrawSprite()
 		}
 
 		KdShaderManager::Instance().m_spriteShader.SetMatrix(Math::Matrix::Identity);
-		KdShaderManager::Instance().m_spriteShader.DrawTex(m_numTex, 635 - i * NUMSIZE, 320, NUMSIZE, NUMSIZE, &rec, &color);
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_numTex, 635.0f - i * NUMSIZE, 320.0f, NUMSIZE, NUMSIZE, &rec, &color);
+	}
+
+	//星
+	Math::Vector2 drawPos = STARDRAWCENTERPOS - Math::Vector2(STARBASESIZE.x * (m_currentStar - 1) / 2.0f, 0.0f);
+	rec = Math::Rectangle(0, 0, (long)STARBASESIZE.x, (long)STARBASESIZE.y);
+	for (auto& star : m_starSize)
+	{
+		//サイズ
+		Math::Vector2 drawSize = STARBASESIZE * star;
+
+		//描画
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_starTex, drawPos.x, drawPos.y, drawSize.x, drawSize.y, &rec);
+
+		//位置更新
+		drawPos.x += STARBASESIZE.x;
 	}
 }
 
@@ -92,6 +124,9 @@ void KillCount::Init()
 
 	m_iconTex = std::make_shared<KdTexture>();
 	m_iconTex->Load("Asset/Textures/Scene/Game/KillsIcon.png");
+
+	m_starTex = std::make_shared<KdTexture>();
+	m_starTex->Load("Asset/Textures/Scene/Game/KillStar.png");
 }
 
 void KillCount::Release()

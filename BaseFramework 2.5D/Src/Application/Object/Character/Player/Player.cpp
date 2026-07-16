@@ -3,6 +3,7 @@
 #include "../../Effect/Slash/Slash.h"
 #include "../../../Sound/SoundManager.h"
 #include "../../Effect/Heal/Heal.h"
+#include "../../../HeartCharge/HeartCharge.h"
 
 Player::Player()
 {
@@ -48,7 +49,7 @@ void Player::Update()
 		}
 
 		//ジャンプ（先行入力）
-		if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+		if (GetAsyncKeyState('X') & 0x8000)
 		{
 			if (!m_isJumpKey)m_jumpInputF = JUMPINPUTF;
 
@@ -666,6 +667,9 @@ void Player::OnDamage()
 	//効果音
 	SOUNDMGR.Play(SoundName::SE_Hit);
 	if (m_health == 1)SOUNDMGR.Play(SoundName::SE_LowHP);
+
+	//チャージ減少
+	HEARTCHARGE.OnPlayerHit();
 
 	//被弾後無敵
 	m_isInvinsible = true;

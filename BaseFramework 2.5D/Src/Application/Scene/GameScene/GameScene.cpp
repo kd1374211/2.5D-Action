@@ -9,9 +9,14 @@
 #include "../../Sound/SoundManager.h"
 #include "../../Camera/CameraManager.h"
 #include "../../Object/Sprite/Scene/KeyGuide/KeyGuide.h"
+#include "../../Object/Sprite/Scene/HeartChargeBar/HeartChargeBar.h"
+#include "../../HeartCharge/HeartCharge.h"
 
 void GameScene::Event()
 {
+	//ハートチャージ更新
+	HEARTCHARGE.Update();
+
 	//ステージ更新
 	STAGESPAWNER.Update();
 
@@ -38,6 +43,9 @@ void GameScene::Event()
 
 			//ハート
 			CHARAMGR.GetPlayer()->SetIsHeartTex(true);
+
+			//ハートチャージ
+			AddObject(std::make_shared<HeartChargeBar>());
 
 			m_isFadeIn = true;
 		}
@@ -93,6 +101,10 @@ void GameScene::Event()
 		}
 	}
 
+	//デバッグ
+	if (GetAsyncKeyState('1') & 0x8000)SCOREMGR.AddHeight(10.0f);
+	if (GetAsyncKeyState('2') & 0x8000)SCOREMGR.AddKillCount();
+
 	//データ回収
 	CameraBaseData data = CAMERAMGR.GetCameraData();
 	Math::Vector3 localPos = CAMERAMGR.GetLocalCameraPos();
@@ -136,4 +148,7 @@ void GameScene::Init()
 
 	//スコアリセット
 	SCOREMGR.Reset();
+
+	//チャージリセット
+	HEARTCHARGE.Reset();
 }

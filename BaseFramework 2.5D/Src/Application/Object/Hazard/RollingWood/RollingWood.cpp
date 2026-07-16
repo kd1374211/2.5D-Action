@@ -74,7 +74,7 @@ void RollingWood::Init()
 	m_model->Load("Asset/Models/RollingWood/RollingWood.gltf");
 
 	m_pCollider = std::make_unique<KdCollider>();
-	m_pCollider->RegisterCollisionShape("Wood", m_model, KdCollider::Type::TypeDamage);
+	m_pCollider->RegisterCollisionShape("Wood", m_model, KdCollider::Type::TypeDamage | KdCollider::Type::TypeRollingObj);
 }
 
 void RollingWood::Release()

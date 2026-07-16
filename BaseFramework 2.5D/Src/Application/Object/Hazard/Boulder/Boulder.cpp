@@ -77,7 +77,7 @@ void Boulder::Init()
 	m_model->Load("Asset/Models/Boulder/Boulder.gltf");
 
 	m_pCollider = std::make_unique<KdCollider>();
-	m_pCollider->RegisterCollisionShape("Boulder", m_model, KdCollider::Type::TypeDamage + KdCollider::Type::TypeHide);
+	m_pCollider->RegisterCollisionShape("Boulder", m_model, KdCollider::Type::TypeDamage | KdCollider::Type::TypeHide | KdCollider::Type::TypeRollingObj);
 }
 
 void Boulder::Release()

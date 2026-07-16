@@ -7,6 +7,7 @@
 #include "../Score/ScoreManager.h"
 #include "../Object/Character/Enemy/EnemyBase.h"
 #include "../Object/Effect/SlashHit/SlashHit.h"
+#include "../HeartCharge/HeartCharge.h"
 
 //階段再出現用
 #define LOWEST m_stairs.front()
@@ -43,9 +44,6 @@ void StageSpawner::ResetStage()
 	m_stairSpawnFlg = true;
 	m_noSpawnStairCnt = 0;
 	m_level = 0;
-	m_heartSpawnCnt = 0;
-	m_heartSpawnChance = HEARTSPAWNCHANCESTART;
-	m_heartSpawnCool = 0;
 	m_woodCool = 0;
 }
 
@@ -388,9 +386,6 @@ void StageSpawner::AddFutureStairVisibleLog(bool a_isVisible)
 
 void StageSpawner::OnEnemyDead(int a_enemyID)
 {
-	//クール減少
-	if (m_heartSpawnCool > 0)m_heartSpawnCool--;
-
 	//初期化
 	std::shared_ptr<EnemyBase> enemy = nullptr;
 	std::shared_ptr<Stair> stair = nullptr;
@@ -415,8 +410,8 @@ void StageSpawner::OnEnemyDead(int a_enemyID)
 		//見つかったら
 		if (enemy != nullptr)
 		{
-			//ハート出現ロール
-			if (rand() % m_heartSpawnChance == 0 && m_heartSpawnCool <= 0)
+			//ハート出現チェック
+			if (HEARTCHARGE.CheckHeartSpawn())
 			{
 				//N個先の階段を取得
 				int number = HEARTFLYMIN;
@@ -451,13 +446,7 @@ void StageSpawner::OnEnemyDead(int a_enemyID)
 						//敵の位置からハートを召喚
 						SCENEMGR.AddObject(std::make_shared<Heart>(enemy->GetPos(), enemy->GetAngleDeg(), enemy->GetLinePos(), linePos, number));
 
-						//ハートの召喚数追加
-						m_heartSpawnCnt++;
-						//その10倍の確率を追加
-						m_heartSpawnChance += HEARTSPAWNCHANCEADD * m_heartSpawnCnt;
-						//追加後の確率の4割をクールに設定
-						m_heartSpawnCool = m_heartSpawnChance * HEARTSPAWNCOOLMULTI;
-
+						//スキップ
 						break;
 					}
 
@@ -470,9 +459,6 @@ void StageSpawner::OnEnemyDead(int a_enemyID)
 			SCENEMGR.AddObject(std::make_shared<SlashHit>(enemy));
 		}
 	}
-	
-	//次が出やすく
-	m_heartSpawnChance--;	
 }
 
 void StageSpawner::DeleteEnemyMap(int a_enemyID)

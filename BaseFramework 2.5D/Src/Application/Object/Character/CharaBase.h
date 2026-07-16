@@ -12,6 +12,11 @@ public:
 
 protected:
 
+	//重力
+	const float GRAVITY = 0.01f;
+	const float FALLSPEEDMAX = -0.4f;
+	float m_moveY = 0.0f;
+
 	float m_animCnt = 0.0f;
 	bool m_isDead = false;
 	

@@ -8,6 +8,7 @@ public:
 	KillCount() { Init(); }
 	~KillCount()override { Release(); }
 
+	void PostUpdate()override;
 	void PreDraw()override;
 	void DrawSprite()override;
 
@@ -35,4 +36,15 @@ private:
 
 	std::shared_ptr<KdTexture> m_iconTex = nullptr;
 	std::shared_ptr<KdTexture> m_numTex = nullptr;
+
+	//星
+	const Math::Vector2 STARDRAWCENTERPOS = Math::Vector2(480.0f, 275.0f);
+	const Math::Vector2 STARBASESIZE = Math::Vector2(24.0f, 20.0f);
+
+	const float STARSIZEADD = 0.1f;
+	const float STARSIZEMAX = 1.0f;
+
+	int m_currentStar = 0;
+	std::list<float> m_starSize;
+	std::shared_ptr<KdTexture> m_starTex = nullptr;
 };

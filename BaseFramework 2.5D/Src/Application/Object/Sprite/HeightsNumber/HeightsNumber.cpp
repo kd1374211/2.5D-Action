@@ -26,6 +26,20 @@ void HeightsNumber::PostUpdate()
 
 	float scrollBack = SCENEMGR.GetScrollBack();
 	SCOREMGR.AddHeight(-scrollBack * 0.05f);
+
+	//星の数更新
+	if (m_currentStar < SCOREMGR.GetHeightRank())
+	{
+		m_currentStar++;
+		m_starSize.push_back(0.0f);
+	}
+
+	//星のサイズ更新
+	for (auto& star : m_starSize)
+	{
+		if (star < STARSIZEMAX)star += STARSIZEADD;
+		if (star >= STARSIZEMAX)star = STARSIZEMAX;
+	}
 }
 
 void HeightsNumber::PreDraw()
@@ -118,6 +132,21 @@ void HeightsNumber::DrawSprite()
 	//m
 	rec = Math::Rectangle(0, 0, (long)BASENUMSIZE, (long)BASENUMSIZE);
 	KdShaderManager::Instance().m_spriteShader.DrawTex(m_meterTex, 192.0f, 320.0f, NUMSIZE, NUMSIZE, &rec, &color);
+
+	//星
+	Math::Vector2 drawPos = STARDRAWCENTERPOS - Math::Vector2(STARBASESIZE.x * (m_currentStar - 1) / 2.0f, 0.0f);
+	rec = Math::Rectangle(0, 0, (long)STARBASESIZE.x, (long)STARBASESIZE.y);
+	for (auto& star : m_starSize)
+	{
+		//サイズ
+		Math::Vector2 drawSize = STARBASESIZE * star;
+
+		//描画
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_starTex, drawPos.x, drawPos.y, drawSize.x, drawSize.y, &rec);
+
+		//位置更新
+		drawPos.x += STARBASESIZE.x;
+	}
 }
 
 void HeightsNumber::Init()
@@ -130,6 +159,9 @@ void HeightsNumber::Init()
 
 	m_meterTex = std::make_shared<KdTexture>();
 	m_meterTex->Load("Asset/Textures/Scene/Game/Meter.png");
+
+	m_starTex = std::make_shared<KdTexture>();
+	m_starTex->Load("Asset/Textures/Scene/Game/HeightStar.png");
 }
 
 void HeightsNumber::Release()

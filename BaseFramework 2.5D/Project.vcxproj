@@ -283,6 +283,7 @@
     <ClInclude Include="Src\Application\Const\StageConst.h" />
     <ClInclude Include="Src\Application\Fonts\FontsManager.h" />
     <ClInclude Include="Src\Application\Fonts\FontsManagerConst.h" />
+    <ClInclude Include="Src\Application\HeartCharge\HeartCharge.h" />
     <ClInclude Include="Src\Application\main.h" />
     <ClInclude Include="Src\Application\Object\Character\CharaBase.h" />
     <ClInclude Include="Src\Application\Object\Character\CharacterInclude.h" />
@@ -302,6 +303,7 @@
     <ClInclude Include="Src\Application\Object\Items\Heart\Heart.h" />
     <ClInclude Include="Src\Application\Object\Sprite\HeightsNumber\HeightsNumber.h" />
     <ClInclude Include="Src\Application\Object\Sprite\KillCount\KillCount.h" />
+    <ClInclude Include="Src\Application\Object\Sprite\Scene\HeartChargeBar\HeartChargeBar.h" />
     <ClInclude Include="Src\Application\Object\Sprite\Scene\KeyGuide\KeyGuide.h" />
     <ClInclude Include="Src\Application\Object\Sprite\Scene\ResultStars\ResultStars.h" />
     <ClInclude Include="Src\Application\Object\Sprite\Scene\ResultWindow\ResultWindow.h" />
@@ -372,6 +374,7 @@
     <ClCompile Include="..\Library\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Src\Application\Camera\CameraManager.cpp" />
     <ClCompile Include="Src\Application\Fonts\FontsManager.cpp" />
+    <ClCompile Include="Src\Application\HeartCharge\HeartCharge.cpp" />
     <ClCompile Include="Src\Application\main.cpp" />
     <ClCompile Include="Src\Application\Object\Character\CharaBase.cpp" />
     <ClCompile Include="Src\Application\Object\Character\CharaManager.cpp" />
@@ -389,6 +392,7 @@
     <ClCompile Include="Src\Application\Object\Items\Heart\Heart.cpp" />
     <ClCompile Include="Src\Application\Object\Sprite\HeightsNumber\HeightsNumber.cpp" />
     <ClCompile Include="Src\Application\Object\Sprite\KillCount\KillCount.cpp" />
+    <ClCompile Include="Src\Application\Object\Sprite\Scene\HeartChargeBar\HeartChargeBar.cpp" />
     <ClCompile Include="Src\Application\Object\Sprite\Scene\KeyGuide\KeyGuide.cpp" />
     <ClCompile Include="Src\Application\Object\Sprite\Scene\ResultStars\ResultStars.cpp" />
     <ClCompile Include="Src\Application\Object\Sprite\Scene\ResultWindow\ResultWindow.cpp" />

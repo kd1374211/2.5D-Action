@@ -9,9 +9,9 @@ public:
 	~EnemyBase()override { Release(); }
 
 	virtual void HitCheck()override;
-	void PostUpdate()override;
+	virtual void PostUpdate()override;
 	void PreDraw()override;
-	void DrawLit()override;
+	virtual void DrawLit()override;
 	void GenerateDepthMapFromLight()override;
 
 	//セッター
@@ -28,12 +28,19 @@ protected:
 
 	void ChangeAnim(EnemyAnimType a_anim);
 	void UpdateAnim();
-	void OnHit();
+	virtual void OnHit();
 	void Release();
 
-	//デゾルブ消滅
-	const float DISSOLVEADD = 0.05f;
+	//撃破時増加ハートチャージ量
+	const float HEARTCHARGEADD = 15.0f;
 
+	//デゾルブ消滅
+	const float DISSOLVEADD = 0.1f;
+	static const int DISSOLVESTART = 25;
+	const float SPEEDMULTIADD_DEAD = -1.75f;
+	const float JUMPPOWER_DEAD = 0.14f;
+
+	int m_countF_dissolveStart = 0;
 	bool m_isDissolve = false;
 	float m_dissolvePow = 0.0f;
 
@@ -49,5 +56,4 @@ protected:
 	int m_enemyID = 0;
 
 	float m_shadowY = 0.0f;
-
 };

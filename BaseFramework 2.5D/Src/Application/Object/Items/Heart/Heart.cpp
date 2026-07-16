@@ -146,7 +146,7 @@ void Heart::Init()
 {
 	//ポリゴン
 	m_polygon = std::make_shared<KdSquarePolygon>();
-	m_polygon->SetMaterial("Asset/Textures/Items/Heart.png");
+	m_polygon->SetMaterial("Asset/Textures/Heart/Heart.png");
 	m_polygon->SetSplit(12, 1);
 	m_polygon->SetPivot(KdSquarePolygon::PivotType::Center_Bottom);
 

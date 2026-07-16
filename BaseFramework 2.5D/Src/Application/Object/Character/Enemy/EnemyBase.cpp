@@ -4,6 +4,7 @@
 #include "../../../StageSpawner/StageSpawner.h"
 #include "../../../Sound/SoundManager.h"
 #include "../../../Camera/CameraManager.h"
+#include "../../../HeartCharge/HeartCharge.h"
 
 void EnemyBase::HitCheck()
 {
@@ -23,7 +24,7 @@ void EnemyBase::HitCheck()
 	//レイの発射方向を設定
 	ray.m_dir = { 0,-1.0f,0 };
 	//レイの長さを設定
-	ray.m_range = enableStepHigh;
+	ray.m_range = enableStepHigh - m_moveY;
 	//当たり判定をしたいタイプを設定
 	ray.m_type = KdCollider::TypeGround;
 
@@ -57,6 +58,7 @@ void EnemyBase::HitCheck()
 	if (isHit)
 	{
 		m_pos = hitPos;
+		m_moveY = 0.0f;
 	}
 
 	//死んでいたら判定スキップ
@@ -169,13 +171,29 @@ void EnemyBase::UpdateAnim()
 
 void EnemyBase::OnHit()
 {
+	//撃破数増加
 	SCOREMGR.AddKillCount();
+
+	//フラグ関係
 	m_isDead = true;
-	m_isDissolve = true;
+	m_countF_dissolveStart = DISSOLVESTART;
+	m_moveY = JUMPPOWER_DEAD;
+
+	//判定消滅
 	m_pCollider->SetEnableAll(false);
+
+	//アニメーション
 	ChangeAnim(EnemyAnimType::Hit);
+
+	//撃破音
 	SOUNDMGR.Play(SoundName::SE_AttackHit);
+
+	//ハートチャージ更新
+	HEARTCHARGE.AddCharge(HEARTCHARGEADD);
+
+	//ハートとエフェクト
 	STAGESPAWNER.OnEnemyDead(m_enemyID);
+
 	//スクリーンシェイク
 	CAMERAMGR.SetCameraShakeFlg(true);
 }

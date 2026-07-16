@@ -79,14 +79,11 @@ private:
 	const float SPHEREHITSIZEMULTI = -0.04f;
 
 	//落下
-	const float GRAVITY = 0.01f;
-	const float FALLSPEEDMAX = -0.4f;
 	const float JUMPPOWER = 0.15f;
 	const float HITJUMP = 0.08f;
 	const float HITJUMP_DEAD = 0.16f;
 	
 	//基礎
-	float m_moveY = 0.0f;
 	bool m_isJump = false;
 	bool m_isAttack = false;
 	int m_attackF = 0;
