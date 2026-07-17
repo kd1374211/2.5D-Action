@@ -1,7 +1,7 @@
-﻿#include "Goblin.h"
+﻿#include "Ghost.h"
 #include "../../../../Scene/SceneManager.h"
 
-Goblin::Goblin(Math::Vector3 a_baseStartPos, float a_startDeg, float a_linePos)
+Ghost::Ghost(Math::Vector3 a_baseStartPos, float a_startDeg, float a_linePos)
 {
 	Init();
 	m_pos = a_baseStartPos + SPAWNPOS;
@@ -9,25 +9,29 @@ Goblin::Goblin(Math::Vector3 a_baseStartPos, float a_startDeg, float a_linePos)
 	m_linePos = a_linePos;
 }
 
-void Goblin::Update()
+void Ghost::Update()
 {
 	float speedMulti = SCENEMGR.GetScrollSpeedMulti();
 
 	//重力更新
 	if (m_moveY > FALLSPEEDMAX)
 	{
-		m_moveY -= GRAVITY;
+		//上重力にもする
+		float gravity = GRAVITY;
+		if (m_mode == VisibleMode::ToInvisible_OnDead)gravity = -gravity;
+
+		m_moveY -= gravity;
 		if (m_moveY <= FALLSPEEDMAX)m_moveY = FALLSPEEDMAX;
 	}
 
-	//死んでいたらデゾルブ
+	//死んでいたらデゾルブ（の代わりに透明化）
 	if (m_isDead)
 	{
-		m_countF_dissolveStart--;
-		if (m_countF_dissolveStart <= 0)m_isDissolve = true;
+		m_countF_fadeStart--;
+		if (m_countF_fadeStart <= 0)m_mode = VisibleMode::ToInvisible_OnDead;
 	}
 
-	//透明解除
+	//透明更新
 	UpdateAlpha();
 
 	//角度更新
@@ -49,7 +53,7 @@ void Goblin::Update()
 	m_mWorld = trans;
 }
 
-void Goblin::HitCheck()
+void Ghost::HitCheck()
 {
 	//死んでいたらスキップ
 	if (!m_isDead && m_isVisibleStart)
@@ -93,7 +97,7 @@ void Goblin::HitCheck()
 	EnemyBase::HitCheck();
 }
 
-void Goblin::PostUpdate()
+void Ghost::PostUpdate()
 {
 	//本体呼ぶ
 	EnemyBase::PostUpdate();
@@ -106,15 +110,13 @@ void Goblin::PostUpdate()
 	}
 }
 
-void Goblin::DrawLit()
+void Ghost::DrawLit()
 {
-	KdShaderManager::Instance().m_StandardShader.SetDissolve(m_dissolvePow);
 	Math::Color color = Math::Color(1.0f, 1.0f, 1.0f, m_alpha);
 	KdShaderManager::Instance().m_StandardShader.DrawPolygon(*m_polygons->find(m_nowAnim)->second.m_polygon, m_mWorld, color);
-	KdShaderManager::Instance().m_StandardShader.SetDissolve(0);
 }
 
-void Goblin::GenerateDepthMapFromLight()
+void Ghost::GenerateDepthMapFromLight()
 {
 	if (m_isVisible)
 	{
@@ -123,18 +125,18 @@ void Goblin::GenerateDepthMapFromLight()
 	}
 }
 
-void Goblin::Init()
+void Ghost::Init()
 {
 	m_sphereHitOfs = SPHEREHITOFS;
 	m_pCollider = std::make_unique<KdCollider>();
-	m_pCollider->RegisterCollisionShape("Goblin", SPHEREHITOFS, 0.6f, KdCollider::TypeDamage);
+	m_pCollider->RegisterCollisionShape("Ghost", SPHEREHITOFS, 0.6f, KdCollider::TypeDamage);
 	m_shadowY = SPAWNPOS.y;
 }
 
-void Goblin::Release()
+void Ghost::Release()
 {}
 
-void Goblin::UpdateAlpha()
+void Ghost::UpdateAlpha()
 {
 	switch (m_mode)
 	{
@@ -160,6 +162,17 @@ void Goblin::UpdateAlpha()
 			}
 		}
 		break;
+	case VisibleMode::ToInvisible_OnDead:
+		if (m_alpha >= 0.0f)
+		{
+			m_alpha -= ALPHACHANGE_DEAD;
+			if (m_alpha <= 0.0f)
+			{
+				m_alpha = 0.0f;
+				m_isExpired = true;
+			}
+		}
+		break;
 	}
 
 	if (m_alpha <= INVISIBLEALPHA)m_isVisible = false;
@@ -169,8 +182,14 @@ void Goblin::UpdateAlpha()
 	m_pCollider->SetEnableAll(m_isVisible);
 }
 
-void Goblin::OnHit()
+void Ghost::OnHit()
 {
 	//透明状態なら無敵
-	if (m_isVisible)EnemyBase::OnHit();
+	if (m_isVisible)
+	{
+		//透明化準備
+		m_countF_fadeStart = FADESTART;
+
+		EnemyBase::OnHit();
+	}
 }

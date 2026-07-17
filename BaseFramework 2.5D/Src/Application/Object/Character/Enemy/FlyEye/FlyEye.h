@@ -10,6 +10,7 @@ public:
 
 	void Update()override;
 	void HitCheck()override;
+	void DrawLit()override;
 	
 private:
 
@@ -31,14 +32,23 @@ private:
 	bool m_isFallStart = false;
 
 	static const int RISEF = 30;
-	static const int WAITF = 10;
+	static const int WAITF = 50;
 	static const int FALLF = 30;
 	const float FLYPOWER = 0.05f;
 
 	int m_countF_evade = 0;
 
+	//デゾルブ消滅
+	const float DISSOLVEADD = 0.1f;
+	static const int DISSOLVESTART = 25;
+	
+	int m_countF_dissolveStart = 0;
+	bool m_isDissolve = false;
+	float m_dissolvePow = 0.0f;
+
 	void Init()override;
 	void Release();
+	void UpdateAnim()override;
 	void OnHit()override;
 
 };

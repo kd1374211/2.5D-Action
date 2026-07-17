@@ -11,7 +11,6 @@ public:
 	virtual void HitCheck()override;
 	virtual void PostUpdate()override;
 	void PreDraw()override;
-	virtual void DrawLit()override;
 	void GenerateDepthMapFromLight()override;
 
 	//セッター
@@ -27,22 +26,16 @@ public:
 protected:
 
 	void ChangeAnim(EnemyAnimType a_anim);
-	void UpdateAnim();
+	virtual void UpdateAnim();
 	virtual void OnHit();
 	void Release();
 
 	//撃破時増加ハートチャージ量
 	const float HEARTCHARGEADD = 15.0f;
 
-	//デゾルブ消滅
-	const float DISSOLVEADD = 0.1f;
-	static const int DISSOLVESTART = 25;
+	//死亡時
 	const float SPEEDMULTIADD_DEAD = -1.75f;
 	const float JUMPPOWER_DEAD = 0.14f;
-
-	int m_countF_dissolveStart = 0;
-	bool m_isDissolve = false;
-	float m_dissolvePow = 0.0f;
 
 	float m_angleDeg = 0.0f;
 	float m_linePos = 0.0f;

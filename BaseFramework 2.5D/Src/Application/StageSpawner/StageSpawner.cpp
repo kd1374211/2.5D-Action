@@ -254,7 +254,7 @@ void StageSpawner::Update()
 							float angleDeg = LOWEST->GetAngleDeg();
 							float linePos = rand() / (float)RAND_MAX * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
 							Math::Vector3 pos = { sinf(DirectX::XMConvertToRadians(angleDeg)) * linePos,respawnPosY,cosf(DirectX::XMConvertToRadians(angleDeg)) * linePos };
-							std::shared_ptr<EnemyBase>enemy = CHARAMGR.SpawnEnemy(EnemyName_Goblin, pos, angleDeg, linePos);
+							std::shared_ptr<EnemyBase>enemy = CHARAMGR.SpawnEnemy(EnemyName_Ghost, pos, angleDeg, linePos);
 
 							//ID結びつけ
 							m_enemyStairMap.emplace(enemy->GetEnemyID(), LOWEST->GetStairID());

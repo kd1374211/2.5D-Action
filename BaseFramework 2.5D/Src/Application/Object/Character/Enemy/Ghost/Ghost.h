@@ -1,12 +1,12 @@
 ﻿#pragma once
 #include "../EnemyBase.h"
 
-class Goblin :public EnemyBase
+class Ghost :public EnemyBase
 {
 public:
 
-	Goblin(Math::Vector3 a_baseStartPos, float a_startDeg, float a_linePos);
-	~Goblin()override { Release(); }
+	Ghost(Math::Vector3 a_baseStartPos, float a_startDeg, float a_linePos);
+	~Ghost()override { Release(); }
 
 	void Update()override;
 	void HitCheck()override;
@@ -20,7 +20,8 @@ private:
 	{
 		ToVisible,
 		Idle,
-		ToInvisible
+		ToInvisible,
+		ToInvisible_OnDead
 	};
 
 	//出現位置
@@ -43,6 +44,13 @@ private:
 	VisibleMode m_mode = VisibleMode::Idle;
 	bool m_isVisible = false;
 
+	//消滅
+	const float ALPHACHANGE_DEAD = 0.1f;
+	static const int FADESTART = 15;
+	
+	int m_countF_fadeStart = 0;
+	bool m_isFade = false;
+	
 	void Init()override;
 	void Release();
 

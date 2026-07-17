@@ -166,6 +166,13 @@ void FlyEye::HitCheck()
 	EnemyBase::HitCheck();
 }
 
+void FlyEye::DrawLit()
+{
+	KdShaderManager::Instance().m_StandardShader.SetDissolve(m_dissolvePow);
+	KdShaderManager::Instance().m_StandardShader.DrawPolygon(*m_polygons->find(m_nowAnim)->second.m_polygon, m_mWorld);
+	KdShaderManager::Instance().m_StandardShader.SetDissolve(0);
+}
+
 void FlyEye::Init()
 {
 	m_sphereHitOfs = SPHEREHITOFS;
@@ -180,10 +187,26 @@ void FlyEye::Release()
 
 }
 
+void FlyEye::UpdateAnim()
+{
+	//本体
+	EnemyBase::UpdateAnim();
+
+	//デゾルブ
+	if (m_isDissolve)
+	{
+		m_dissolvePow += DISSOLVEADD;
+		if (m_dissolvePow >= 1.0f)m_isExpired = true;
+	}
+}
+
 void FlyEye::OnHit()
 {
 	//避けモード終了
 	m_isEvadeMode = false;
+
+	//デゾルブ準備
+	m_countF_dissolveStart = DISSOLVESTART;
 
 	//本体
 	EnemyBase::OnHit();

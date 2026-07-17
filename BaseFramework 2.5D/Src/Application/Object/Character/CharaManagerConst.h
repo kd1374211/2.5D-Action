@@ -13,7 +13,7 @@ enum class PlayerAnimType
 
 enum EnemyName
 {
-	EnemyName_Goblin,
+	EnemyName_Ghost,
 	EnemyName_FlyEye,
 	EnemyNumber
 };

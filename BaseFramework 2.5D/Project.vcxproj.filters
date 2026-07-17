@@ -127,9 +127,6 @@
     <Filter Include="Src\Application\Object\Character\Enemy">
       <UniqueIdentifier>{47a76a1d-c167-465d-924e-feb774e0345a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Application\Object\Character\Enemy\Goblin">
-      <UniqueIdentifier>{bde22c5f-4b60-4390-bd94-6f6630e85339}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Application\Object\Effect">
       <UniqueIdentifier>{de53d848-3ffb-44fd-a736-11993c1c4e9f}</UniqueIdentifier>
     </Filter>
@@ -198,6 +195,9 @@
     </Filter>
     <Filter Include="Src\Application\Object\Sprite\Scene\HeartChargeBar">
       <UniqueIdentifier>{cb10d622-5bfc-4f97-9b8c-63ddf67e8137}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Character\Enemy\Ghost">
+      <UniqueIdentifier>{bde22c5f-4b60-4390-bd94-6f6630e85339}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -420,9 +420,6 @@
     <ClInclude Include="Src\Application\Object\Character\Enemy\EnemyBase.h">
       <Filter>Src\Application\Object\Character\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\Object\Character\Enemy\Goblin\Goblin.h">
-      <Filter>Src\Application\Object\Character\Enemy\Goblin</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\Object\Character\CharacterInclude.h">
       <Filter>Src\Application\Object\Character</Filter>
     </ClInclude>
@@ -497,6 +494,9 @@
     </ClInclude>
     <ClInclude Include="Src\Application\Object\Sprite\Scene\HeartChargeBar\HeartChargeBar.h">
       <Filter>Src\Application\Object\Sprite\Scene\HeartChargeBar</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Character\Enemy\Ghost\Ghost.h">
+      <Filter>Src\Application\Object\Character\Enemy\Ghost</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -683,9 +683,6 @@
     <ClCompile Include="Src\Application\Object\Character\Enemy\EnemyBase.cpp">
       <Filter>Src\Application\Object\Character\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\Object\Character\Enemy\Goblin\Goblin.cpp">
-      <Filter>Src\Application\Object\Character\Enemy\Goblin</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Application\Object\Effect\Slash\Slash.cpp">
       <Filter>Src\Application\Object\Effect\Slash</Filter>
     </ClCompile>
@@ -742,6 +739,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Sprite\Scene\HeartChargeBar\HeartChargeBar.cpp">
       <Filter>Src\Application\Object\Sprite\Scene\HeartChargeBar</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Character\Enemy\Ghost\Ghost.cpp">
+      <Filter>Src\Application\Object\Character\Enemy\Ghost</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

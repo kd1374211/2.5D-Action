@@ -124,13 +124,6 @@ void EnemyBase::PreDraw()
 	data->m_polygon->SetUVRect((int)m_animCnt);
 }
 
-void EnemyBase::DrawLit()
-{
-	KdShaderManager::Instance().m_StandardShader.SetDissolve(m_dissolvePow);
-	KdShaderManager::Instance().m_StandardShader.DrawPolygon(*m_polygons->find(m_nowAnim)->second.m_polygon, m_mWorld);
-	KdShaderManager::Instance().m_StandardShader.SetDissolve(0);
-}
-
 void EnemyBase::GenerateDepthMapFromLight()
 {
 	if (!m_isShadow)return;
@@ -161,12 +154,6 @@ void EnemyBase::UpdateAnim()
 			break;
 		}
 	}
-
-	if (m_isDissolve)
-	{
-		m_dissolvePow += DISSOLVEADD;
-		if (m_dissolvePow >= 1.0f)m_isExpired = true;
-	}
 }
 
 void EnemyBase::OnHit()
@@ -176,7 +163,6 @@ void EnemyBase::OnHit()
 
 	//フラグ関係
 	m_isDead = true;
-	m_countF_dissolveStart = DISSOLVESTART;
 	m_moveY = JUMPPOWER_DEAD;
 
 	//判定消滅

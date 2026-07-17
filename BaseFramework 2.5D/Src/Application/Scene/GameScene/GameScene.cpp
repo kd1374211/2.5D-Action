@@ -101,10 +101,6 @@ void GameScene::Event()
 		}
 	}
 
-	//デバッグ
-	if (GetAsyncKeyState('1') & 0x8000)SCOREMGR.AddHeight(10.0f);
-	if (GetAsyncKeyState('2') & 0x8000)SCOREMGR.AddKillCount();
-
 	//データ回収
 	CameraBaseData data = CAMERAMGR.GetCameraData();
 	Math::Vector3 localPos = CAMERAMGR.GetLocalCameraPos();

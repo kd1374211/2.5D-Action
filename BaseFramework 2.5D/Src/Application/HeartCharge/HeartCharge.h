@@ -35,10 +35,10 @@ private:
 	void Release();
 
 	//毎フレームのチャージ減少量(割合)
-	const float CHARGEREDUCE_F = 0.00015f;
+	const float CHARGEREDUCE_F = 0.0001f;
 
 	//被弾時のチャージ減少量(割合)
-	const float CHARGEREDUCE_HIT = 0.2f;
+	const float CHARGEREDUCE_HIT = 0.15f;
 
 	//必要チャージ増加量(数値)
 	const float TARGETCHARGESTART = 100.0f;

@@ -11,8 +11,6 @@ void HeartCharge::Reset()
 
 void HeartCharge::Update()
 {
-	if (GetAsyncKeyState('3') & 0x8000)m_charge += 2.0f;
-
 	//最大チェック
 	if (m_charge >= m_targetCharge)
 	{

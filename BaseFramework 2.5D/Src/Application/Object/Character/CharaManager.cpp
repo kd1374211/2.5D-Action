@@ -45,8 +45,8 @@ std::shared_ptr<EnemyBase> CharaManager::SpawnEnemy(EnemyName a_name, Math::Vect
 	std::shared_ptr<EnemyBase>enemy = nullptr;
 	switch (a_name)
 	{
-	case EnemyName::EnemyName_Goblin:
-		enemy = std::make_shared<Goblin>(a_pos, a_deg, a_linePos);
+	case EnemyName::EnemyName_Ghost:
+		enemy = std::make_shared<Ghost>(a_pos, a_deg, a_linePos);
 		enemy->SetEnemyID(m_enemyID);
 		break;
 	case EnemyName::EnemyName_FlyEye:
