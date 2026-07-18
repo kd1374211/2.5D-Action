@@ -23,7 +23,7 @@ void Spear::Update()
 	//角度に合わせて位置変更
 	m_pos = { sinf(DirectX::XMConvertToRadians(m_angleDeg)) * m_linePos,m_pos.y += TERRAINBASEMOVEY * speedMulti,cosf(DirectX::XMConvertToRadians(m_angleDeg)) * m_linePos };
 	//一定位置まで下りたら槍が生える
-	if (m_pos.y < SPEARACTIVEY)
+	if (m_pos.y < SPEARACTIVEY && !m_isSpear)
 	{
 		m_isSpear = true;
 		m_pCollider->SetEnableAll(true);

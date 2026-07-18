@@ -8,6 +8,7 @@
 #include "../Object/Character/Enemy/EnemyBase.h"
 #include "../Object/Effect/SlashHit/SlashHit.h"
 #include "../HeartCharge/HeartCharge.h"
+#include "../Sound/SoundManager.h"
 
 //階段再出現用
 #define LOWEST m_stairs.front()
@@ -275,7 +276,7 @@ void StageSpawner::Update()
 
 							//槍(3)
 							data = m_gimmicksData.find(Gimmicks::Spear_Three)->second;
-							if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel)
+							if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel && !isEnemySpawn)
 							{
 								float angleDeg = LOWEST->GetAngleDeg();
 								float linePos = rand() / (float)RAND_MAX * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
@@ -299,7 +300,7 @@ void StageSpawner::Update()
 							{
 								//槍(5)
 								data = m_gimmicksData.find(Gimmicks::Spear_Five)->second;
-								if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel)
+								if (rand() % data.m_chance[m_level] == 0 && m_level >= data.m_minLevel && !isEnemySpawn)
 								{
 									float angleDeg = LOWEST->GetAngleDeg();
 									float linePos = rand() / (float)RAND_MAX * (data.m_linePosMax - data.m_linePosMin) + data.m_linePosMin;
@@ -445,6 +446,7 @@ void StageSpawner::OnEnemyDead(int a_enemyID)
 
 						//敵の位置からハートを召喚
 						SCENEMGR.AddObject(std::make_shared<Heart>(enemy->GetPos(), enemy->GetAngleDeg(), enemy->GetLinePos(), linePos, number));
+						SOUNDMGR.Play(SoundName::SE_HeartSpawn);
 
 						//スキップ
 						break;

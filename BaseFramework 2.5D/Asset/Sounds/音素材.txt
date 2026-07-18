@@ -20,6 +20,8 @@ Hit 中パンチ
 Jump 高速移動
 Landing ジャンプの着地
 LowHealth 警告音２
+MaxCharge ゲージ回復２
+HeartSpawn ゲージ回復１
 Roll ドラムロール
 RollEnd ジャン！
 Start 剣で打ち合う２

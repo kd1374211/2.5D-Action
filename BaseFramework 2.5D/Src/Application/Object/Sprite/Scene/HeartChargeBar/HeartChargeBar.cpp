@@ -13,9 +13,10 @@ void HeartChargeBar::PreDraw()
 	//バー更新
 	float chargeProg = HEARTCHARGE.GetChargeProgress();
 	float chargeDiff = chargeProg - m_heartBarFill;
+	float move = 0.0f;
 	if (HEARTCHARGE.GetIsHeartSpawned())
 	{
-		float move = std::clamp(chargeDiff, -CHARGEREDUCE_AFTERHEART, CHARGESPEED);
+		move = std::clamp(chargeDiff, -CHARGEREDUCE_AFTERHEART, CHARGESPEED);
 
 		//フラグ消し
 		if (move > -CHARGEREDUCE_AFTERHEART)HEARTCHARGE.SetHeartSpawned(false);
@@ -24,7 +25,15 @@ void HeartChargeBar::PreDraw()
 	}
 	else
 	{
-		m_heartBarFill += std::clamp(chargeDiff, -CHARGESPEED, CHARGESPEED);
+		move += std::clamp(chargeDiff, -CHARGESPEED, CHARGESPEED);
+
+		//被弾後フラグ消し
+		if (HEARTCHARGE.GetIsAfterHit())
+		{
+			if (move > -CHARGESPEED)HEARTCHARGE.SetIsAfterHit(false);
+		}
+
+		m_heartBarFill += move;
 	}
 }
 
@@ -42,7 +51,16 @@ void HeartChargeBar::DrawSprite()
 	//最大チャージ
 	rec = Math::Rectangle(0, (long)(BASETEXSIZE.y - (BARBOTTOM + chargeBarHeight)), (long)BASETEXSIZE.x, (long)(BARBOTTOM + chargeBarHeight));
 	Math::Vector2 drawPos = TEXDRAWPOS - Math::Vector2(0, (BASETEXSIZE.y - BARBOTTOM - chargeBarHeight) / 2.0f) * TEXSCALE;
-	KdShaderManager::Instance().m_spriteShader.DrawTex(m_barTex, drawPos.x, drawPos.y, TEXDRAWSIZE.x, (BARBOTTOM + chargeBarHeight) * TEXSCALE, &rec, &color);
+
+	//減少チェック
+	if (HEARTCHARGE.GetIsAfterHit() || HEARTCHARGE.GetIsHeartSpawned())
+	{
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_barTex_reduce, drawPos.x, drawPos.y, TEXDRAWSIZE.x, (BARBOTTOM + chargeBarHeight) * TEXSCALE, &rec, &color);
+	}
+	else
+	{
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_barTex, drawPos.x, drawPos.y, TEXDRAWSIZE.x, (BARBOTTOM + chargeBarHeight) * TEXSCALE, &rec, &color);
+	}
 
 	//最大チャージハート
 	if (HEARTCHARGE.GetIsMaxCharge())
@@ -60,6 +78,9 @@ void HeartChargeBar::Init()
 
 	m_barTex = std::make_shared<KdTexture>();
 	m_barTex->Load("Asset/Textures/Heart/HealthBar.png");
+
+	m_barTex_reduce = std::make_shared<KdTexture>();
+	m_barTex_reduce->Load("Asset/Textures/Heart/HealthBar_Reduce.png");
 
 	m_fullTex = std::make_shared<KdTexture>();
 	m_fullTex->Load("Asset/Textures/Heart/FullCharge.png");

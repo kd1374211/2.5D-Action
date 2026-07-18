@@ -19,6 +19,7 @@ enum class SoundName
 	SE_Hit,
 	SE_LowHP,
 	SE_HeartMaxCharge,
+	SE_HeartSpawn,
 	SE_Heal,
 	SE_Falling,
 	SE_GameStart,

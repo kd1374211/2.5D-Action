@@ -9,8 +9,9 @@
 7,Asset/Sounds/SE/Hit.wav,0.5,0
 8,Asset/Sounds/SE/LowHealth.wav,0.6,0
 9,Asset/Sounds/SE/MaxCharge.wav,0.5,0
-10,Asset/Sounds/SE/Heal.wav,0.4,0
-11,Asset/Sounds/SE/Falling.wav,0.3,0
-12,Asset/Sounds/SE/Start.wav,0.6,0
-13,Asset/Sounds/SE/Roll.wav,0.5,0
-14,Asset/Sounds/SE/RollEnd.wav,0.5,0
+10,Asset/Sounds/SE/HeartSpawn.wav,0.3,0
+11,Asset/Sounds/SE/Heal.wav,0.4,0
+12,Asset/Sounds/SE/Falling.wav,0.3,0
+13,Asset/Sounds/SE/Start.wav,0.6,0
+14,Asset/Sounds/SE/Roll.wav,0.5,0
+15,Asset/Sounds/SE/RollEnd.wav,0.5,0

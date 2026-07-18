@@ -32,6 +32,7 @@ private:
 	void Release() {};
 
 	std::shared_ptr<KdTexture> m_barTex;
+	std::shared_ptr<KdTexture> m_barTex_reduce;
 	std::shared_ptr<KdTexture> m_frameTex;
 	std::shared_ptr<KdTexture> m_fullTex;
 

@@ -5,6 +5,7 @@ void HeartCharge::Reset()
 {
 	m_isMaxCharge = false;
 	m_isHeartSpawned = false;
+	m_isAfterHit = false;
 	m_charge = 0.0f;
 	m_targetCharge = TARGETCHARGESTART;
 }
@@ -61,6 +62,9 @@ void HeartCharge::OnPlayerHit()
 	{
 		m_charge -= m_targetCharge * CHARGEREDUCE_HIT;
 	}
+
+	//被弾後フラグ設定
+	m_isAfterHit = true;
 }
 
 void HeartCharge::Init()

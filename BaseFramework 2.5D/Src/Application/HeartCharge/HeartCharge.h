@@ -25,6 +25,10 @@ public:
 	//ハート出現後フラグ
 	void SetHeartSpawned(bool a_flg) { m_isHeartSpawned = a_flg; }
 	bool GetIsHeartSpawned()const { return m_isHeartSpawned; }
+
+	//被弾後フラグ
+	bool GetIsAfterHit()const { return m_isAfterHit; }
+	void SetIsAfterHit(bool a_flg) { m_isAfterHit = a_flg; }
 	
 private:
 
@@ -53,6 +57,9 @@ private:
 
 	//ハート出現後フラグ
 	bool m_isHeartSpawned = false;
+
+	//被弾時減少フラグ
+	bool m_isAfterHit = false;
 
 public:
 
