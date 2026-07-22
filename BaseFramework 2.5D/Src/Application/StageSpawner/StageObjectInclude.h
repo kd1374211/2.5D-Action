@@ -7,4 +7,3 @@
 #include "../Object/Hazard/RollingWood/RollingWood.h"
 #include "../Object/Hazard/Spear/Spear.h"
 #include "../Object/Hazard/SideSpear/SideSpear.h"
-#include "../Object/Items/Heart/Heart.h"

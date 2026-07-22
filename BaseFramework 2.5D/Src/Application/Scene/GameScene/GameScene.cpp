@@ -41,9 +41,6 @@ void GameScene::Event()
 			//操作ガイド
 			AddObject(std::make_shared<KeyGuide>());
 
-			//ハート
-			CHARAMGR.GetPlayer()->SetIsHeartTex(true);
-
 			//ハートチャージ
 			AddObject(std::make_shared<HeartChargeBar>());
 
@@ -81,7 +78,6 @@ void GameScene::Event()
 				if (m_wpTransition.lock()->GetIsReset())
 				{
 					STAGESPAWNER.ResetStage();
-					player->SetIsHeartTex(false);
 					SCENEMGR.AddCarryObject(m_wpTransition.lock());
 					SceneManager::Instance().SetNextScene
 					(

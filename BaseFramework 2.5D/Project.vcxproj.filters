@@ -172,15 +172,6 @@
     <Filter Include="Src\Application\Object\Sprite\Scene\KeyGuide">
       <UniqueIdentifier>{3d52be32-3187-4533-954e-41917659a686}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Application\Object\Items">
-      <UniqueIdentifier>{bafe59f6-6ce1-4753-9fae-3618a6715e08}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\Object\Items\Heart">
-      <UniqueIdentifier>{35feb533-da99-47dd-83a7-1eeab6728b95}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\Object\Effect\Heal">
-      <UniqueIdentifier>{6bd4ae1e-acbb-4597-bd73-61dc64a608bb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Resource">
       <UniqueIdentifier>{4a86dea4-1c20-4852-a2f0-8ed4389cce06}</UniqueIdentifier>
     </Filter>
@@ -474,12 +465,6 @@
     <ClInclude Include="Src\Application\StageSpawner\GimmicksConst.h">
       <Filter>Src\Application\StageSpawner</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\Object\Items\Heart\Heart.h">
-      <Filter>Src\Application\Object\Items\Heart</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\Object\Effect\Heal\Heal.h">
-      <Filter>Src\Application\Object\Effect\Heal</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Resource\resource.h">
       <Filter>Src\Resource</Filter>
     </ClInclude>
@@ -721,12 +706,6 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Sprite\Scene\KeyGuide\KeyGuide.cpp">
       <Filter>Src\Application\Object\Sprite\Scene\KeyGuide</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Application\Object\Items\Heart\Heart.cpp">
-      <Filter>Src\Application\Object\Items\Heart</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Application\Object\Effect\Heal\Heal.cpp">
-      <Filter>Src\Application\Object\Effect\Heal</Filter>
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Effect\SlashHit\SlashHit.cpp">
       <Filter>Src\Application\Object\Effect\SlashHit</Filter>

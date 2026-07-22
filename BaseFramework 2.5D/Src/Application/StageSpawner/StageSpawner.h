@@ -94,11 +94,6 @@ private:
 	const float LEVELHEIGHTS[MAXLEVEL] = { 0,50.0f,100.0f,150.0f,200.0f,250.0f,300.0f,350.0f,400.0f,500.0f };
 	int m_level = 0;
 
-	//回復ハート
-	static const int HEARTFLYMIN = 9;
-	static const int HEARTFLYMAX = 15;
-	const float HEARTMOVEDISTMAX = 3.0f;
-	
 	//敵と階段をIDで結びつけ
 	std::map<int, int> m_enemyStairMap;
 

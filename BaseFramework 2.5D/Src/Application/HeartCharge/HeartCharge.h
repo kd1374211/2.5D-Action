@@ -9,26 +9,25 @@ public:
 
 	void Update();
 
-	//ハート出現チェック
-	bool CheckHeartSpawn();
-
 	//プレイヤー被弾時
 	void OnPlayerHit();
+
+	//落下死
+	void OnPlayerFall();
 
 	//アッダー
 	void AddCharge(float a_amount) { m_charge += a_amount; }
 
 	//ゲッター
-	bool GetIsMaxCharge()const { return m_isMaxCharge; }
-	float GetChargeProgress()const { return std::clamp(m_charge / m_targetCharge, 0.0f, 1.0f); }
-
-	//ハート出現後フラグ
-	void SetHeartSpawned(bool a_flg) { m_isHeartSpawned = a_flg; }
-	bool GetIsHeartSpawned()const { return m_isHeartSpawned; }
+	float GetChargeProgress()const { return std::clamp(m_charge / MAXCHARGE, 0.0f, 1.0f); }
 
 	//被弾後フラグ
 	bool GetIsAfterHit()const { return m_isAfterHit; }
 	void SetIsAfterHit(bool a_flg) { m_isAfterHit = a_flg; }
+
+	//落下死フラグ
+	bool GetIsFallVoid()const { return m_isFallVoid; }
+	void SetIsFallVoid(bool a_flg) { m_isFallVoid = a_flg; }
 	
 private:
 
@@ -44,22 +43,17 @@ private:
 	//被弾時のチャージ減少量(割合)
 	const float CHARGEREDUCE_HIT = 0.15f;
 
-	//必要チャージ増加量(数値)
-	const float TARGETCHARGESTART = 100.0f;
-	const float TARGETCHARGEADD = 50.0f;
+	//最大チャージ
+	const float MAXCHARGE = 100.0f;
 
 	//チャージ量
-	float m_charge = 0.0f;
-	float m_targetCharge = 0.0f;
-
-	//最大チャージフラグ
-	bool m_isMaxCharge = false;
-
-	//ハート出現後フラグ
-	bool m_isHeartSpawned = false;
-
+	float m_charge = MAXCHARGE;
+	
 	//被弾時減少フラグ
 	bool m_isAfterHit = false;
+
+	//落下死
+	bool m_isFallVoid = false;
 
 public:
 

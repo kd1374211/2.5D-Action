@@ -15,13 +15,10 @@ https://soundeffect-lab.info/
 Attack 剣の素振り２
 AttackHit 剣で斬る１
 Falling ヒューンと落下
-Heal 回復魔法１
 Hit 中パンチ
 Jump 高速移動
 Landing ジャンプの着地
 LowHealth 警告音２
-MaxCharge ゲージ回復２
-HeartSpawn ゲージ回復１
 Roll ドラムロール
 RollEnd ジャン！
 Start 剣で打ち合う２

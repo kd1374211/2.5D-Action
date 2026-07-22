@@ -2,23 +2,12 @@
 #include "../../../Scene/SceneManager.h"
 #include "../../Effect/Slash/Slash.h"
 #include "../../../Sound/SoundManager.h"
-#include "../../Effect/Heal/Heal.h"
 #include "../../../HeartCharge/HeartCharge.h"
 
 Player::Player()
 {
 	Init();
 	m_pos = { 0,0.2f,LINEPOSSTART };
-
-	for (int i = 0; i < STARTHEALTH; i++)
-	{
-		m_healthTexData.push_back(HealthTexData(i, false, 0.0f, false));
-	}
-}
-
-void Player::PreUpdate()
-{
-	CheckHeartAnimExpired();
 }
 
 void Player::Update()
@@ -124,9 +113,6 @@ void Player::Update()
 	//アニメーション更新
 	UpdateAnim();
 	
-	//ハート画像
-	UpdateHeartAnim();
-
 	//無敵F更新
 	if (m_isInvinsible)
 	{
@@ -357,32 +343,6 @@ void Player::HitCheck()
 		{
 			OnHit();
 		}
-
-		//4
-		//取得判定（回復）
-
-		//上のスフィアを使いまわす（タイプだけ変更）
-		sphere.m_type = KdCollider::Type::TypeHeal;
-
-		//全オブジェクトとの当たり判定
-		for (auto& obj : SceneManager::Instance().GetObjList())
-		{
-			//↓スフィア当たり判定
-			if (obj->Intersects(sphere, nullptr))
-			{
-				obj->SetIsExpired(true);
-				m_health++;
-
-				//ずらす
-				for (auto &obj : m_healthTexData)
-				{
-					obj.m_number++;
-				}
-				m_healthTexData.push_back(HealthTexData(0, false, 0.0f, false));
-				SOUNDMGR.Play(SoundName::SE_Heal);
-				SCENEMGR.AddObject(std::make_shared<Heal>());
-			}
-		}
 	}
 
 	if (m_pos.y < VOIDPOSY)
@@ -408,16 +368,6 @@ void Player::PreDraw()
 {
 	PolygonData* data = &m_polygons->find(m_nowAnim)->second;
 	data->m_polygon->SetUVRect((int)m_animCnt);
-
-	if (m_isHeartTex)
-	{
-		//アルファ更新
-		if (m_heartTexAlpha < 1.0f)
-		{
-			m_heartTexAlpha += ALPHAADD;
-			if (m_heartTexAlpha >= 1.0f)m_heartTexAlpha = 1.0f;
-		}
-	}
 }
 
 void Player::DrawLit()
@@ -433,25 +383,6 @@ void Player::GenerateDepthMapFromLight()
 	KdShaderManager::Instance().m_StandardShader.DrawPolygon(*data->m_polygon, m_mWorld);
 }
 
-void Player::DrawSprite()
-{
-	if (!m_isHeartTex)return;
-
-	Math::Color color = Math::Color(1.0f, 1.0f, 1.0f, m_heartTexAlpha);
-
-	int heartNum = m_healthTexData.size();
-	const float left = -630.0f;
-	const float top = 310.0f;
-	for (auto &itr : m_healthTexData)
-	{
-		if (itr.m_isExpired)continue;
-
-		Math::Rectangle rec = Math::Rectangle((long)((int)itr.m_animCnt * HEARTTEXBASESIZE.x), 0, (long)HEARTTEXBASESIZE.x, (long)HEARTTEXBASESIZE.y);
-		Math::Vector2 pos = Math::Vector2(left + HEARTTEXDRAWSIZE.x * ((float)(itr.m_number % 5) + 0.5f), top - HEARTTEXDRAWSIZE.y * (itr.m_number / 5));
-		KdShaderManager::Instance().m_spriteShader.DrawTex(m_heartTex, pos.x, pos.y, HEARTTEXDRAWSIZE.x, HEARTTEXDRAWSIZE.y, &rec, &color);
-	}
-}
-
 void Player::OnHit()
 { 
 	//無敵ならスキップ
@@ -462,8 +393,8 @@ void Player::OnHit()
 	m_isLanding = false;
 
 	//体力減少
-	m_health--;
-	if (m_health <= 0)
+	HEARTCHARGE.OnPlayerHit();
+	if (HEARTCHARGE.GetChargeProgress() == 0.0f)
 	{
 		//上方向に飛ばす
 		m_moveY = HITJUMP_DEAD;
@@ -497,13 +428,7 @@ void Player::FallVoid()
 	if (m_isDead)return;
 
 	//死
-	m_health = 0;
-
-	//体力画像
-	for (auto& itr : m_healthTexData)
-	{
-		itr.m_isAnimStart = true;
-	}
+	HEARTCHARGE.OnPlayerFall();
 
 	m_isDead = true;
 	m_isVoidFall = true;
@@ -527,14 +452,6 @@ void Player::Respawn(Math::Vector3 a_pos)
 	m_isGameEnd = false;
 	ChangeAnim(PlayerAnimType::Run);
 
-	m_heartTexAlpha = 0.0f;
-	m_healthTexData.clear();
-	m_health = STARTHEALTH;
-	for (int i = 0; i < STARTHEALTH; i++)
-	{
-		m_healthTexData.push_back(HealthTexData(i, false, 0.0f, false));
-	}
-
 	m_isInvinsible = false;
 	m_immuneF = 0;
 	m_isHitBlink = false;
@@ -549,9 +466,6 @@ void Player::Respawn(Math::Vector3 a_pos)
 
 void Player::Init()
 {
-	//ハート画像
-	m_heartTex = std::make_shared<KdTexture>();
-	m_heartTex->Load("Asset/Textures/Chara/Player/Heart.png");
 }
 
 void Player::Release()
@@ -640,34 +554,11 @@ void Player::UpdateAnim()
 	}
 }
 
-void Player::CheckHeartAnimExpired()
-{
-	//消去チェック
-	while (!m_healthTexData.empty() && m_healthTexData.back().m_isExpired)
-	{
-		m_healthTexData.pop_back();
-	}
-}
-
-void Player::UpdateHeartAnim()
-{
-	for (auto& itr : m_healthTexData)
-	{
-		if (itr.m_isAnimStart)
-		{
-			itr.m_animCnt += HEALTHANIMSPEED;
-
-			if (itr.m_animCnt >= HEALTHANIMEND)itr.m_isExpired = true;
-		}
-	}
-}
-
 void Player::OnDamage()
 {
 	//効果音
 	SOUNDMGR.Play(SoundName::SE_Hit);
-	if (m_health == 1)SOUNDMGR.Play(SoundName::SE_LowHP);
-
+	
 	//チャージ減少
 	HEARTCHARGE.OnPlayerHit();
 
@@ -684,12 +575,6 @@ void Player::OnDamage()
 
 	//攻撃停止、攻撃不可
 	AttackStun();
-
-	//体力画像
-	for (auto &itr : m_healthTexData)
-	{
-		if (itr.m_number == m_health)itr.m_isAnimStart = true;
-	}
 }
 
 void Player::AttackStun()

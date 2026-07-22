@@ -9,14 +9,12 @@ public:
 	Player();
 	~Player()override { Release(); }
 
-	void PreUpdate()override;
 	void Update()override;
 	void HitCheck()override;
 	void PostUpdate()override;
 	void PreDraw()override;
 	void DrawLit()override;
 	void GenerateDepthMapFromLight()override;
-	void DrawSprite()override;
 	void OnHit();
 	void FallVoid();
 
@@ -25,8 +23,7 @@ public:
 
 	//セッター
 	void SetPolygonData(std::map<PlayerAnimType, PolygonData>* a_data) { m_polygons = a_data; }
-	void SetIsHeartTex(bool a_flg) { m_isHeartTex = a_flg; }
-
+	
 	//ゲッター
 	bool GetIsGameEnd()const { return m_isGameEnd; }
 	float GetLinePos()const { return -m_pos.z; }
@@ -44,10 +41,6 @@ private:
 	void ChangeAnim(PlayerAnimType a_anim);
 	void UpdateAnim();
 
-	//体力画像
-	void CheckHeartAnimExpired();
-	void UpdateHeartAnim();
-
 	//体力減少
 	void OnDamage();
 
@@ -57,12 +50,6 @@ private:
 	//ポリゴン
 	std::map<PlayerAnimType, PolygonData>* m_polygons = nullptr;
 	
-	//体力画像
-	const Math::Vector2 HEARTTEXBASESIZE = Math::Vector2(17.0f, 17.0f);
-	const Math::Vector2 HEARTTEXDRAWSIZE = HEARTTEXBASESIZE * 4.0f;
-	
-	std::shared_ptr<KdTexture> m_heartTex = nullptr;
-
 	//移動範囲
 	const float LINEPOSMAX = -2.0f;
 	const float LINEPOSSTART = -5.0f;
@@ -94,30 +81,8 @@ private:
 	static const int ATTACKWAITF = 20;
 	static const int ATTACKSPAWNF = 4;
 
-	//体力
-	static const int STARTHEALTH = 3;
-	const float HEALTHANIMSPEED = 0.5f;
-	static const int HEALTHANIMEND = 5;
-
-	bool m_isHeartTex = false;
-
 	//ゲーム終了フラグ
 	bool m_isGameEnd = false;
-
-	//フェードイン
-	const float ALPHAADD = 0.05f;
-	float m_heartTexAlpha = 0.0f;
-
-	struct HealthTexData
-	{
-		int m_number;
-		bool m_isAnimStart;
-		float m_animCnt;
-		bool m_isExpired;
-	};
-
-	int m_health = STARTHEALTH;
-	std::list<HealthTexData> m_healthTexData;
 
 	//アニメーション
 	PlayerAnimType m_nowAnim = PlayerAnimType::Run;

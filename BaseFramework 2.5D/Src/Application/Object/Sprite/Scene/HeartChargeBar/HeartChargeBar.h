@@ -14,8 +14,9 @@ private:
 
 	//滑らかにしたい
 	const float CHARGESPEED = 0.01f;
-	//ハート出現後の高速ゲージ減少
-	const float CHARGEREDUCE_AFTERHEART = 0.05f;
+
+	//落下死
+	const float CHARGEREDUCE_FALLVOID = 0.05f;
 
 	//フェードイン
 	const float ALPHAADD = 0.05f;
@@ -34,8 +35,6 @@ private:
 	std::shared_ptr<KdTexture> m_barTex;
 	std::shared_ptr<KdTexture> m_barTex_reduce;
 	std::shared_ptr<KdTexture> m_frameTex;
-	std::shared_ptr<KdTexture> m_fullTex;
-
-	float m_heartBarFill = 0.0f;
-
+	
+	float m_heartBarFill = 1.0f;
 };

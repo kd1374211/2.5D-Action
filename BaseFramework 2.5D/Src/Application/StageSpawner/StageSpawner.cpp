@@ -411,52 +411,6 @@ void StageSpawner::OnEnemyDead(int a_enemyID)
 		//見つかったら
 		if (enemy != nullptr)
 		{
-			//ハート出現チェック
-			if (HEARTCHARGE.CheckHeartSpawn())
-			{
-				//N個先の階段を取得
-				int number = HEARTFLYMIN;
-
-				while (1)
-				{
-					int target = itr->second + number;
-
-					//ループ
-					if (target >= STAIRNUM)target -= STAIRNUM;
-
-					//階段があるかを取得
-					std::weak_ptr<Stair> targetStair = m_stairsIDmap.find(target)->second;
-					if (targetStair.expired())
-					{
-						number++;
-						if (number >= HEARTFLYMAX)break;
-
-						continue;
-					}
-
-					//階段取得
-					stair = targetStair.lock();
-
-					if (stair->GetStairFlg())
-					{
-						//LinePosランダム(敵位置から+-3.0f)
-						float posMin = std::clamp(enemy->GetLinePos() - HEARTMOVEDISTMAX, LINEPLAYAREA_MIN + 0.6f, LINEPLAYAREA_MAX - 0.6f);
-						float posMax = std::clamp(enemy->GetLinePos() + HEARTMOVEDISTMAX, LINEPLAYAREA_MIN + 0.6f, LINEPLAYAREA_MAX - 0.6f);
-						float linePos = rand() / (float)RAND_MAX * (posMax - posMin) + posMin;
-
-						//敵の位置からハートを召喚
-						SCENEMGR.AddObject(std::make_shared<Heart>(enemy->GetPos(), enemy->GetAngleDeg(), enemy->GetLinePos(), linePos, number));
-						SOUNDMGR.Play(SoundName::SE_HeartSpawn);
-
-						//スキップ
-						break;
-					}
-
-					number++;
-					if (number >= HEARTFLYMAX)break;
-				}
-			}
-
 			//当たりエフェクト生成
 			SCENEMGR.AddObject(std::make_shared<SlashHit>(enemy));
 		}
