@@ -113,7 +113,9 @@ void Ghost::PostUpdate()
 void Ghost::DrawLit()
 {
 	Math::Color color = Math::Color(1.0f, 1.0f, 1.0f, m_alpha);
+	if (m_alpha < 1.0f)KdShaderManager::Instance().ChangeDepthStencilState(KdDepthStencilState::ZWriteDisable);
 	KdShaderManager::Instance().m_StandardShader.DrawPolygon(*m_polygons->find(m_nowAnim)->second.m_polygon, m_mWorld, color);
+	if (m_alpha < 1.0f)KdShaderManager::Instance().ChangeDepthStencilState(KdDepthStencilState::ZEnable);
 }
 
 void Ghost::GenerateDepthMapFromLight()
