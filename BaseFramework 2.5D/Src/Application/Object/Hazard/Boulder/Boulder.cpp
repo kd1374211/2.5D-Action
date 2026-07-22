@@ -60,7 +60,6 @@ void Boulder::PostUpdate()
 
 void Boulder::DrawLit()
 {
-	m_alpha = 0.2f;
 	Math::Color color = Math::Color(1.0f, 1.0f, 1.0f, m_alpha);
 	if (m_alpha < 1.0f)KdShaderManager::Instance().ChangeDepthStencilState(KdDepthStencilState::ZWriteDisable);
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld, color);

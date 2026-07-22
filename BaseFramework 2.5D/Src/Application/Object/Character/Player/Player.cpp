@@ -12,6 +12,20 @@ Player::Player()
 
 void Player::Update()
 {
+	//死亡チェック
+	if (!m_isDead && HEARTCHARGE.GetHealth() == 0.0f)
+	{
+		ChangeAnim(PlayerAnimType::Dead);
+		m_isHitBlink = false;
+
+		//体力切れ
+		m_isDead = true;
+		m_isEmptyDead = true;
+
+		//スクロール量設定
+		m_scrollAdd_empty = m_stageScrollMulti / -125.0f;
+	}
+
 	//重力更新
 	if (m_moveY > FALLSPEEDMAX)
 	{
@@ -25,6 +39,13 @@ void Player::Update()
 	//死んでいたら操作不可
 	if (!m_isDead)
 	{
+		//瀕死チェック
+		if (!m_isCriticalHealth)
+		{
+			if (HEARTCHARGE.GetIsCriticalHealth())SOUNDMGR.Play(SoundName::SE_LowHP);
+		}
+		m_isCriticalHealth = HEARTCHARGE.GetIsCriticalHealth();
+
 		//奥行き移動
 		if (GetAsyncKeyState(VK_UP) & 0x8000)
 		{
@@ -206,7 +227,7 @@ void Player::HitCheck()
 		m_moveY = 0.0f;
 
 		//死亡時バウンド
-		if (m_isDead && m_deadBounceCnt < DEADBOUNCEMAX)
+		if (m_isDead && !m_isEmptyDead && m_deadBounceCnt < DEADBOUNCEMAX)
 		{
 			m_deadBounceCnt++;
 			m_moveY = JUMPPOWER * pow(DEADBOUNCEMULTI, m_deadBounceCnt);
@@ -300,7 +321,7 @@ void Player::HitCheck()
 				}
 
 				//死亡時バウンド
-				if (m_isDead && m_deadBounceCnt < DEADBOUNCEMAX)
+				if (m_isDead && !m_isEmptyDead && m_deadBounceCnt < DEADBOUNCEMAX)
 				{
 					m_deadBounceCnt++;
 					m_moveY = JUMPPOWER * pow(DEADBOUNCEMULTI, m_deadBounceCnt);
@@ -394,7 +415,7 @@ void Player::OnHit()
 
 	//体力減少
 	HEARTCHARGE.OnPlayerHit();
-	if (HEARTCHARGE.GetChargeProgress() == 0.0f)
+	if (HEARTCHARGE.GetHealth() == 0.0f)
 	{
 		//上方向に飛ばす
 		m_moveY = HITJUMP_DEAD;
@@ -446,11 +467,15 @@ void Player::Respawn(Math::Vector3 a_pos)
 	m_attackF = 0;
 	m_attackWaitF = 0;
 
+	m_isCriticalHealth = false;
 	m_isDead = false;
 	m_isVoidFall = false;
+	m_isEmptyDead = false;
+	m_scrollAdd_empty = 0.0f;
 	m_deadBounceCnt = 0;
 	m_isGameEnd = false;
 	ChangeAnim(PlayerAnimType::Run);
+	HEARTCHARGE.Reset();
 
 	m_isInvinsible = false;
 	m_immuneF = 0;
@@ -481,6 +506,15 @@ void Player::UpdateScrollMulti()
 			{
 				m_stageScrollMulti += STAGESCROLLADD_VOID;
 				if (m_stageScrollMulti <= STAGESCROLL_GAMEEND)
+				{
+					m_stageScrollMulti = STAGESCROLL_GAMEEND;
+					m_isGameEnd = true;
+				}
+			}
+			else if(m_isEmptyDead)
+			{
+				m_stageScrollMulti += m_scrollAdd_empty;
+				if ((m_scrollAdd_empty > 0.0f && m_stageScrollMulti >= STAGESCROLL_GAMEEND) || (m_scrollAdd_empty <= 0.0f && m_stageScrollMulti <= STAGESCROLL_GAMEEND))
 				{
 					m_stageScrollMulti = STAGESCROLL_GAMEEND;
 					m_isGameEnd = true;
@@ -559,9 +593,6 @@ void Player::OnDamage()
 	//効果音
 	SOUNDMGR.Play(SoundName::SE_Hit);
 	
-	//チャージ減少
-	HEARTCHARGE.OnPlayerHit();
-
 	//被弾後無敵
 	m_isInvinsible = true;
 	m_immuneF = HITIMMUNEF;

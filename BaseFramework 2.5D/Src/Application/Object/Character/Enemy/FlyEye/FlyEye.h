@@ -33,6 +33,7 @@ private:
 
 	static const int RISEF = 30;
 	static const int WAITF = 50;
+	static const int WAITF_INSIDE = 80;
 	static const int FALLF = 30;
 	const float FLYPOWER = 0.05f;
 

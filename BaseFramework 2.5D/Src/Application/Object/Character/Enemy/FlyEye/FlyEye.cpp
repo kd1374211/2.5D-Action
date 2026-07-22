@@ -38,7 +38,14 @@ void FlyEye::Update()
 			}
 
 			//上昇終了チェック
-			if (m_countF_evade >= RISEF + WAITF)m_isRiseEnd = true;
+			if (m_linePos <= 4.0f)
+			{
+				if (m_countF_evade >= RISEF + WAITF_INSIDE)m_isRiseEnd = true;
+			}
+			else
+			{
+				if (m_countF_evade >= RISEF + WAITF)m_isRiseEnd = true;
+			}
 		}
 
 		//下降
@@ -58,7 +65,7 @@ void FlyEye::Update()
 		}
 
 		//フレーム更新
-		if (m_countF_evade < RISEF + WAITF)m_countF_evade++;
+		if (m_countF_evade < RISEF + WAITF_INSIDE)m_countF_evade++;
 	}
 
 	//角度更新

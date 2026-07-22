@@ -15,11 +15,11 @@ public:
 	//落下死
 	void OnPlayerFall();
 
-	//アッダー
-	void AddCharge(float a_amount) { m_charge += a_amount; }
-
+	//敵撃破時
+	void OnEnemyDead();
+	
 	//ゲッター
-	float GetChargeProgress()const { return std::clamp(m_charge / MAXCHARGE, 0.0f, 1.0f); }
+	float GetHealth()const { return std::clamp(m_charge / MAXCHARGE, 0.0f, 1.0f); }
 
 	//被弾後フラグ
 	bool GetIsAfterHit()const { return m_isAfterHit; }
@@ -29,6 +29,9 @@ public:
 	bool GetIsFallVoid()const { return m_isFallVoid; }
 	void SetIsFallVoid(bool a_flg) { m_isFallVoid = a_flg; }
 	
+	//瀕死チェック
+	bool GetIsCriticalHealth()const { return (m_charge / MAXCHARGE) <= CRITICALHEALTHBORDER ? true : false; }
+
 private:
 
 	HeartCharge() { Init(); }
@@ -37,11 +40,14 @@ private:
 	void Init();
 	void Release();
 
+	//瀕死ボーダー
+	const float CRITICALHEALTHBORDER = 0.25f;
+
 	//毎フレームのチャージ減少量(割合)
-	const float CHARGEREDUCE_F = 0.0001f;
+	const float CHARGEREDUCE_F = 0.00025f;
 
 	//被弾時のチャージ減少量(割合)
-	const float CHARGEREDUCE_HIT = 0.15f;
+	const float CHARGEREDUCE_HIT = 0.25f;
 
 	//最大チャージ
 	const float MAXCHARGE = 100.0f;

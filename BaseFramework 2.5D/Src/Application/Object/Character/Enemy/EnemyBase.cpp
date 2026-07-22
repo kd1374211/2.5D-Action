@@ -175,7 +175,7 @@ void EnemyBase::OnHit()
 	SOUNDMGR.Play(SoundName::SE_AttackHit);
 
 	//ハートチャージ更新
-	HEARTCHARGE.AddCharge(HEARTCHARGEADD);
+	HEARTCHARGE.OnEnemyDead();
 
 	//ハートとエフェクト
 	STAGESPAWNER.OnEnemyDead(m_enemyID);

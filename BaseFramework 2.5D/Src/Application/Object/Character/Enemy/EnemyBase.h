@@ -30,9 +30,6 @@ protected:
 	virtual void OnHit();
 	void Release();
 
-	//撃破時増加ハートチャージ量
-	const float HEARTCHARGEADD = 15.0f;
-
 	//死亡時
 	const float SPEEDMULTIADD_DEAD = -1.75f;
 	const float JUMPPOWER_DEAD = 0.14f;

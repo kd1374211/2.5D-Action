@@ -135,4 +135,10 @@ private:
 
 	int m_deadBounceCnt = 0;
 
+	//瀕死フラグ
+	bool m_isCriticalHealth = false;
+
+	//体力切れフラグ
+	float m_scrollAdd_empty = 0.0f;
+	bool m_isEmptyDead = false;
 };

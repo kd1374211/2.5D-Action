@@ -11,7 +11,7 @@ void HeartChargeBar::PreDraw()
 	}
 
 	//バー更新
-	float chargeProg = HEARTCHARGE.GetChargeProgress();
+	float chargeProg = HEARTCHARGE.GetHealth();
 	float chargeDiff = chargeProg - m_heartBarFill;
 	float move = 0.0f;
 	//落下死
@@ -51,8 +51,8 @@ void HeartChargeBar::DrawSprite()
 	rec = Math::Rectangle(0, (long)(BASETEXSIZE.y - (BARBOTTOM + chargeBarHeight)), (long)BASETEXSIZE.x, (long)(BARBOTTOM + chargeBarHeight));
 	Math::Vector2 drawPos = TEXDRAWPOS - Math::Vector2(0, (BASETEXSIZE.y - BARBOTTOM - chargeBarHeight) / 2.0f) * TEXSCALE;
 
-	//減少チェック
-	if (HEARTCHARGE.GetIsAfterHit() || HEARTCHARGE.GetIsFallVoid())
+	//減少チェック(瀕死状態時も)
+	if (HEARTCHARGE.GetIsAfterHit() || HEARTCHARGE.GetIsFallVoid() || HEARTCHARGE.GetIsCriticalHealth())
 	{
 		KdShaderManager::Instance().m_spriteShader.DrawTex(m_barTex_reduce, drawPos.x, drawPos.y, TEXDRAWSIZE.x, (BARBOTTOM + chargeBarHeight) * TEXSCALE, &rec, &color);
 	}

@@ -25,6 +25,9 @@ public:
 	void OnEnemyDead(int a_enemyID);
 	void DeleteEnemyMap(int a_enemyID);
 	
+	//ゲージ回復量ゲッター
+	float GetHealPower()const { return HEALPOWER[m_level]; }
+
 private:
 
 	StageSpawner() { Init(); }
@@ -93,6 +96,9 @@ private:
 	//ステージレベル
 	const float LEVELHEIGHTS[MAXLEVEL] = { 0,50.0f,100.0f,150.0f,200.0f,250.0f,300.0f,350.0f,400.0f,500.0f };
 	int m_level = 0;
+
+	//回復量
+	const float HEALPOWER[MAXLEVEL] = { 11.0f,9.0f,8.0f,7.0f,6.5f,6.0f,5.0f,4.5f,3.5f,3.0f };
 
 	//敵と階段をIDで結びつけ
 	std::map<int, int> m_enemyStairMap;
